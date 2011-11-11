@@ -15,6 +15,7 @@ java_import 'javafx.scene.shape.Rectangle'
 java_import 'javafx.stage.Stage'
 java_import 'javafx.util.Duration'
 
+# TODO: temporary manual bootstrap
 java_import 'org.jruby.ext.jrubyfx.JRubyFX'
 
 class MyApp
