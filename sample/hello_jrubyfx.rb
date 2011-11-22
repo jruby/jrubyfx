@@ -1,20 +1,10 @@
 # Original version is here: http://www.oracle.com/technetwork/jp/ondemand/java/20110519-java-a-2-sato-400530-ja.pdf
 # Modified by Hiroshi Nakamura <nahi@ruby-lang.org>
 
-require_relative('utils')
+require 'jrubyfx'
 
-java_import 'javafx.animation.KeyFrame'
-java_import 'javafx.animation.KeyValue'
-java_import 'javafx.animation.Timeline'
-java_import 'javafx.scene.Group'
-java_import 'javafx.scene.Scene'
-java_import 'javafx.scene.paint.Color'
-java_import 'javafx.scene.shape.Rectangle'
-java_import 'javafx.stage.Stage'
-java_import 'javafx.util.Duration'
-
-class MyApp
-  include Utils
+class HelloJRubyFX
+  include JRubyFX
 
   def start(stage)
     root = build(Group) {
@@ -34,4 +24,4 @@ class MyApp
   end
 end
 
-JRubyFX.start(MyApp.new)
+HelloJRubyFX.start

@@ -30,7 +30,7 @@
   </target>
 
   <target depends="build" name="jar" description="Build a JAR file with the generated Java class files">
-    <jar destfile="${target}/jrubyfx.jar" basedir="${target.classes}">
+    <jar destfile="lib/jrubyfx.jar" basedir="${target.classes}">
       <manifest>
         <attribute name="Built-By" value="${user.name}"/>
       </manifest>

@@ -1,20 +1,7 @@
-require_relative 'utils'
-
-java_import 'javafx.beans.value.ChangeListener'
-java_import 'javafx.scene.Group'
-java_import 'javafx.scene.Scene'
-java_import 'javafx.scene.control.TextField'
-java_import 'javafx.scene.control.Button'
-java_import 'javafx.scene.layout.Priority'
-java_import 'javafx.scene.layout.ColumnConstraints'
-java_import 'javafx.scene.layout.GridPane'
-java_import 'javafx.scene.web.WebView'
-java_import 'javafx.stage.Stage'
-java_import 'javafx.geometry.HPos'
-java_import 'javafx.geometry.VPos'
+require 'jrubyfx'
 
 class WebViewApp
-  include Utils
+  include JRubyFX
 
   DEFAULT_URL = "http://jruby.org"
 
@@ -53,4 +40,4 @@ class WebViewApp
   end
 end
 
-JRubyFX.start(WebViewApp.new)
+WebViewApp.start

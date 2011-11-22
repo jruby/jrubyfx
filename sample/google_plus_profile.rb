@@ -1,31 +1,16 @@
 # Original version is for GroovyFX by @kazuchika
 # https://gist.github.com/1341142
 
-require File.expand_path('./utils', File.dirname(__FILE__))
+require 'jrubyfx'
 require 'json'
 require 'httpclient'
-
-java_import 'javafx.geometry.VPos'
-java_import 'javafx.scene.Group'
-java_import 'javafx.scene.Scene'
-java_import 'javafx.stage.Stage'
-java_import 'javafx.scene.effect.Reflection'
-java_import 'javafx.scene.effect.Bloom'
-java_import 'javafx.animation.Interpolator'
-java_import 'javafx.animation.RotateTransition'
-java_import 'javafx.scene.image.Image'
-java_import 'javafx.scene.image.ImageView'
-java_import 'javafx.scene.paint.Color'
-java_import 'javafx.scene.text.Font'
-java_import 'javafx.scene.text.Text'
-java_import 'javafx.util.Duration'
 
 key = '<YOUR Google+ API KEY HERE>'
 uid = 115625967573239196767 # user ID
 url = "https://www.googleapis.com/plus/v1/people/#{uid}?key=#{key}"
 
-class GooglePlusProfileApp
-  include Utils
+class GooglePlusProfile
+  include JRubyFX
 
   DEFAULT_IMAGE_URL = 'http://cdn.mamapop.com/wp-content/uploads/2011/09/fuuuu-rage-guy1.png'
 
@@ -70,4 +55,4 @@ class GooglePlusProfileApp
   end
 end
 
-JRubyFX.start(GooglePlusProfileApp.new(url))
+GooglePlusProfile.start(url)

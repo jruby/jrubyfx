@@ -11,20 +11,12 @@
 #
 # duke.svg is copied from: https://github.com/skrb/SVGLoader/tree/master/src
 
-require_relative('utils')
+require 'jrubyfx'
 require 'SVGLoader.jar'
-
-java_import 'javafx.animation.KeyFrame'
-java_import 'javafx.animation.KeyValue'
-java_import 'javafx.animation.Timeline'
-java_import 'javafx.scene.Group'
-java_import 'javafx.scene.Scene'
-java_import 'javafx.util.Duration'
-
 java_import 'net.javainthebox.caraibe.svg.SVGLoader'
 
 class SVGLoaderApp
-  include Utils
+  include JRubyFX
 
   def start(stage)
     root = build(Group) {
@@ -43,4 +35,4 @@ class SVGLoaderApp
   end
 end
 
-JRubyFX.start(SVGLoaderApp.new)
+SVGLoaderApp.start

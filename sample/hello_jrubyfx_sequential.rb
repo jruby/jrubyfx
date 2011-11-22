@@ -1,24 +1,11 @@
 # Original version is here: http://www.oracle.com/technetwork/jp/ondemand/java/20110519-java-a-2-sato-400530-ja.pdf
 # Modified by Hiroshi Nakamura <nahi@ruby-lang.org>
 
-require 'java'
-require 'jfxrt'
 require 'jrubyfx'
 
-java_import 'javafx.animation.KeyFrame'
-java_import 'javafx.animation.KeyValue'
-java_import 'javafx.animation.Timeline'
-java_import 'javafx.scene.Group'
-java_import 'javafx.scene.Scene'
-java_import 'javafx.scene.paint.Color'
-java_import 'javafx.scene.shape.Rectangle'
-java_import 'javafx.stage.Stage'
-java_import 'javafx.util.Duration'
+class JRubyFXSequential
+  include JRubyFX
 
-# TODO: temporary manual bootstrap
-java_import 'org.jruby.ext.jrubyfx.JRubyFX'
-
-class MyApp
   def init
   end
 
@@ -51,4 +38,4 @@ class MyApp
   end
 end
 
-JRubyFX.start(MyApp.new)
+JRubyFX.start(JRubyFXSequential.new)

@@ -1,34 +1,10 @@
 # Original version is here: https://gist.github.com/1358093
 
-require 'java'
-require 'jfxrt'
 require 'jrubyfx'
 
-java_import 'javafx.animation.Timeline'
-java_import 'javafx.animation.KeyValue'
-java_import 'javafx.animation.KeyFrame'
-java_import 'javafx.event.EventHandler'
-java_import 'javafx.scene.Scene'
-java_import 'javafx.scene.paint.Color'
-java_import 'javafx.scene.paint.CycleMethod'
-java_import 'javafx.scene.paint.RadialGradient'
-java_import 'javafx.scene.paint.Stop'
-java_import 'javafx.scene.Group'
-java_import 'javafx.scene.shape.ArcTo'
-java_import 'javafx.scene.shape.Circle'
-java_import 'javafx.scene.shape.Line'
-java_import 'javafx.scene.shape.LineTo'
-java_import 'javafx.scene.shape.MoveTo'
-java_import 'javafx.scene.shape.Path'
-java_import 'javafx.scene.shape.Rectangle'
-java_import 'javafx.scene.transform.Rotate'
-java_import 'javafx.stage.Stage'
-java_import 'javafx.util.Duration'
-
-# TODO: temporary manual bootstrap
-java_import 'org.jruby.ext.jrubyfx.JRubyFX'
-
 class AnalogClock
+  include JRubyFX
+
   def start(stage)
     stage.tap do |s|
       s.title, s.width, s.height = 'Analog Clock (Ruby)', 245, 265
@@ -113,4 +89,4 @@ class AnalogClock
   end
 end
  
-JRubyFX.start(AnalogClock.new)
+AnalogClock.start

@@ -1,25 +1,10 @@
 # Original version is for GroovyFX by @kazuchika
 # https://gist.github.com/1362259G
 
-require File.expand_path('./utils', File.dirname(__FILE__))
-
-java_import 'javafx.animation.FadeTransition'
-java_import 'javafx.animation.ParallelTransition'
-java_import 'javafx.animation.RotateTransition'
-java_import 'javafx.animation.ScaleTransition'
-java_import 'javafx.scene.Group'
-java_import 'javafx.scene.Scene'
-java_import 'javafx.scene.effect.SepiaTone'
-java_import 'javafx.scene.effect.GaussianBlur'
-java_import 'javafx.scene.media.MediaView'
-java_import 'javafx.scene.media.MediaPlayer'
-java_import 'javafx.scene.media.Media'
-java_import 'javafx.scene.paint.Color'
-java_import 'javafx.stage.Stage'
-java_import 'javafx.util.Duration'
+require 'jrubyfx'
 
 class MovieApp
-  include Utils
+  include JRubyFX
 
   def start(stage)
     source_url = 'http://www.mediacollege.com/video-gallery/testclips/20051210-w50s_56K.flv'
@@ -55,4 +40,4 @@ class MovieApp
   end
 end
 
-JRubyFX.start(MovieApp.new)
+MovieApp.start
