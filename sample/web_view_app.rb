@@ -8,8 +8,6 @@ class WebViewApp
   def start(stage)
     # nodes
     view = build(WebView) {
-      set_min_size(500, 400)
-      set_pref_size(500, 400)
       engine.load(DEFAULT_URL)
     }
     location = build(TextField, DEFAULT_URL)
@@ -24,19 +22,28 @@ class WebViewApp
       }
     )
     # layout
-    grid = build(GridPane, vgap: 3, hgap: 2) {
+    grid = build(GridPane, vgap: 2, hgap: 2) {
+      set_pref_size(500, 400)
       GridPane.set_constraints(location, 0, 0, 1, 1)
       GridPane.set_constraints(go,       1, 0)
-      GridPane.set_constraints(view,     0, 1, 1, 1, HPos::LEFT, VPos::CENTER)
+      GridPane.set_constraints(view,     0, 1, 2, 1, HPos::LEFT, VPos::CENTER)
       column_constraints <<
-        ColumnConstraints.new(100, 460, 500, Priority::ALWAYS, HPos::CENTER, true) <<
+        ColumnConstraints.new(100, 100, 999, Priority::ALWAYS, HPos::CENTER, true) <<
         ColumnConstraints.new( 40,  40,  40, Priority::NEVER,  HPos::CENTER, true)
       children << location << go << view
     }
-    root = build(Group) {
-      children << grid
-    }
-    with(stage, title: 'WebView', scene: build(Scene, root)).show
+    scene = Scene.new(build(Group) { children << grid })
+    scene.width_property.add_listener(
+      listener(ChangeListener, :changed) { |observable, old_value, new_value|
+        grid.pref_width = new_value
+      }
+    )
+    scene.height_property.add_listener(
+      listener(ChangeListener, :changed) { |observable, old_value, new_value|
+        grid.pref_height = new_value
+      }
+    )
+    with(stage, title: 'WebView', scene: scene).show
   end
 end
 
