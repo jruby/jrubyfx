@@ -2,9 +2,9 @@ package org.jruby.ext.jrubyfx;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.jruby.runtime.ThreadContext;
 import org.jruby.javasupport.Java;
 import org.jruby.javasupport.JavaObject;
+import org.jruby.runtime.ThreadContext;
 import org.jruby.runtime.builtin.IRubyObject;
 
 public class JRubyFX extends Application {
