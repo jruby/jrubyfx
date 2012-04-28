@@ -16,9 +16,15 @@
                     <encoding>UTF-8</encoding>
                 </source-folder>
                 <source-folder>
-                    <label>src</label>
+                    <label>Java Source</label>
                     <type>java</type>
                     <location>src</location>
+                    <encoding>UTF-8</encoding>
+                </source-folder>
+                <source-folder>
+                    <label>Ruby Source</label>
+                    <type>java</type>
+                    <location>lib</location>
                     <encoding>UTF-8</encoding>
                 </source-folder>
                 <source-folder>
@@ -48,8 +54,12 @@
             <view>
                 <items>
                     <source-folder style="packages">
-                        <label>src</label>
+                        <label>Java Source</label>
                         <location>src</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>Ruby Source</label>
+                        <location>lib</location>
                     </source-folder>
                     <source-folder style="packages">
                         <label>sample</label>
@@ -76,6 +86,10 @@
             </compilation-unit>
             <compilation-unit>
                 <package-root>sample</package-root>
+                <source-level>1.7</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>lib</package-root>
                 <source-level>1.7</source-level>
             </compilation-unit>
         </java-data>
