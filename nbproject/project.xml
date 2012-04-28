@@ -28,9 +28,9 @@
                     <encoding>UTF-8</encoding>
                 </source-folder>
                 <source-folder>
-                    <label>sample</label>
+                    <label>samples</label>
                     <type>java</type>
-                    <location>sample</location>
+                    <location>samples</location>
                     <encoding>UTF-8</encoding>
                 </source-folder>
             </folders>
@@ -62,8 +62,8 @@
                         <location>lib</location>
                     </source-folder>
                     <source-folder style="packages">
-                        <label>sample</label>
-                        <location>sample</location>
+                        <label>samples</label>
+                        <location>samples</location>
                     </source-folder>
                     <source-file>
                         <location>build.xml</location>
@@ -85,11 +85,11 @@
                 <source-level>1.7</source-level>
             </compilation-unit>
             <compilation-unit>
-                <package-root>sample</package-root>
+                <package-root>lib</package-root>
                 <source-level>1.7</source-level>
             </compilation-unit>
             <compilation-unit>
-                <package-root>lib</package-root>
+                <package-root>samples</package-root>
                 <source-level>1.7</source-level>
             </compilation-unit>
         </java-data>
