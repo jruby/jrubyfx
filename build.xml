@@ -19,7 +19,7 @@
   </target>
 
   <target name="clean">
-    <delete dir="target"/>
+    <delete dir="${target}"/>
   </target>
 
   <target depends="init" name="build" description="Compiles Java source files">
