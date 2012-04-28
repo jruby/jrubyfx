@@ -9,6 +9,7 @@ It should be found in `$JAVA_HOME/jre/lib/jfxrt.jar` for a suitable
 JDK/JRE.
 
 Then, run
+
     ant jar
 
 SAMPLES
@@ -21,5 +22,5 @@ TBD
 
 AUTHORS
 -------
-Hiroshi Nakamura
-Hiro Asari
+- Hiroshi Nakamura
+- Hiro Asari
