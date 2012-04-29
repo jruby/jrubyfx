@@ -15,10 +15,9 @@ Then, run
 SAMPLES
 -------
 
-
 LICENSE
 -------
-TBD
+See LICENSE.
 
 AUTHORS
 -------
