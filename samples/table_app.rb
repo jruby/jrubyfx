@@ -8,10 +8,10 @@ class TableApp
   def start(stage)
     # build
     tbl = create_table()
-    scene = build(Scene, build(Group) { children << tbl }, width: 640, height: 480)
+    scene = build(Scene, build(Group) { children << tbl })
     # adjust width/height
-    tbl.pref_width = scene.width
-    tbl.pref_height = scene.height
+    tbl.pref_width = 640
+    tbl.pref_height = 480
     scene.width_property.add_listener(
       listener(ChangeListener, :changed) { |observable, old_value, new_value|
         tbl.pref_width = new_value
@@ -37,7 +37,7 @@ class TableApp
     end
     tbl = build(TableView, column_resize_policy: TableView::CONSTRAINED_RESIZE_POLICY)
     26.times do |idx|
-      tbl.columns << build(TableColumn, width: 50, text: (?A.ord + idx).chr)
+      tbl.columns << build(TableColumn, min_width: 50, text: (?A.ord + idx).chr)
     end
     tbl.items = data
     tbl
