@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="build" name="jrubyfx">
+<project basedir="." default="jar" name="jrubyfx">
   <property file="build.properties"/>
   <property name="src.java" value="src"/>
   <property name="target" value="target"/>

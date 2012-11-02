@@ -10,7 +10,9 @@ JDK/JRE.
 
 Then, run
 
-    ant jar
+```text
+    ant
+```
 
 SAMPLES
 -------
