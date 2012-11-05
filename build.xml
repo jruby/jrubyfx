@@ -5,15 +5,55 @@
   <property name="target" value="target"/>
   <property name="target.classes" value="${target}/classes"/>
   <property name="jruby.jar" value="${jruby.home}/lib/jruby.jar"/>
-  <property name="version.source" value="1.7"/>
-  <property name="version.target" value="1.7"/>
 
-  <path id="build.classpath">
-    <pathelement location="${jruby.jar}"/>
-    <pathelement location="build_lib/jfxrt.jar"/>
-  </path>
+  <!-- Figure out whether javafx is installed in Java or is a separate
+       download.  There are three JavaFX install mechanisms: bundled (not
+       loaded on JVM startup), integrated (loaded automatically by Java),
+       and external (not part of Java install). -->
+  <target name="detect.javafx">
+    <condition property="javafx.install.bundled">
+      <matches pattern="1.7.[0123456789]+.(0[456789]|[1])" 
+               string="${java.version}" />
+    </condition>
 
-  <target name="init">
+    <condition property="javafx.install.integrated">
+      <matches pattern="[123456789].[89]" string="${java.version}"/>
+    </condition>
+
+    <condition property="javafx.install.external">
+      <and>
+        <not><isset property="javafx.install.bundled"/></not>
+        <not><isset property="javafx.install.integrated"/></not>
+      </and>
+    </condition>
+  </target>
+
+  <target name="setup.bundled.path" if="javafx.install.bundled">
+    <echo>Running Java 7 with JavaFx bundled...adding jar</echo>
+    <path id="build.classpath">
+      <pathelement location="${jruby.jar}"/>
+      <pathelement location="${java.home}/lib/jfxrt.jar"/>
+    </path>
+  </target>
+
+  <target name="setup.integrated.path" if="javafx.install.integrated">
+    <echo>Running Java 8 or later...integrated into Java</echo>
+    <path id="build.classpath">
+      <pathelement location="${jruby.jar}"/>
+    </path>
+  </target>
+
+  <target name="setup.external.path" if="javafx.install.external">
+    <echo>Pre-FX Java assuming javafx rt in ../javafx</echo>
+    <path id="build.classpath">
+      <pathelement location="${jruby.jar}"/>
+      <pathelement location="../javafx/rt/lib/jfxrt.jar"/>
+    </path>
+  </target>
+
+  <target name="setup.path" depends="setup.bundled.path,setup.integrated.path,setup.external.path"/>
+
+  <target name="init" depends="detect.javafx,setup.path">
     <mkdir dir="${target}"/>
     <mkdir dir="${target.classes}"/>
   </target>
@@ -23,7 +63,7 @@
   </target>
 
   <target depends="init" name="build" description="Compiles Java source files">
-    <javac debug="true" includeAntRuntime="false" destdir="${target.classes}" source="${version.source}" target="${version.target}">
+    <javac debug="true" includeAntRuntime="false" destdir="${target.classes}">
       <classpath refid="build.classpath"/>
       <src path="${src.java}"/>
     </javac>
