@@ -54,6 +54,7 @@ module JRubyFX
   java_import 'javafx.scene.transform.Rotate'
   java_import 'javafx.scene.web.WebView'
   java_import 'javafx.stage.Stage'
+  java_import 'javafx.stage.StageStyle'
   java_import 'javafx.util.Duration'
 
   module ClassUtils
@@ -70,25 +71,44 @@ module JRubyFX
     Java.org.jruby.ext.jrubyfx.JRubyFX.start(app)
   end
 
-  def with(obj, keyword_injection = nil, &block)
+  ##
+  # Set properties (e.g. setters) on the passed in object plus also invoke
+  # any block passed against this object.
+  # === Examples
+  #
+  #   with(grid, vgap: 2, hgap: 2) do
+  #     set_pref_size(500, 400)
+  #     children << location << go << view
+  #   end
+  #
+  def with(obj, properties = {}, &block)
     if block_given?
       obj.extend(JRubyFX)
       obj.instance_eval(&block)
     end
-    if keyword_injection
-      keyword_injection.each do |k, v|
-        obj.send(k.to_s + '=', v)
-      end
-    end
+    properties.each_pair { |k, v| obj.send(k.to_s + '=', v) }
     obj
   end
 
+  ##
+  # Create "build" a new JavaFX instance with the provided class and
+  # set properties (e.g. setters) on that new instance plus also invoke
+  # any block passed against this new instance
+  # === Examples
+  #
+  #   grid = build(GridPane, vgap: 2, hgap: 2) do
+  #     set_pref_size(500, 400)
+  #     children << location << go << view
+  #   end
+  #
   def build(klass, *args, &block)
-    if !args.empty? and Hash === args.last
-      keyword_injection = args.pop
+    if !args.empty? and args.last.respond_to? :each_pair
+      properties = args.pop 
+    else 
+      properties = {}
     end
-    obj = klass.new(*args)
-    with(obj, keyword_injection, &block)
+
+    with(klass.new(*args), properties, &block)
   end
 
   def listener(mod, name, &block)
