@@ -54,6 +54,7 @@ module JRubyFX
   java_import 'javafx.scene.transform.Rotate'
   java_import 'javafx.scene.web.WebView'
   java_import 'javafx.stage.Stage'
+  java_import 'javafx.stage.StageStyle'
   java_import 'javafx.util.Duration'
 
   module ClassUtils
