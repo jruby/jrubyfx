@@ -30,9 +30,10 @@
 
   <target name="setup.bundled.path" if="javafx.install.bundled">
     <echo>Running Java 7 with JavaFx bundled...adding jar</echo>
+    <property name="javafx.dir" value="${java.home}/lib"/>
     <path id="build.classpath">
       <pathelement location="${jruby.jar}"/>
-      <pathelement location="${java.home}/lib/jfxrt.jar"/>
+      <pathelement location="${javafx.dir}/jfxrt.jar"/>
     </path>
   </target>
 
@@ -45,9 +46,10 @@
 
   <target name="setup.external.path" if="javafx.install.external">
     <echo>Pre-FX Java assuming javafx rt in ../javafx</echo>
+    <property name="javafx.dir" value="../javafx/rt/lib"/>
     <path id="build.classpath">
       <pathelement location="${jruby.jar}"/>
-      <pathelement location="../javafx/rt/lib/jfxrt.jar"/>
+      <pathelement location="${javafx.dir}/jfxrt.jar"/>
     </path>
   </target>
 
@@ -75,5 +77,17 @@
         <attribute name="Built-By" value="${user.name}"/>
       </manifest>
     </jar>
+  </target>
+
+  <target name="run" depends="build">
+    <input message="Enter path to jrubyfx script:" addproperty="javafx.prog" 
+           defaultvalue="samples/AnalogClock.rb"/>
+    <echo message="-I lib:${javafx.dir} ${javafx.prog}"/>
+    <java classname="org.jruby.Main" fork="true" maxmemory="1024M" 
+          failonerror="true">
+      <classpath refid="build.classpath"/>
+      <sysproperty key="jruby.home" value="${jruby.home}"/>
+      <arg line="-I lib:${javafx.dir} ${javafx.prog}"/>
+    </java>
   </target>
 </project>
