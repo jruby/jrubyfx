@@ -32,3 +32,5 @@ AUTHORS
 -------
 - Hiroshi Nakamura
 - Hiro Asari
+- Thomas E Enebo
+
