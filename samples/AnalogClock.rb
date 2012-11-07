@@ -6,11 +6,15 @@ class AnalogClock
   include JRubyFX
 
   def start(stage)
+    stage.initStyle StageStyle::TRANSPARENT
     stage.tap do |s|
       s.title, s.width, s.height = 'Analog Clock (Ruby)', 245, 265
       s.resizable = false
       group = Group.new.tap {|g| g.children << create_content }
-      s.scene = Scene.new(group)
+      s.scene = Scene.new(group).tap do |sc|
+        sc.fill = nil # Completes transparency
+        sc.set_on_key_pressed { |e| java.lang.System.exit(0) }
+      end
       s.show
     end
   end

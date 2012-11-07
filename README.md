@@ -10,10 +10,19 @@ JDK/JRE.
 
 Then, run
 
-    ant jar
+```text
+    ant
+```
 
 SAMPLES
 -------
+
+To run samples:
+
+```text
+   ant run
+```
+At the prompt specify the .rb file representing your jrubyfx script to execute.
 
 LICENSE
 -------
