@@ -1,6 +1,18 @@
 require 'java'
 require 'jfxrt.jar'
 require 'jrubyfx.jar'
+require 'jrubyfx/utils/common_utils'
+require 'jrubyfx/core_ext/node'
+require 'jrubyfx/core_ext/circle'
+require 'jrubyfx/core_ext/group'
+require 'jrubyfx/core_ext/labeled'
+require 'jrubyfx/core_ext/path'
+require 'jrubyfx/core_ext/scene'
+require 'jrubyfx/core_ext/shape'
+require 'jrubyfx/core_ext/stage'
+require 'jrubyfx/core_ext/stop'
+require 'jrubyfx/core_ext/timeline'
+require 'jrubyfx/core_ext/xy_chart'
 
 module JRubyFX
   java_import 'javafx.animation.FadeTransition'
@@ -19,6 +31,10 @@ module JRubyFX
   java_import 'javafx.geometry.VPos'
   java_import 'javafx.scene.Group'
   java_import 'javafx.scene.Scene'
+  java_import 'javafx.scene.chart.CategoryAxis'
+  java_import 'javafx.scene.chart.LineChart'
+  java_import 'javafx.scene.chart.NumberAxis'
+  java_import 'javafx.scene.chart.XYChart'
   java_import 'javafx.scene.control.Button'
   java_import 'javafx.scene.control.Label'
   java_import 'javafx.scene.control.TableColumn'
@@ -57,6 +73,8 @@ module JRubyFX
   java_import 'javafx.stage.StageStyle'
   java_import 'javafx.util.Duration'
 
+  include JRubyFX::Utils::CommonUtils
+
   module ClassUtils
     def start(*args)
       JRubyFX.start(new(*args))
@@ -82,11 +100,13 @@ module JRubyFX
   #   end
   #
   def with(obj, properties = {}, &block)
+    populate_properties(obj, properties)
+
     if block_given?
       obj.extend(JRubyFX)
       obj.instance_eval(&block)
     end
-    properties.each_pair { |k, v| obj.send(k.to_s + '=', v) }
+    
     obj
   end
 
@@ -102,13 +122,8 @@ module JRubyFX
   #   end
   #
   def build(klass, *args, &block)
-    if !args.empty? and args.last.respond_to? :each_pair
-      properties = args.pop 
-    else 
-      properties = {}
-    end
-
-    with(klass.new(*args), properties, &block)
+    args, properties = split_args_from_properties(*args)
+    with(klass.new(*attempt_conversion(klass, :new, *args)), properties, &block)
   end
 
   def listener(mod, name, &block)

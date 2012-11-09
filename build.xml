@@ -81,7 +81,7 @@
 
   <target name="run" depends="build">
     <input message="Enter path to jrubyfx script:" addproperty="javafx.prog" 
-           defaultvalue="samples/AnalogClock.rb"/>
+           defaultvalue="samples/analog_clock.rb"/>
     <echo message="-I lib:${javafx.dir} ${javafx.prog}"/>
     <java classname="org.jruby.Main" fork="true" maxmemory="1024M" 
           failonerror="true">

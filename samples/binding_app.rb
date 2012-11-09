@@ -21,7 +21,7 @@ class BindingApp
     root = build(Group) {
       children << build(VBox) {
         children <<
-          build(HBox) { children << Label.new('Price: ') << price_input } <<
+          build(HBox) { children << build(Label, 'Price: ', text_fill: :red) << price_input } <<
           build(HBox) { children << Label.new('Tax rate: ') << tax_input } <<
           total_lbl
       }
