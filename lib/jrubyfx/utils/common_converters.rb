@@ -38,7 +38,12 @@ module JRubyFX
           # FIXME: Better error reporting on many things which can fail
           i = 0
           values.inject([]) do |s, value|
-            s << CONVERTERS[converter[i]].call(value)
+            conv = converter[i]
+            if conv.kind_of? Proc
+              s << conv.call(value)
+            else
+              s << CONVERTERS[converter[i]].call(value)
+            end
             i += 1
             s
           end
