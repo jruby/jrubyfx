@@ -13,10 +13,10 @@ class AnalogClock
 
         group(translate_x: width / 2.0, translate_y: height / 2.0) do
           circle(:radius => radius + 20.0) { # outer
-            fill radial_gradient(0, 0, 0, 0, radius + 20, false, CycleMethod::NO_CYCLE, [stop(0.9, :silver), stop(1, :black)])
+            fill radial_gradient(0, 0, 0, 0, radius + 20, false, :no_cycle, [stop(0.9, :silver), stop(1, :black)])
           }
           circle(:radius => radius + 10.0) do  # inner
-            fill radial_gradient(0, 0, 0, 0, 90, false, CycleMethod::NO_CYCLE, [stop(0.0, :white), stop(1, :cadet_blue)])
+            fill radial_gradient(0, 0, 0, 0, 90, false, :no_cycle, [stop(0.0, :white), stop(1, :cadet_blue)])
           end
 
           0.upto(11) do |i|
