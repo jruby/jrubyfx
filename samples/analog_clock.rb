@@ -28,21 +28,21 @@ class AnalogClock
           
           circle(5, :black)
           
-          path(fill: :black, id: 'minutes') do
+          path(fill: :black, id: 'minute') do
             move_to(4, -4)
             arc_to(-1, -1, 0, -4, -4, false, false)
             line_to(0, -radius)
             rotate
           end
           
-          path(fill: :black, id: 'hours') do
+          path(fill: :black, id: 'hour') do
             move_to(4, -4)
             arc_to(-1, -1, 0, -4, -4, false, false)
             line_to(0, -radius/4*3)
             rotate
           end
           
-          line(stroke: :red, end_y: -radius-3, stroke_width: 2, id: 'seconds') do
+          line(stroke: :red, end_y: -radius-3, stroke_width: 2, id: 'second') do
             rotate
           end
         end
@@ -54,9 +54,9 @@ class AnalogClock
 
   def refresh_time
     t = Time.now
-    @stage['#seconds'].transforms[0].angle = t.sec * 6
-    @stage['#minutes'].transforms[0].angle = t.min * 6
-    @stage['#hours'].transforms[0].angle = t.hour * 30 + t.min * 0.5
+    @stage['#second'].transforms[0].angle = t.sec * 6
+    @stage['#minute'].transforms[0].angle = t.min * 6
+    @stage['#hour'].transforms[0].angle = t.hour * 30 + t.min * 0.5
   end
  
   def play
