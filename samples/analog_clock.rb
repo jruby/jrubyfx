@@ -32,18 +32,18 @@ class AnalogClock
             move_to(4, -4)
             arc_to(-1, -1, 0, -4, -4, false, false)
             line_to(0, -radius)
-            get_transforms << Rotate.new
+            rotate
           end
           
           path(fill: :black, id: 'hours') do
             move_to(4, -4)
             arc_to(-1, -1, 0, -4, -4, false, false)
             line_to(0, -radius/4*3)
-            get_transforms << Rotate.new
+            rotate
           end
           
           line(stroke: :red, end_y: -radius-3, stroke_width: 2, id: 'seconds') do
-            get_transforms << Rotate.new
+            rotate
           end
         end
       end.set_on_key_pressed { |e| java.lang.System.exit(0) }
