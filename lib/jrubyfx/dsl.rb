@@ -87,7 +87,7 @@ module JRubyFX
       'border_pane' => Java::javafx.scene.layout.BorderPane,
       'flow_pane' => Java::javafx.scene.layout.FlowPane,
       'grid_pane' => Java::javafx.scene.layout.GridPane,
-      'hbox' => Java::javafx.scene.layout.VBox,
+      'hbox' => Java::javafx.scene.layout.HBox,
       'stack_pane' => Java::javafx.scene.layout.StackPane,
       'tile_pane' => Java::javafx.scene.layout.TilePane,
       'vbox' => Java::javafx.scene.layout.VBox,
