@@ -1,5 +1,9 @@
-class Java::javafx::scene::Group
-  java_import Java::javafx.scene.shape.Shape
+require 'jrubyfx/dsl'
+
+class Java::javafx::scene::Parent
+  java_import Java::javafx.scene.Node
+
+  include JRubyFX::DSL
 
   ##
   # Add to child list without need to ask for children
@@ -13,7 +17,7 @@ class Java::javafx::scene::Group
   # PathElement.
   def method_missing(name, *args, &block)
     super.tap do |obj|
-      add(obj) if obj.kind_of? Shape
+      add(obj) if obj.kind_of? Node
     end
   end
 end
