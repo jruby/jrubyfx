@@ -85,6 +85,7 @@
     <echo message="-I lib:${javafx.dir} ${javafx.prog}"/>
     <java classname="org.jruby.Main" fork="true" maxmemory="1024M" 
           failonerror="true">
+      <!-- <jvmArg value="-javaagent:ScenicView.jar"/> -->
       <classpath refid="build.classpath"/>
       <sysproperty key="jruby.home" value="${jruby.home}"/>
       <arg line="-I lib:${javafx.dir} ${javafx.prog}"/>
