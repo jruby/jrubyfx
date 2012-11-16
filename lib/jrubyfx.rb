@@ -1,5 +1,19 @@
 require 'java'
-require 'jfxrt.jar'
+
+# Load built-in JavaFX support or potentially override or define for Java 6
+# if you specify JAVAFX_JRE_DIR environment variable.
+begin
+  $: << ENV['JAVAFX_JRE_DIR'] if ENV['JAVAFX_JRE_DIR']
+  $: << ENV_JAVA['sun.boot.library.path']
+  require 'jfxrt.jar'
+rescue LoadError
+  fail <<EOS
+Unable to load JavaFX runtime.  Please either use Java 7u4 or higher
+or set environment variable JAVAFX_JRE_DIR to specify the directory
+where jxfrt.jar can be found.
+EOS
+end
+
 require 'jrubyfx.jar'
 require 'jrubyfx/utils/common_utils'
 require 'jrubyfx/core_ext/node'
@@ -67,6 +81,8 @@ module JRubyFX
   java_import 'javafx.scene.shape.MoveTo'
   java_import 'javafx.scene.shape.Path'
   java_import 'javafx.scene.shape.Rectangle'
+  java_import 'javafx.scene.shape.StrokeType'
+  java_import 'javafx.scene.shape.StrokeLineJoin'
   java_import 'javafx.scene.text.Font'
   java_import 'javafx.scene.text.Text'
   java_import 'javafx.scene.transform.Rotate'
