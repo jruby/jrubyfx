@@ -95,9 +95,7 @@ module JRubyFX
 
   module ClassUtils
     def start(*args)
-      obj = new *args
-      JRubyFX.start obj
-      obj
+      JRubyFX.start(new(*args))
     end
   end
 
