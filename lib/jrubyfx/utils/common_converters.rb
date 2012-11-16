@@ -7,14 +7,35 @@ module JRubyFX
       NAME_TO_COLORS = {
         'black' => Color::BLACK,
         'blue' => Color::BLUE,
+        'cyan' => Color::CYAN,
         'cadet_blue' => Color::CADETBLUE,
         'dark_blue' => Color::DARKBLUE,
+        'dark_cyan' => Color::DARKCYAN,
+        'dark_green' => Color::DARKGREEN,
+        'dark_magenta' => Color::DARKMAGENTA,
+        'dark_red' => Color::DARKRED,
+        'dark_yellow' => Color.web('0xc0c000'),
         'green' => Color::GREEN,
+        'light_blue' => Color::LIGHTBLUE,
+        'light_cyan' => Color::LIGHTCYAN,
+        'light_green' => Color::LIGHTGREEN,
+        'light_magenta' => Color.web('0xffc0ff'),
+        'light_red' => Color.web('0xffc0c0'),
+        'light_yellow' => Color::LIGHTYELLOW,
+        'magenta' => Color::MAGENTA,
         'red' => Color::RED,
         'silver' => Color::SILVER,
         'yellow' => Color::YELLOW,
         'white' => Color::WHITE,
       }
+
+      ##
+      # Generate a converter for a map of supplied values.
+      def map_converter(map)
+        lambda do |value|
+          map.key?(value) ? map[value] : value
+        end
+      end
 
       ##
       # Allows you to specify you want a converter method created for the
