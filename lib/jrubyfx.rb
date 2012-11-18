@@ -39,6 +39,7 @@ module JRubyFX
   java_import 'javafx.animation.RotateTransition'
   java_import 'javafx.animation.ScaleTransition'
   java_import 'javafx.animation.Timeline'
+  java_import 'javafx.application.Platform'
   java_import 'javafx.beans.property.SimpleDoubleProperty'
   java_import 'javafx.beans.value.ChangeListener'
   java_import 'javafx.collections.FXCollections'
@@ -126,6 +127,13 @@ module JRubyFX
     end
     
     obj
+  end
+
+  ##
+  # Convenience method so anything can safely schedule to run on JavaFX
+  # main thread.
+  def run_later(&block)
+    Platform.run_later &block
   end
 
   ##
