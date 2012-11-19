@@ -29,6 +29,7 @@ require 'jrubyfx/core_ext/stage'
 require 'jrubyfx/core_ext/stop'
 require 'jrubyfx/core_ext/timeline'
 require 'jrubyfx/core_ext/xy_chart'
+require 'jrubyfx/core_ext/border_pane'
 
 module JRubyFX
   java_import 'javafx.animation.FadeTransition'

@@ -108,5 +108,7 @@ module JRubyFX
 
       build(clazz, *args, &block)
     end
+
+    alias :node_method_missing :method_missing
   end
 end
