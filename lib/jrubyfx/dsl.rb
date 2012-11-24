@@ -57,6 +57,7 @@ module JRubyFX
       'separator' => Java::javafx.scene.control.Separator,
       'slider' => Java::javafx.scene.control.Slider,
       'split_pane' => Java::javafx.scene.control.SplitPane,
+      'table_column' => Java::javafx.scene.control.TableColumn,
       'table_view' => Java::javafx.scene.control.TableView,
       'tab_pane' => Java::javafx.scene.control.TabPane,
       'text_area' => Java::javafx.scene.control.TextArea,
@@ -110,6 +111,8 @@ module JRubyFX
       'key_frame' => Java::javafx.animation.KeyFrame,
       'key_value' => Java::javafx.animation.KeyValue,
       'timeline' => Java::javafx.animation.Timeline,
+      # observable structs
+      'observable_array_list' => proc { |*args| FXCollections.observable_array_list(*args) },
     }
 
     def method_missing(name, *args, &block)

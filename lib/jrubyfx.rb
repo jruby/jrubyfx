@@ -14,6 +14,8 @@ where jxfrt.jar can be found.
 EOS
 end
 
+# FIXME: core_ext could be loaded on demand through dsl API if we only had
+# dsl API.
 require 'jrubyfx.jar'
 require 'jrubyfx/utils/common_utils'
 require 'jrubyfx/core_ext/node'
@@ -27,6 +29,7 @@ require 'jrubyfx/core_ext/scene'
 require 'jrubyfx/core_ext/shape'
 require 'jrubyfx/core_ext/stage'
 require 'jrubyfx/core_ext/stop'
+require 'jrubyfx/core_ext/table_view'
 require 'jrubyfx/core_ext/timeline'
 require 'jrubyfx/core_ext/xy_chart'
 require 'jrubyfx/core_ext/border_pane'
@@ -140,7 +143,9 @@ module JRubyFX
   ##
   # Create "build" a new JavaFX instance with the provided class and
   # set properties (e.g. setters) on that new instance plus also invoke
-  # any block passed against this new instance
+  # any block passed against this new instance.  This also can build a proc
+  # or lambda form in which case the return value of the block will be what 
+  # is used to set the additional properties on.
   # === Examples
   #
   #   grid = build(GridPane, vgap: 2, hgap: 2) do
@@ -148,9 +153,18 @@ module JRubyFX
   #     children << location << go << view
   #   end
   #
+  #  build(proc { Foo.new }, vgap: 2, hgap: 2)
+  #
   def build(klass, *args, &block)
     args, properties = split_args_from_properties(*args)
-    with(klass.new(*attempt_conversion(klass, :new, *args)), properties, &block)
+
+    obj = if klass.kind_of? Proc
+            klass.call(*args)
+          else
+            klass.new(*attempt_conversion(klass, :new, *args))
+          end
+
+    with(obj, properties, &block)
   end
 
   def listener(mod, name, &block)
@@ -164,4 +178,5 @@ module JRubyFX
     end
     obj
   end
+  module_function :listener
 end
