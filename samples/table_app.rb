@@ -1,46 +1,29 @@
 # Original version is here: http://drdobbs.com/blogs/java/231903245 (BindingEx1)
-
 require 'jrubyfx'
 
 class TableApp
   include JRubyFX
 
   def start(stage)
-    # build
-    tbl = create_table()
-    scene = build(Scene, build(Group) { children << tbl })
-    # adjust width/height
-    tbl.pref_width = 640
-    tbl.pref_height = 480
-    scene.width_property.add_listener(
-      listener(ChangeListener, :changed) { |observable, old_value, new_value|
-        tbl.pref_width = new_value
-      }
-    )
-    scene.height_property.add_listener(
-      listener(ChangeListener, :changed) { |observable, old_value, new_value|
-        tbl.pref_height = new_value
-      }
-    )
-    # show
-    stage.title = 'My Table'
-    stage.scene = scene
-    stage.show
-  rescue
-    p $!
-  end
-    
-  def create_table
-    data = FXCollections.observableArrayList
-    100.times do |idx|
-      data << idx.to_s
-    end
-    tbl = build(TableView, column_resize_policy: TableView::CONSTRAINED_RESIZE_POLICY)
-    26.times do |idx|
-      tbl.columns << build(TableColumn, min_width: 50, text: (?A.ord + idx).chr)
-    end
-    tbl.items = data
-    tbl
+    with(stage, title: 'MyTable') do
+      layout_scene do
+        group do
+          table_view(id: 'table', pref_width: 640, pref_height: 480,
+                     column_resize_policy: TableView::CONSTRAINED_RESIZE_POLICY) do
+            26.times do |i|
+              table_column(min_width: 50, text: (?A.ord + i).chr)
+            end
+            set_items observable_array_list((1..100).to_a.map(&:to_s))
+          end
+        end
+      end
+    end.show
+    stage.scene.width_property.add_change_listener do |obs, ovalue, new_value|
+      stage['#table'].pref_width = new_value
+    end 
+    stage.scene.height_property.add_change_listener do |obs, ovalue, new_value|
+      stage['#table'].pref_height = new_value
+    end 
   end
 end
 
