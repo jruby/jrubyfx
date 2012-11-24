@@ -6,6 +6,16 @@ module JRubyFX
     include JRubyFX
     include JRubyFX::Utils::CommonUtils
 
+    module ClassUtils
+      def register_type(name, type)
+        JRubyFX::DSL::NAME_TO_CLASSES[name.to_s] = type
+      end
+    end
+
+    def self.included(mod)
+      mod.extend(JRubyFX::DSL::ClassUtils)
+    end
+
     # FIXME: This should be broken up with nice override for each type of 
     # fx object so we can manually create static overrides.
     NAME_TO_CLASSES = {
