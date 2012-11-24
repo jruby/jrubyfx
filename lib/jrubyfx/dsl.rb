@@ -108,11 +108,43 @@ module JRubyFX
       'xy_chart_series' => Java::javafx.scene.chart.XYChart::Series,
       'xy_chart_data' => Java::javafx.scene.chart.XYChart::Data,
       # animation
+      'fade_transition' => Java::javafx.animation.FadeTransition,
+      'fill_transition' => Java::javafx.animation.FillTransition,
       'key_frame' => Java::javafx.animation.KeyFrame,
       'key_value' => Java::javafx.animation.KeyValue,
+      'parallel_transition' => Java::javafx.animation.ParallelTransition,
+      'path_transition' => Java::javafx.animation.PathTransition,
+      'pause_transition' => Java::javafx.animation.PauseTransition,
+      'rotate_transition' => Java::javafx.animation.RotateTransition,
+      'scale_transition' => Java::javafx.animation.ScaleTransition,
+      'sequential_transition' => Java::javafx.animation.SequentialTransition,
+      'stroke_transition' => Java::javafx.animation.StrokeTransition,
       'timeline' => Java::javafx.animation.Timeline,
+      'translate_transition' => Java::javafx.animation.TranslateTransition,
       # observable structs
       'observable_array_list' => proc { |*args| FXCollections.observable_array_list(*args) },
+      # media
+      'media' => Java::javafx.scene.media.Media,
+      'media_player' => Java::javafx.scene.media.MediaPlayer,
+      'media_view' => Java::javafx.scene.media.MediaView,
+      # effects
+      'blend' => Java::javafx.scene.effect.Blend,
+      'bloom' => Java::javafx.scene.effect.Bloom,
+      'box_blur' => Java::javafx.scene.effect.BoxBlur,
+      'color_adjust' => Java::javafx.scene.effect.ColorAdjust,
+      'color_input' => Java::javafx.scene.effect.ColorInput,
+      'displacement_map' => Java::javafx.scene.effect.DisplacementMap,
+      'drop_shadow' => Java::javafx.scene.effect.DropShadow,
+      'gaussian_blur' => Java::javafx.scene.effect.GaussianBlur,
+      'glow' => Java::javafx.scene.effect.Glow,
+      'image_input' => Java::javafx.scene.effect.ImageInput,
+      'inner_shadow' => Java::javafx.scene.effect.InnerShadow,
+      'lighting' => Java::javafx.scene.effect.Lighting,
+      'motion_blur' => Java::javafx.scene.effect.MotionBlur,
+      'perspective_transform' => Java::javafx.scene.effect.PerspectiveTransform,
+      'reflection' => Java::javafx.scene.effect.Reflection,
+      'sepia_tone' => Java::javafx.scene.effect.SepiaTone,
+      'shadow' => Java::javafx.scene.effect.Shadow,
     }
 
     def method_missing(name, *args, &block)
