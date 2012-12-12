@@ -154,7 +154,7 @@ class FXMLController
     if name == :initialize
       add_method_signature :initialize, [Void::TYPE, URL, ResourceBundle]
     else
-      @fxml_controller_next_actio.call(name) unless @fxml_controller_next_action == nil
+      @fxml_controller_next_action.call(name) unless @fxml_controller_next_action == nil
     end
     @fxml_controller_next_action = nil
   end
