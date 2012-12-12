@@ -19,7 +19,7 @@ end
 class TestController < FXMLController
   fxml_linked :AnchorPane
   def initialize(url = nil, resources = nil)
-    if url == nil and resources == nil
+    if url == nil
       # ruby new
       puts "ruby new"
     else
@@ -28,20 +28,18 @@ class TestController < FXMLController
     end
   end
   
-  fxml_event
-  def click(stuff)
+  fxml_event :click do 
     puts "Clicked Green"
   end
   
-  fxml_event
-  def clickbl(stuff)
+  fxml_event :clickbl do
     puts "Clicked Black"
     p @AnchorPane
   end
   
-  fxml_event
-  def clickre(stuff)
+  fxml_event :clickre do |arg|
     puts "Clicked Red"
+    p arg
   end
 end
 

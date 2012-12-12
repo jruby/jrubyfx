@@ -134,7 +134,7 @@ module JRubyFX
   end
 end
 
-
+# inherit from this class for FXML controllers
 class FXMLController
   java_import 'javafx.event.ActionEvent'
   java_import 'java.lang.Void'
@@ -143,26 +143,28 @@ class FXMLController
   
   include Java.javafx.fxml.Initializable #interfaces
   
-  def self.fxml_event()
-    @fxml_controller_next_action = lambda { |name|
+  # block construct to define methods and automatically add action events
+  def self.fxml_event(name, &block)
+    class_eval do
+      #must define this way so block executes in class scope, not static scope
+      define_method(name, block)
       #the first arg is the return type, the rest are params
       add_method_signature name, [Void::TYPE, ActionEvent]
-    }
+    end
   end
   
+  # when initialize method is created, add java signature
   def self.method_added(name)
     if name == :initialize
       add_method_signature :initialize, [Void::TYPE, URL, ResourceBundle]
-    else
-      @fxml_controller_next_action.call(name) unless @fxml_controller_next_action == nil
     end
-    @fxml_controller_next_action = nil
   end
   
+  # FXML linked variable names by class
   @@fxml_linked_args = {}
   
   def self.fxml_linked(name)
-    
+    # we must distinguish between subclasses, hence self.
     (@@fxml_linked_args[self] ||= []) << name
   end
   
@@ -170,6 +172,7 @@ class FXMLController
   def scene=(s)
     @scene = s
     (@@fxml_linked_args[self.class] ||= []).each do |name|
+      #set each instance variable from the lookup on the scene
       instance_variable_set("@#{name}".to_sym, s.lookup(name.to_s))
     end
   end
@@ -179,6 +182,7 @@ class FXMLController
     @scene
   end
   
+  #magic self-java-ifying new call
   def self.new_java
     self.become_java!
     self.new
