@@ -31,7 +31,7 @@ class TestControllerj
   #TODO: SOOPER HACK!!!! BAD BAD BAD
   #@java_aliases = {} if @java_aliases == nil
   #java_alias :initialize, :initialize
-  add_method_signature :click, [Java.javafx.event.ActionEvent]
+  add_method_signature :click, [java.lang.Void::TYPE,Java.javafx.event.ActionEvent]
   def initialize(fxmlFileLocation, resources)
     puts "initalized"
     p fxmlFileLocation
