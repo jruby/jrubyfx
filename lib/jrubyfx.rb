@@ -1,6 +1,7 @@
 require 'java'
 require 'jfxrt.jar'
 require 'jrubyfx.jar'
+require 'jruby/core_ext'
 
 module JRubyFX
   java_import 'javafx.animation.FadeTransition'

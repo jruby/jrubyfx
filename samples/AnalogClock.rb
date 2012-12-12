@@ -1,7 +1,6 @@
 # Original version is here: https://gist.github.com/1358093
 
 require 'jrubyfx'
-require 'jruby/core_ext'
 
 class AnalogClock
   include JRubyFX
