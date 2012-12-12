@@ -59,7 +59,9 @@ module JRubyFX
 
   module ClassUtils
     def start(*args)
+    puts "jrubyfx.rb:class.start(#{args.inspect})@" + Time.now.usec.to_s
       JRubyFX.start(new(*args))
+    puts "jrubyfx.rb:class.start-ed(#{args.inspect})@" + Time.now.usec.to_s
     end
   end
 
@@ -68,7 +70,17 @@ module JRubyFX
   end
 
   def self.start(app)
+    puts "jrubyfx.rb:self.start("+app.inspect+")@" + Time.now.usec.to_s
     Java.org.jruby.ext.jrubyfx.JRubyFX.start(app)
+    puts "jrubyfx.rb:self.start-ed("+app.inspect+")@" + Time.now.usec.to_s
+  end
+  
+  def load_fxml(filename, ctrlr)
+    fx = Java.javafx.fxml.FXMLLoader.new()
+    fx.location = Java.java.net.URL.new(
+        Java.java.net.URL.new("file:"), filename)
+    fx.controller = ctrlr
+    return fx.load
   end
 
   ##

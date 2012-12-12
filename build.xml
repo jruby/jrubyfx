@@ -4,7 +4,9 @@
   <property name="src.java" value="src"/>
   <property name="target" value="target"/>
   <property name="target.classes" value="${target}/classes"/>
-  <property name="jruby.jar" value="${jruby.home}/lib/jruby.jar"/>
+  <property name="jruby.home" value="/home/patrick/.rvm/src/jruby-1.7.0/"/>
+  <property name="jruby.jar" value="/home/patrick/.rvm/src/jruby-1.7.0//lib/jruby.jar"/>
+  <echo>${jruby.jar}</echo>
 
   <!-- Figure out whether javafx is installed in Java or is a separate
        download.  There are three JavaFX install mechanisms: bundled (not
@@ -80,8 +82,8 @@
   </target>
 
   <target name="run" depends="build">
-    <input message="Enter path to jrubyfx script:" addproperty="javafx.prog" 
-           defaultvalue="samples/AnalogClock.rb"/>
+    <property name="javafx.prog" 
+           value="samples/AnalogClock.rb"/>
     <echo message="-I lib:${javafx.dir} ${javafx.prog}"/>
     <java classname="org.jruby.Main" fork="true" maxmemory="1024M" 
           failonerror="true">

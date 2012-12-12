@@ -80,7 +80,7 @@
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/3">
             <compilation-unit>
                 <package-root>src</package-root>
-                <classpath mode="compile">build_lib/jfxrt.jar:../jruby/lib/jruby.jar</classpath>
+                <classpath mode="compile">/usr/lib/jvm/java-7-oracle/jre/lib/jfxrt.jar:/home/patrick/.rvm/src/jruby-1.7.0/lib/jruby.jar</classpath>
                 <built-to>lib/jrubyfx.jar</built-to>
                 <source-level>1.7</source-level>
             </compilation-unit>
