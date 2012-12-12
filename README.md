@@ -1,6 +1,6 @@
-JRubyFX
+JRubyFXML
 =======
-JRuby wrapper for JavaFX 2.x.
+JRuby wrapper for JavaFX 2.x with FXML support (based on JRubyFX)
 
 BUILD
 -----
@@ -26,11 +26,12 @@ At the prompt specify the .rb file representing your jrubyfx script to execute.
 
 LICENSE
 -------
-See LICENSE.
+LGPLv3+. See LICENSE.
 
 AUTHORS
 -------
-- Hiroshi Nakamura
-- Hiro Asari
-- Thomas E Enebo
+- Patrick Plenefisch
+- Hiroshi Nakamura (JRubyFX)
+- Hiro Asari (JRubyFX)
+- Thomas E Enebo (JRubyFX)
 
