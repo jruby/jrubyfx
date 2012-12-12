@@ -14,6 +14,7 @@ module JRubyFX
   java_import 'javafx.beans.property.SimpleDoubleProperty'
   java_import 'javafx.beans.value.ChangeListener'
   java_import 'javafx.collections.FXCollections'
+  java_import 'javafx.event.ActionEvent'
   java_import 'javafx.event.EventHandler'
   java_import 'javafx.geometry.HPos'
   java_import 'javafx.geometry.VPos'
@@ -59,9 +60,7 @@ module JRubyFX
 
   module ClassUtils
     def start(*args)
-    puts "jrubyfx.rb:class.start(#{args.inspect})@" + Time.now.usec.to_s
       JRubyFX.start(new(*args))
-    puts "jrubyfx.rb:class.start-ed(#{args.inspect})@" + Time.now.usec.to_s
     end
   end
 
@@ -70,9 +69,7 @@ module JRubyFX
   end
 
   def self.start(app)
-    puts "jrubyfx.rb:self.start("+app.inspect+")@" + Time.now.usec.to_s
     Java.org.jruby.ext.jrubyfx.JRubyFX.start(app)
-    puts "jrubyfx.rb:self.start-ed("+app.inspect+")@" + Time.now.usec.to_s
   end
   
   def load_fxml(filename, ctrlr)

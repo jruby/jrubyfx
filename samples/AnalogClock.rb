@@ -7,47 +7,34 @@ class AnalogClock
   include JRubyFX
 
   def start(stage)
-    
-    #puts caller
-    #stage.initStyle StageStyle::TRANSPARENT
-    #scene = load_fxml_scene("Sample.fxml")
     stage.tap do |s|
       s.title, s.width, s.height = 'This is RUBY!!!!', 600,600
-      #s.resizable = false
-      #group = Group.new.tap {|g| g.children << create_content }
       s.scene = Scene.new(load_fxml "#{File.dirname(__FILE__)}/Sample.fxml", TestController.newInstance)
-      #.tap do |sc|
-      #  sc.fill = nil # Completes transparency
-        #sc.set_on_key_pressed { |e| java.lang.System.exit(0) }
-      #end
       s.show
     end
   end
 
 end
 
-class TestControllerj
-  include Java.javafx.fxml.Initializable
-  #TODO: SOOPER HACK!!!! BAD BAD BAD
-  #@java_aliases = {} if @java_aliases == nil
-  #java_alias :initialize, :initialize
-  add_method_signature :click, [java.lang.Void::TYPE,Java.javafx.event.ActionEvent]
+class TestController_ruby
+  java_import 'javafx.event.ActionEvent'
+  java_import 'java.lang.Void'
+  java_import 'java.net.URL'
+  java_import 'java.util.ResourceBundle'
+  
+  include Java.javafx.fxml.Initializable #interfaces
+  
+  #the first arg is the return type, the rest are params
+  add_method_signature :initialize, [Void::TYPE, URL, ResourceBundle]
   def initialize(fxmlFileLocation, resources)
     puts "initalized"
-    p fxmlFileLocation
-    p resources
   end
   
+  add_method_signature :click, [Void::TYPE, ActionEvent]
   def click(stuff)
-    p "Clicked"
-    p stuff
+    puts "Clicked"
   end
 end
-# TestController."click")
- TestControllerj.add_method_signature("initialize", [java.lang.Void::TYPE, Java.java.net.URL, Java.java.util.ResourceBundle])
-    
-TestController = TestControllerj.become_java!
-p TestController.declared_methods
- #   puts "AnalogClock.rb:raw start()@" + Time.now.usec.to_s
+
+TestController = TestController_ruby.become_java!
 AnalogClock.start
- #   puts "AnalogClock.rb:raw start()-ed@" + Time.now.usec.to_s
