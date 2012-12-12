@@ -1,6 +1,8 @@
 package org.jruby.ext.jrubyfx;
 
 import java.io.Console;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Date;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -46,5 +48,31 @@ public class JRubyFX extends Application {
         if (handler.respondsTo(methodName)) {
             handler.callMethod(ctx(), methodName);
         }
+    }
+    
+    public static void p(Object o)
+    {
+        System.out.println(o);
+    }
+    
+    public static void reflexDump(Object o)
+    {
+        Class c = o.getClass();
+        p("Fields:");
+        for (Field f : c.getDeclaredFields())
+        {
+            p(f.getName());
+        }
+        p("------------\n");
+        p("Methods:");
+        for (Method f : c.getDeclaredMethods())
+        {
+            p(f.getName());
+            for (Class p : f.getParameterTypes())
+            {
+                p("\t" + p.getSimpleName());
+            }
+        }
+        p("------------\n");
     }
 }

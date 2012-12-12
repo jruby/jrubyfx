@@ -142,7 +142,6 @@ class FXMLController
   
   include Java.javafx.fxml.Initializable #interfaces
   
-  
   def self.fxml_event()
     @fxml_controller_next_action = lambda { |name|
       #the first arg is the return type, the rest are params
@@ -157,5 +156,30 @@ class FXMLController
       @fxml_controller_next_action.call(name) unless @fxml_controller_next_action == nil
     end
     @fxml_controller_next_action = nil
+  end
+  
+  @@fxml_linked_args = {}
+  
+  def self.fxml_linked(name)
+    
+    (@@fxml_linked_args[self] ||= []) << name
+  end
+  
+  # set scene object (setter), and update fxml-injected values
+  def scene=(s)
+    @scene = s
+    (@@fxml_linked_args[self.class] ||= []).each do |name|
+      instance_variable_set("@#{name}".to_sym, s.lookup(name.to_s))
+    end
+  end
+  
+  # return the scene object (getter)
+  def scene()
+    @scene
+  end
+  
+  def self.new_java
+    self.become_java!
+    self.new
   end
 end

@@ -9,16 +9,24 @@ class AnalogClock
   def start(stage)
     stage.tap do |s|
       s.title, s.width, s.height = 'This is RUBY!!!!', 600,600
-      s.scene = Scene.new(load_fxml "#{File.dirname(__FILE__)}/Sample.fxml", TestController.newInstance)
+      ctrlr = TestController.new_java
+      ctrlr.scene = s.scene = Scene.new(load_fxml "#{File.dirname(__FILE__)}/Sample.fxml", ctrlr)
       s.show
     end
   end
 
 end
 
-class TestController_ruby < FXMLController
-  def initialize(fxmlFileLocation, resources)
-    puts "initalized"
+class TestController < FXMLController
+  fxml_linked :AnchorPane
+  def initialize(url = nil, resources = nil)
+    if url == nil and resources == nil
+      # ruby new
+      puts "ruby new"
+    else
+      # Java interface call
+      puts "initalized"
+    end
   end
   
   fxml_event
@@ -29,6 +37,7 @@ class TestController_ruby < FXMLController
   fxml_event
   def clickbl(stuff)
     puts "Clicked Black"
+    p @AnchorPane
   end
   
   fxml_event
@@ -37,5 +46,4 @@ class TestController_ruby < FXMLController
   end
 end
 
-TestController = TestController_ruby.become_java!
 AnalogClock.start
