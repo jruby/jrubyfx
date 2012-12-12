@@ -15,8 +15,8 @@
             <GridPane layoutX="314.0" layoutY="60.0" prefHeight="38.0" prefWidth="198.0">
               <children>
                 <Button onAction="#click" id="" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-border-radius: 5 0 0 5;&#10;-fx-background-radius: 5 0 0 5;&#10;-fx-background-color: green;&#10;" text="Forward" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-border-radius: 0 5 5 0;&#10;-fx-background-radius: 0 5 5 0;&#10;-fx-background-color: red;" text="Reverse" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-border-radius: 0;&#10;-fx-background-radius: 0;&#10;-fx-background-color: black" text="Off" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <Button onAction="#clickre" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-border-radius: 0 5 5 0;&#10;-fx-background-radius: 0 5 5 0;&#10;-fx-background-color: red;" text="Reverse" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <Button onAction="#clickbl" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-border-radius: 0;&#10;-fx-background-radius: 0;&#10;-fx-background-color: black" text="Off" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="0" />
               </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

@@ -75,7 +75,7 @@ module JRubyFX
   def load_fxml(filename, ctrlr)
     fx = Java.javafx.fxml.FXMLLoader.new()
     fx.location = Java.java.net.URL.new(
-        Java.java.net.URL.new("file:"), filename)
+      Java.java.net.URL.new("file:"), filename)
     fx.controller = ctrlr
     return fx.load
   end
@@ -130,5 +130,32 @@ module JRubyFX
       end
     end
     obj
+  end
+end
+
+
+class FXMLController
+  java_import 'javafx.event.ActionEvent'
+  java_import 'java.lang.Void'
+  java_import 'java.net.URL'
+  java_import 'java.util.ResourceBundle'
+  
+  include Java.javafx.fxml.Initializable #interfaces
+  
+  
+  def self.fxml_event()
+    @fxml_controller_next_action = lambda { |name|
+      #the first arg is the return type, the rest are params
+      add_method_signature name, [Void::TYPE, ActionEvent]
+    }
+  end
+  
+  def self.method_added(name)
+    if name == :initialize
+      add_method_signature :initialize, [Void::TYPE, URL, ResourceBundle]
+    else
+      @fxml_controller_next_actio.call(name) unless @fxml_controller_next_action == nil
+    end
+    @fxml_controller_next_action = nil
   end
 end

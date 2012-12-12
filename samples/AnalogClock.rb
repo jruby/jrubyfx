@@ -16,23 +16,24 @@ class AnalogClock
 
 end
 
-class TestController_ruby
-  java_import 'javafx.event.ActionEvent'
-  java_import 'java.lang.Void'
-  java_import 'java.net.URL'
-  java_import 'java.util.ResourceBundle'
-  
-  include Java.javafx.fxml.Initializable #interfaces
-  
-  #the first arg is the return type, the rest are params
-  add_method_signature :initialize, [Void::TYPE, URL, ResourceBundle]
+class TestController_ruby < FXMLController
   def initialize(fxmlFileLocation, resources)
     puts "initalized"
   end
   
-  add_method_signature :click, [Void::TYPE, ActionEvent]
+  fxml_event
   def click(stuff)
-    puts "Clicked"
+    puts "Clicked Green"
+  end
+  
+  fxml_event
+  def clickbl(stuff)
+    puts "Clicked Black"
+  end
+  
+  fxml_event
+  def clickre(stuff)
+    puts "Clicked Red"
   end
 end
 
