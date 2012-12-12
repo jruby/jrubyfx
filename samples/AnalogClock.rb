@@ -1,8 +1,7 @@
-# Original version is here: https://gist.github.com/1358093
 
-require 'jrubyfx'
+require 'jrubyfxml'
 
-class AnalogClock
+class SimpleFXMLDemo
   include JRubyFX
 
   def start(stage)
@@ -43,4 +42,4 @@ class TestController < FXMLController
   end
 end
 
-AnalogClock.start
+SimpleFXMLDemo.start
