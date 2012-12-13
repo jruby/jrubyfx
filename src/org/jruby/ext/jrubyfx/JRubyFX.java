@@ -26,8 +26,10 @@ import org.jruby.runtime.builtin.IRubyObject;
 
 public class JRubyFX extends Application {
 
+    // There must only be one JavaFX application. this is the ruby handler
     public static IRubyObject handler;
 
+    // ruby calls this with the class that will handle stuff
     public static void start(IRubyObject obj) {
         if (obj == null) {
             throw new NullPointerException("Application required");

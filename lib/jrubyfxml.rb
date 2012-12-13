@@ -15,8 +15,23 @@ GNU General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
+;;;# What are the ;;;  and ### for?
+;;;# lines that start with ;;; will be removed when we are embedded
+;;;# lines that start with ### will be uncommented when we are embedded
+;;;if $0 == __FILE__ && ARGV.length >=2 && ARGV[0] == "jar-ify"
+  ;;;  lines = File.readlines(__FILE__)
+  ;;;  lines = lines.find_all { |line| !line.strip.match(/^;;;/) }
+  ;;;  File.open(ARGV[1], "w+") { |io| lines.each { |line| io.write line } }
+  ;;;  exit 0
+  ;;;end
+
 require 'java'
-require 'jrubyfx.jar'
+;;;begin
+  ;;;  require 'jrubyfx.jar'
+  ;;;rescue LoadError
+  ;;;  # lets pray its embedded
+  ;;;  puts "[Warning] jrubyfx.jar not found - assuming its already loaded"
+  ;;;end
 require 'jruby/core_ext'
 
 #not sure if I like this hackyness, but is nice for just running scripts.

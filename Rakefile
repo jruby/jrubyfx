@@ -1,4 +1,4 @@
-task :default => [:jar, :run]
+task :default => [:gem_jar, :run]
 
 javac = ENV['javac'] || "javac"
 jar = ENV['jar'] || "jar"
@@ -33,7 +33,7 @@ task :build => :loadJFX do
   #end
 end
 
-task :jar => :build do
+task :gem_jar => :build do
   cd target_classes
   sh "#{jar} cf '../../lib/#{output_jar}' 'org/jruby/ext/jrubyfx/JRubyFX.class'"
   cd "../../"
@@ -43,12 +43,29 @@ task :run do
   ruby "-I lib '#{main_script}'"
 end
 
-task :gem => [:clean, :jar] do
+task :gem => [:clean, :gem_jar] do
   sh "gem build jrubyfxml.gemspec"
 end
 
 task :install => :gem do
   sh "gem install jrubyfxml-*-java.gem"
+end
+
+desc "Create a full jar with embedded JRuby and given script (via main_script ENV var)"
+task :full_jar do
+  #copy jruby jar file in, along with script and our rb files
+  cp get_jruby_jar, "#{target_classes}/dist.jar"
+  cp main_script, "#{target_classes}/jar-bootstrap.rb"
+  ruby "lib/jrubyfxml.rb jar-ify #{target_classes}/jrubyfxml.rb"
+  # edit the jar
+  cd target_classes
+  sh "#{jar} ufe 'dist.jar' org.jruby.JarBootstrapMain *"
+  chmod 0775, 'dist.jar'
+  cd "../../"
+end
+desc "Create a full jar and run it"
+task :run_full => :full_jar do
+  sh "java -jar #{target_classes}/dist.jar"
 end
 
 def get_jfx_path
