@@ -224,3 +224,29 @@ class FXMLController
     self.new
   end
 end
+
+class JRubyFXApp < Java.javafx.application.Application
+  
+  java_import 'java.lang.Void'
+  def self.run
+    #Java.javafx.application.Application::launch
+    Java.org.jruby.ext.jrubyfx.JRubyFX.start(JRubyFXApp.java_class)
+  end
+  add_method_signature :start, [Void::TYPE, Java.javafx.stage.Stage]
+  def start(stage)
+    puts "Started with"
+    p stage
+  end
+  def initialize(arg)
+    puts "initlize"
+    p arg
+  end
+  
+  def newInstance(arg)
+    p arg
+    puts "iniited"
+  end
+end
+
+JRubyFXApp.become_java!
+JRubyFXApp.run

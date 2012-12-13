@@ -30,12 +30,15 @@ public class JRubyFX extends Application {
     public static IRubyObject handler;
 
     // ruby calls this with the class that will handle stuff
-    public static void start(IRubyObject obj) {
-        if (obj == null) {
-            throw new NullPointerException("Application required");
-        }
-        handler = obj;
-        Application.launch((String[]) null);
+    public static void start(Object obj) {
+        System.out.println(obj.getClass().getCanonicalName());
+        Application.launch((Class<Application>)obj, (String[]) null);
+        return;
+//        if (obj == null) {
+//            throw new NullPointerException("Application required");
+//        }
+//        handler = obj;
+//        Application.launch((String[]) null);
     }
 
     @Override
