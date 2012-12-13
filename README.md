@@ -4,25 +4,21 @@ JRuby wrapper for JavaFX 2.x with FXML support (based on JRubyFX)
 
 BUILD
 -----
-The default ant script expects the JavaFX runtime JAR in build_lib.
-It should be found in `$JAVA_HOME/jre/lib/jfxrt.jar` for a suitable
-JDK/JRE.
-
-Then, run
+Build is done using rake/gem. You obviously need JRuby, Java 1.7 (with JavaFX) also.
 
 ```text
-    ant
+    rake gem install
 ```
+Once the gem is installed, just run a ruby file that uses it normally.
 
 SAMPLES
 -------
 
-To run samples:
+To run sample:
 
 ```text
-   ant run
+   jruby samples/SimpleFXMLDemo.rb
 ```
-At the prompt specify the .rb file representing your jrubyfx script to execute.
 
 LICENSE
 -------

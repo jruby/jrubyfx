@@ -43,6 +43,14 @@ task :run do
   ruby "-I lib '#{main_script}'"
 end
 
+task :gem => [:clean, :jar] do
+  sh "gem build jrubyfxml.gemspec"
+end
+
+task :install => :gem do
+  sh "gem install jrubyfxml-*-java.gem"
+end
+
 def get_jfx_path
   #remove platform-specific bits. TODO: arm
   #NOTE: this is also in jrubyfxml.rb
