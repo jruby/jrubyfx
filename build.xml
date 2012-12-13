@@ -83,7 +83,7 @@
 
   <target name="run" depends="build">
     <property name="javafx.prog" 
-           value="samples/AnalogClock.rb"/>
+           value="samples/SimpleFXMLDemo.rb"/>
     <echo message="-I lib:${javafx.dir} ${javafx.prog}"/>
     <java classname="org.jruby.Main" fork="true" maxmemory="1024M" 
           failonerror="true">
