@@ -3,7 +3,7 @@ task :default => [:jar, :run]
 javac = ENV['javac'] || "javac"
 jar = ENV['jar'] || "jar"
 src_java = ENV['src_java'] || "src"
-target = ENV['target'] || "bin"
+target = ENV['target'] || "target"
 target_classes = "#{target}/classes"
 jfx_path = ENV['jfx_path'] || "../javafx/rt/lib"
 output_jar = ENV['output_jar'] || "jrubyfx.jar"
@@ -40,11 +40,12 @@ task :jar => :build do
 end
 
 task :run do
-  ruby "-I lib:#{get_jfx_path} '#{main_script}'"
+  ruby "-I lib '#{main_script}'"
 end
 
 def get_jfx_path
   #remove platform-specific bits. TODO: arm
+  #NOTE: this is also in jrubyfxml.rb
   Java.java.lang.System.getProperties["sun.boot.library.path"].gsub(/[\/\\][ix345678_]+$/, "")
 end
 

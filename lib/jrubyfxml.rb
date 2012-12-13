@@ -16,9 +16,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 require 'java'
-require 'jfxrt.jar'
 require 'jrubyfx.jar'
 require 'jruby/core_ext'
+
+#not sure if I like this hackyness, but is nice for just running scripts.
+#This is also in the rakefile
+require ((Java.java.lang.System.getProperties["java.runtime.version"].match(/^1.7.[0123456789]+.(0[456789]|[1])/) != nil) ?
+    Java.java.lang.System.getProperties["sun.boot.library.path"].gsub(/[\/\\][ix345678_]+$/, "") + "/" : "") + 'jfxrt.jar'
 
 module JRubyFX
   java_import 'javafx.animation.FadeTransition'

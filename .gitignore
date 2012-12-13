@@ -2,3 +2,4 @@ build_lib
 lib/jrubyfx.jar
 target
 /nbproject/private/
+*.gem
