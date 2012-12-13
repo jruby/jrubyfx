@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.platform    = 'java'
   s.authors     = ["Patrick Plenefisch"]
   s.email       = ["simonpatp@gmail.com"]
-  s.homepage    = "http://none"
+  s.homepage    = "https://github.com/byteit101/JRubyFXML"
   s.summary     = "JavaFX for JRuby with FXML"
   s.description = "Enables FXML controller use in pure ruby"
  
