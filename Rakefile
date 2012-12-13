@@ -1,12 +1,13 @@
 task :default => [:jar, :run]
 
-javac = "javac"
-jar = "jar"
-src_java = "src"
-target = "target"
+javac = ENV['javac'] || "javac"
+jar = ENV['jar'] || "jar"
+src_java = ENV['src_java'] || "src"
+target = ENV['target'] || "bin"
 target_classes = "#{target}/classes"
-jfx_path = "../javafx/rt/lib"
-output_jar = "jrubyfx.jar"
+jfx_path = ENV['jfx_path'] || "../javafx/rt/lib"
+output_jar = ENV['output_jar'] || "jrubyfx.jar"
+main_script = ENV['main_script'] || 'samples/SimpleFXMLDemo.rb'
 
 task :loadJFX do
   jversion = Java.java.lang.System.getProperties["java.runtime.version"]
@@ -39,8 +40,7 @@ task :jar => :build do
 end
 
 task :run do
-  puts Java.java.lang.System.getProperties["java.runtime.version"]
-  ruby "-I lib:#{get_jfx_path} samples/SimpleFXMLDemo.rb"
+  ruby "-I lib:#{get_jfx_path} '#{main_script}'"
 end
 
 def get_jfx_path
