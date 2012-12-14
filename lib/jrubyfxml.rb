@@ -26,12 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ;;;end
 
 require 'java'
-;;;begin
-  ;;;  require 'jrubyfx.jar'
-  ;;;rescue LoadError
-  ;;;  # lets pray its embedded
-  ;;;  puts "[Warning] jrubyfx.jar not found - assuming its already loaded"
-  ;;;end
 require 'jruby/core_ext'
 
 #not sure if I like this hackyness, but is nice for just running scripts.
@@ -39,7 +33,7 @@ require 'jruby/core_ext'
 require ((Java.java.lang.System.getProperties["java.runtime.version"].match(/^1.7.[0123456789]+.(0[456789]|[1])/) != nil) ?
     Java.java.lang.System.getProperties["sun.boot.library.path"].gsub(/[\/\\][ix345678_]+$/, "") + "/" : "") + 'jfxrt.jar'
 
-module JRubyFX
+class FXMLApplication < Java.javafx.application.Application
   java_import 'javafx.animation.FadeTransition'
   java_import 'javafx.animation.Interpolator'
   java_import 'javafx.animation.KeyFrame'
@@ -95,18 +89,9 @@ module JRubyFX
   java_import 'javafx.stage.StageStyle'
   java_import 'javafx.util.Duration'
 
-  module ClassUtils
-    def start(*args)
-      JRubyFX.start(new(*args))
-    end
-  end
-
-  def self.included(mod)
-    mod.extend(ClassUtils)
-  end
-
-  def self.start(app)
-    Java.org.jruby.ext.jrubyfx.JRubyFX.start(app)
+  def self.launch(*args)
+    #call our custom launcher to avoid a java shim
+    JavaFXImpl::Launcher.launch_app(self, *args)
   end
   
   def load_fxml(filename, ctrlr)
@@ -225,28 +210,88 @@ class FXMLController
   end
 end
 
-class JRubyFXApp < Java.javafx.application.Application
+# Due to certain bugs in JRuby 1.7 (namely some newInstance mapping bugs), we
+# are forced to re-create the Launcher if we want a pure ruby wrapper
+module JavaFXImpl
   
-  java_import 'java.lang.Void'
-  def self.run
-    #Java.javafx.application.Application::launch
-    Java.org.jruby.ext.jrubyfx.JRubyFX.start(JRubyFXApp.java_class)
-  end
-  add_method_signature :start, [Void::TYPE, Java.javafx.stage.Stage]
-  def start(stage)
-    puts "Started with"
-    p stage
-  end
-  def initialize(arg)
-    puts "initlize"
-    p arg
+  #JRuby, you make me have to create real classes!
+  class FinisherInterface
+    include Java.com.sun.javafx.application.PlatformImpl::FinishListener
+    
+    def initialize(&block)
+      @exitBlock = block
+    end
+    
+    def idle(someBoolean)
+      @exitBlock.call
+    end
+    
+    def exitCalled()
+      @exitBlock.call
+    end
   end
   
-  def newInstance(arg)
-    p arg
-    puts "iniited"
+  class Launcher
+    java_import 'java.util.concurrent.atomic.AtomicBoolean'
+    java_import 'java.util.concurrent.CountDownLatch'
+    java_import 'java.lang.IllegalStateException'
+    
+    @@launchCalled = AtomicBoolean.new(false) # Atomic boolean go boom on bikini
+    
+    def self.launch_app(classObj, args=nil)
+      #prevent multiple!
+      if @@launchCalled.getAndSet(true)
+        throw IllegalStateException.new "Application launch must not be called more than once"
+      end
+      
+      #create a java thread, and run the real worker, and wait till it exits
+      count_down_latch = CountDownLatch.new(1)
+      thread = Java.java.lang.Thread.new do
+        launch_app_from_thread(classObj)
+        count_down_latch.countDown
+      end
+      thread.name = "JavaFX-Launcher"
+      thread.start
+      count_down_latch.await
+    end
+    
+    def self.launch_app_from_thread(classO)
+      #platformImpl startup?
+      finished_latch = CountDownLatch.new(1)
+      Java.com.sun.javafx.application.PlatformImpl.startup do
+        finished_latch.countDown
+      end
+      finished_latch.await
+      
+      #listeners - for the end
+      finished_latch = CountDownLatch.new(1)
+      
+      # register for shutdown
+      Java.com.sun.javafx.application.PlatformImpl.addListener(FinisherInterface.new {
+        # this is called when the stage exits
+        finished_latch.countDown
+      })
+      
+      app = classO.new
+      # do we need to register the params if there are none?
+      app.init()
+      
+      #RUN! and hope it works!
+      Java.com.sun.javafx.application.PlatformImpl.runAndWait do
+        stage = Java.javafx.stage.Stage.new
+        stage.impl_setPrimary(true)
+        app.start(stage)
+        # no countDown here because its up top... yes I know
+      end
+      
+      #wait for stage exit
+      finished_latch.await
+      
+      # call stop on the interface
+      app.stop()
+      
+      #kill the toolkit and exit
+      Java.com.sun.javafx.application.PlatformImpl.tkExit
+    end
   end
 end
-
-JRubyFXApp.become_java!
-JRubyFXApp.run

@@ -18,8 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'jrubyfxml'
 
-class SimpleFXMLDemo
-  include JRubyFX
+class SimpleFXMLDemo < FXMLApplication
 
   def start(stage)
     stage.tap do |s|
@@ -29,7 +28,6 @@ class SimpleFXMLDemo
       s.show
     end
   end
-
 end
 
 class TestController < FXMLController
@@ -59,4 +57,4 @@ class TestController < FXMLController
   end
 end
 
-SimpleFXMLDemo.start
+SimpleFXMLDemo.launch
