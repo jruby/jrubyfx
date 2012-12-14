@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 =begin
 JRubyFXML - Write JavaFX and FXML in Ruby
 Copyright (C) 2012 Patrick Plenefisch
@@ -16,22 +17,46 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
+# Require JRubyFXML library so we can get FXMLApplication and FXMLController
 require 'jrubyfxml'
 
-class SimpleFXMLDemo < FXMLApplication
-
+# Inherit from FXMLApplication to create our Application
+class SimpleFXMLApplication < FXMLApplication
+  # we must override start to get a stage on application initialization
   def start(stage)
-    stage.tap do |s|
-      s.title, s.width, s.height = 'This is RUBY!!!!', 600,600
-      ctrlr = TestController.new_java
-      ctrlr.scene = s.scene = Scene.new(load_fxml "#{File.dirname(__FILE__)}/Sample.fxml", ctrlr)
-      s.show
-    end
+    # assign the title, width, and height
+    stage.title = "Simple JavaFX FXML App in pure Ruby"
+    stage.width = 620
+    stage.height = 480
+    
+    # create a new instance of our controller. Note that you MUST use new_java
+    # to ensure that it is really a java object. new_java is specific to 
+    # the FXMLController class
+    ctrlr = SimpleFXMLController.new_java
+    
+    # Load the FXML file. Hopefully in future versions you won't need this
+    fxml = load_fxml("#{File.dirname(__FILE__)}/Sample.fxml", ctrlr)
+    
+    # Create a new Scene with our parsed FXML
+    stage.scene = Scene.new(fxml)
+    
+    # Give our controller the scene also. THIS IS CRITICAL if you have fx:id
+    # properties. Not setting this prevents the fx:id's from binding properly
+    ctrlr.scene = stage.scene
+    
+    # finally, show our app
+    stage.show
   end
 end
 
-class TestController < FXMLController
+# Inherit from FXMLController to create our controller for this FXML file.
+# You will need one Controller per FXML file under normal conditions.
+class SimpleFXMLController < FXMLController
+  
+  # Here we declare that AnchorPane is a fx:id in the file
   fxml_linked :AnchorPane
+  
+  # Initialize must have url and resources as it is actually an interface method
   def initialize(url = nil, resources = nil)
     if url == nil
       # ruby new
@@ -42,6 +67,8 @@ class TestController < FXMLController
     end
   end
   
+  # This is how events are defined in code.
+  # This will be called on onAction="#click"
   fxml_event :click do 
     puts "Clicked Green"
   end
@@ -51,10 +78,12 @@ class TestController < FXMLController
     p @AnchorPane
   end
   
+  # If you want to capture the ActionEvent object, just request it like this
   fxml_event :clickre do |arg|
     puts "Clicked Red"
     p arg
   end
 end
 
-SimpleFXMLDemo.launch
+# Launch our application!
+SimpleFXMLApplication.launch
