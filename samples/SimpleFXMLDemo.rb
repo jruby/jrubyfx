@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env jruby
 =begin
 JRubyFXML - Write JavaFX and FXML in Ruby
 Copyright (C) 2012 Patrick Plenefisch
@@ -54,7 +54,7 @@ end
 class SimpleFXMLController < FXMLController
   
   # Here we declare that AnchorPane is a fx:id in the file
-  fxml_linked :AnchorPane
+  fx_id :AnchorPane
   
   # Initialize must have url and resources as it is actually an interface method
   def initialize(url = nil, resources = nil)
@@ -68,18 +68,18 @@ class SimpleFXMLController < FXMLController
   end
   
   # This is how events are defined in code.
-  # This will be called on onAction="#click"
-  fxml_event :click do 
+  # This will be called from FXML by onAction="#click"
+  on_action :click do 
     puts "Clicked Green"
   end
   
-  fxml_event :clickbl do
+  on_action :clickbl do
     puts "Clicked Black"
     p @AnchorPane
   end
   
   # If you want to capture the ActionEvent object, just request it like this
-  fxml_event :clickre do |arg|
+  on_action :clickre do |arg|
     puts "Clicked Red"
     p arg
   end

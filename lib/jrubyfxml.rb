@@ -165,7 +165,7 @@ class FXMLController
   include Java.javafx.fxml.Initializable #interfaces
   
   # block construct to define methods and automatically add action events
-  def self.fxml_event(name, &block)
+  def self.on_action(name, &block)
     class_eval do
       #must define this way so block executes in class scope, not static scope
       define_method(name, block)
@@ -184,7 +184,7 @@ class FXMLController
   # FXML linked variable names by class
   @@fxml_linked_args = {}
   
-  def self.fxml_linked(name)
+  def self.fx_id(name)
     # we must distinguish between subclasses, hence self.
     (@@fxml_linked_args[self] ||= []) << name
   end
