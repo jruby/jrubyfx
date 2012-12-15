@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;# lines that start with ### will be uncommented when we are embedded
 ;;;if $0 == __FILE__ && ARGV.length >=2 && ARGV[0] == "jar-ify"
   ;;;  lines = File.readlines(__FILE__)
-  ;;;  lines = lines.find_all { |line| !line.strip.match(/^;;;/) }
+  ;;;  lines = lines.find_all { |line| !line.strip.match(/^;;;/) }.map {|line| line.gsub(/^([ \t]*)###/,'\1') }
   ;;;  File.open(ARGV[1], "w+") { |io| lines.each { |line| io.write line } }
   ;;;  exit 0
   ;;;end
@@ -31,7 +31,7 @@ require 'jruby/core_ext'
 #not sure if I like this hackyness, but is nice for just running scripts.
 #This is also in the rakefile
 require ((Java.java.lang.System.getProperties["java.runtime.version"].match(/^1.7.[0123456789]+.(0[456789]|[1])/) != nil) ?
-    Java.java.lang.System.getProperties["sun.boot.library.path"].gsub(/[\/\\][ix345678_]+$/, "") + "/" : "") + 'jfxrt.jar'
+    Java.java.lang.System.getProperties["sun.boot.library.path"].gsub(/[\/\\][amdix345678_]+$/, "") + "/" : "") + 'jfxrt.jar'
 
 class FXMLApplication < Java.javafx.application.Application
   java_import 'javafx.animation.FadeTransition'
@@ -88,6 +88,10 @@ class FXMLApplication < Java.javafx.application.Application
   java_import 'javafx.stage.Stage'
   java_import 'javafx.stage.StageStyle'
   java_import 'javafx.util.Duration'
+
+  def self.in_jar?()
+    $LOAD_PATH.inject(false) { |res,i| res || i.include?("jruby-complete.jar!")}
+  end
 
   def self.launch(*args)
     #call our custom launcher to avoid a java shim

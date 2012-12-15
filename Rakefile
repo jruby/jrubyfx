@@ -55,7 +55,7 @@ end
 def get_jfx_path
   #remove platform-specific bits. TODO: arm
   #NOTE: this is also in jrubyfxml.rb
-  Java.java.lang.System.getProperties["sun.boot.library.path"].gsub(/[\/\\][ix345678_]+$/, "")
+  Java.java.lang.System.getProperties["sun.boot.library.path"].gsub(/[\/\\][amdix345678_]+$/, "")
 end
 
 def get_jruby_jar
