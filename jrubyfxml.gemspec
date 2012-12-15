@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "jrubyfxml"
-  s.version     = "0.3"
+  s.version     = "0.4"
   s.platform    = 'java'
   s.authors     = ["Patrick Plenefisch"]
   s.email       = ["simonpatp@gmail.com"]

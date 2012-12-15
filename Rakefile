@@ -25,7 +25,7 @@ task :build => :clean do
 end
 
 task :install => :build do
-  sh "gem install jrubyfxml-*-java.gem"
+  sh "gem install jrubyfxml-0.4-java.gem"
 end
 
 task :download_jruby_jar do
