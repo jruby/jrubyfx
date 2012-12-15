@@ -243,15 +243,25 @@ module JavaFXImpl
         throw IllegalStateException.new "Application launch must not be called more than once"
       end
       
-      #create a java thread, and run the real worker, and wait till it exits
-      count_down_latch = CountDownLatch.new(1)
-      thread = Java.java.lang.Thread.new do
-        launch_app_from_thread(classObj)
-        count_down_latch.countDown
+      begin
+        #create a java thread, and run the real worker, and wait till it exits
+        count_down_latch = CountDownLatch.new(1)
+        thread = Java.java.lang.Thread.new do
+          begin
+            launch_app_from_thread(classObj)
+          rescue => ex
+            puts "Exception starting app:"
+            p ex
+          end
+          count_down_latch.countDown #always count down
+        end
+        thread.name = "JavaFX-Launcher"
+        thread.start
+        count_down_latch.await
+      rescue => ex
+        puts "Exception launching JavaFX-Launcher thread:"
+        p ex
       end
-      thread.name = "JavaFX-Launcher"
-      thread.start
-      count_down_latch.await
     end
     
     def self.launch_app_from_thread(classO)
@@ -262,6 +272,18 @@ module JavaFXImpl
       end
       finished_latch.await
       
+      begin
+        launch_app_after_platform(classO) #try to launch the app
+      rescue => ex
+        puts "Error running Application:"
+        p ex
+      end
+      
+      #kill the toolkit and exit
+      Java.com.sun.javafx.application.PlatformImpl.tkExit
+    end
+    
+    def self.launch_app_after_platform(classO)
       #listeners - for the end
       finished_latch = CountDownLatch.new(1)
       
@@ -270,27 +292,32 @@ module JavaFXImpl
         # this is called when the stage exits
         finished_latch.countDown
       })
-      
+    
       app = classO.new
       # do we need to register the params if there are none?
       app.init()
       
+      error = false
       #RUN! and hope it works!
       Java.com.sun.javafx.application.PlatformImpl.runAndWait do
-        stage = Java.javafx.stage.Stage.new
-        stage.impl_setPrimary(true)
-        app.start(stage)
-        # no countDown here because its up top... yes I know
+        begin
+          stage = Java.javafx.stage.Stage.new
+          stage.impl_setPrimary(true)
+          app.start(stage)
+          # no countDown here because its up top... yes I know
+        rescue => ex
+          puts "Exception running Application:"
+          p ex
+          error = true
+          finished_latch.countDown # but if we fail, we need to unlatch it
+        end
       end
-      
+        
       #wait for stage exit
       finished_latch.await
       
       # call stop on the interface
-      app.stop()
-      
-      #kill the toolkit and exit
-      Java.com.sun.javafx.application.PlatformImpl.tkExit
+      app.stop() unless error
     end
   end
 end
