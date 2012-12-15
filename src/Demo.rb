@@ -34,7 +34,8 @@ class SimpleFXMLApplication < FXMLApplication
     # the FXMLController class
     ctrlr = SimpleFXMLController.new_java
     
-    # Load the FXML file with our controller
+    # Load the FXML file with our controller. NEVER make this an absoloute path,
+    # or Java will fail to load it if we are in a jar
     fxml = load_fxml("Demo.fxml", ctrlr)
     
     # Create a new Scene with our parsed FXML

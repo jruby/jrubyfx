@@ -11,19 +11,32 @@ jruby_version = ENV['jruby_version'] || JRUBY_VERSION || "1.7.1" #if they want s
 
 base_dir = File.dirname(__FILE__)
 cd base_dir
+main_script = nil if main_script == "nil"
 
+desc "Clean all build artifacts except #{dist}/jruby-complete.jar"
 task :clean do
   rm_rf target
+  FileList["*java.gem"].each do |file|
+    rm file
+  end
 end
 
+desc "Clean all build artifacts INCLUDING #{dist}/jruby-complete.jar"
+task :clean_jruby => :clean do
+  rm_rf dist
+end
+
+desc "Run a script without installing the gem"
 task :run do
   ruby "-I lib '#{main_script||'src/Demo.rb'}'"
 end
 
+desc "Build the gem"
 task :build => :clean do
   sh "gem build jrubyfxml.gemspec"
 end
 
+desc "Build and install the gem"
 task :install => :build do
   sh "gem install jrubyfxml-0.4-java.gem"
 end
