@@ -90,7 +90,7 @@ class FXMLApplication < Java.javafx.application.Application
   java_import 'javafx.util.Duration'
 
   def self.in_jar?()
-    $LOAD_PATH.inject(false) { |res,i| res || i.include?("jruby-complete.jar!")}
+    $LOAD_PATH.inject(false) { |res,i| res || i.include?(".jar!/META-INF/jruby.home/lib/ruby/")}
   end
 
   def self.launch(*args)
@@ -100,8 +100,12 @@ class FXMLApplication < Java.javafx.application.Application
   
   def load_fxml(filename, ctrlr)
     fx = Java.javafx.fxml.FXMLLoader.new()
-    fx.location = Java.java.net.URL.new(
-      Java.java.net.URL.new("file:"), filename)
+    fx.location = if self.class.in_jar?
+      JRuby.runtime.jruby_class_loader.get_resource(filename)
+    else
+      Java.java.net.URL.new(
+        Java.java.net.URL.new("file:"), filename)
+    end
     fx.controller = ctrlr
     return fx.load
   end
