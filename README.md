@@ -54,14 +54,14 @@ the controller. See src/Demo.rb for commented example.
 
 Issues
 ------
-# You must NOT set fx:controller in the FXML files. At the moment, due to JRuby bugs, Java is unable
+* You must NOT set fx:controller in the FXML files. At the moment, due to JRuby bugs, Java is unable
   to initialize Ruby objects in this way. See Demo.rb for proper way to set the controller (passing it
   in to load_fxml())
-# You must use the provided JavaFXImpl::Launcher to launch the app. This is due to the same JRuby bugs
+* You must use the provided JavaFXImpl::Launcher to launch the app. This is due to the same JRuby bugs
   as above.
-# Errors loading jfxrt.jar are bugs. Please report if you encounter this issue, tell us your platform,
+* Errors loading jfxrt.jar are bugs. Please report if you encounter this issue, tell us your platform,
   OS, and version of JRuby
-# Any other difficulties are bugs. Please report them
+* Any other difficulties are bugs. Please report them
 
 License
 -------
