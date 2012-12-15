@@ -7,7 +7,7 @@ dist = ENV['dist'] || "dist"
 output_jar = ENV['output_jar'] || "rubyfx-app.jar"
 main_script = ENV['main_script'] || nil
 src = ENV['src'] || 'samples/*'
-jruby_version = ENV['jruby_version'] || JRUBY_VERSION
+jruby_version = ENV['jruby_version'] || JRUBY_VERSION || "1.7.1" #if they want speedy raking, use the default so they can use MRI or other rubies
 
 base_dir = File.dirname(__FILE__)
 cd base_dir
@@ -38,31 +38,32 @@ task :download_jruby_jar do
 	end
 end
 
-desc "Create a full jar with embedded JRuby and given script (via main_script ENV var)"
+desc "Create a full jar with embedded JRuby and given script (via main_script and src ENV var)"
 task :jar => :download_jruby_jar do
   mkdir_p target
+  
   #copy jruby jar file in, along with script and our rb files
   cp "#{dist}/jruby-complete.jar", "#{target}/#{output_jar}"
+  
   #copy source in
   FileList[src].each do |iv_srv|
     cp iv_srv, "#{target}/#{File.basename(iv_srv)}" if main_script == nil || main_script != iv_srv
   end
   cp main_script, "#{target}/jar-bootstrap.rb" unless main_script == nil
+  
   #copy our libs in
   ruby "lib/jrubyfxml.rb jar-ify #{target}/jrubyfxml.rb"
+  
   # edit the jar
   cd target
   sh "#{jar} ufe '#{output_jar}' org.jruby.JarBootstrapMain *"
   chmod 0775, output_jar
   cd base_dir
 end
+
 desc "Create a full jar and run it"
 task :run_jar => :jar do
   sh "java -jar #{target}/#{output_jar}"
-end
-
-def get_jruby_jar
-  Java.java.lang.System.getProperties["sun.boot.class.path"].split(':').find_all{|i| i.match(/jruby\.jar$/)}[0]
 end
 
 BASE_URL='http://repository.codehaus.org/org/jruby/jruby-complete'
