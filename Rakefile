@@ -16,7 +16,7 @@ main_script = nil if main_script == "nil"
 desc "Clean all build artifacts except #{dist}/jruby-complete.jar"
 task :clean do
   rm_rf target
-  FileList["*java.gem"].each do |file|
+  FileList["jrubyfxml-*-java.gem"].each do |file|
     rm file
   end
 end
@@ -38,7 +38,7 @@ end
 
 desc "Build and install the gem"
 task :install => :build do
-  sh "gem install jrubyfxml-0.4-java.gem"
+  sh "gem install jrubyfxml-*-java.gem"
 end
 
 task :download_jruby_jar do
