@@ -104,7 +104,7 @@ class FXMLApplication < Java.javafx.application.Application
       JRuby.runtime.jruby_class_loader.get_resource(filename)
     else
       Java.java.net.URL.new(
-        Java.java.net.URL.new("file:"), filename)
+        Java.java.net.URL.new("file:"), "#{File.dirname($0)}/#{filename}") #hope the start file is relative!
     end
     fx.controller = ctrlr
     return fx.load
