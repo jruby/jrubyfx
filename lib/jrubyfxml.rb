@@ -156,7 +156,16 @@ end
 
 # inherit from this class for FXML controllers
 class FXMLController
+  java_import 'javafx.event.Event'
   java_import 'javafx.event.ActionEvent'
+  java_import 'javafx.scene.input.KeyEvent'
+  java_import 'javafx.scene.input.MouseEvent'
+  java_import 'javafx.scene.input.TouchEvent'
+  java_import 'javafx.scene.input.DragEvent'
+  java_import 'javafx.scene.input.GestureEvent'
+  java_import 'javafx.scene.input.ContextMenuEvent'
+  java_import 'javafx.scene.input.InputMethodEvent'
+  java_import 'javafx.stage.WindowEvent'
   java_import 'java.lang.Void'
   java_import 'java.net.URL'
   java_import 'java.util.ResourceBundle'
@@ -164,12 +173,35 @@ class FXMLController
   include Java.javafx.fxml.Initializable #interfaces
   
   # block construct to define methods and automatically add action events
-  def self.on_action(name, &block)
+  def self.fx_handler(name, type=ActionEvent, &block)
     class_eval do
       #must define this way so block executes in class scope, not static scope
       define_method(name, block)
       #the first arg is the return type, the rest are params
-      add_method_signature name, [Void::TYPE, ActionEvent]
+      add_method_signature name, [Void::TYPE, type]
+    end
+  end
+  
+  #get the singleton class, and add special overloads as fx_EVENT_handler
+  class << self
+    {:key => KeyEvent,
+    :mouse => MouseEvent,
+    :touch => TouchEvent, 
+    :gesture => GestureEvent,
+    :context => ContextMenuEvent,
+    :context_menu => ContextMenuEvent,
+    :drag => DragEvent,
+    :ime => InputMethodEvent,
+    :input_method => InputMethodEvent,
+    :window => WindowEvent,
+    :action => ActionEvent,
+    :generic => Event}.each do |method, klass|
+      #instance_eval on the self instance so that these are defined as class methods
+      self.instance_eval do
+        define_method("fx_#{method}_handler") do |name, &block|
+          fx_handler(name, klass, &block)
+        end
+      end
     end
   end
   

@@ -69,20 +69,50 @@ class SimpleFXMLController < FXMLController
   
   # This is how events are defined in code.
   # This will be called from FXML by onAction="#click"
-  on_action :click do 
+  fx_handler :click do 
     puts "Clicked Green"
   end
   
-  on_action :clickbl do
+  # fx_action_handler and fx_handler all the same for standard ActionEvents
+  fx_action_handler :clickbl do
     puts "Clicked Black"
     p @AnchorPane
   end
   
   # If you want to capture the ActionEvent object, just request it like this
-  on_action :clickre do |arg|
+  fx_handler :clickre do |arg|
     puts "Clicked Red"
     p arg
   end
+  
+  # For key events, you must use fx_key_handler
+  fx_key_handler :keyPressed do |e|
+    puts "You pressed a key!"
+    puts "Alt: #{e.alt_down?} Ctrl: #{e.control_down?} Shift: #{e.shift_down?} Meta (Windows): #{e.meta_down?} Shortcut: #{e.shortcut_down?}"
+    puts "Key Code: #{e.code} Character: #{e.character.to_i} Text: '#{e.text}'"
+  end
+  
+  # For Context menu event, you must use fx_context_handler
+  fx_context_handler :cmenu do
+    puts "Context Menu Requested"
+  end
+  
+  # Full list of mappings:
+  # fx_key_handler is for KeyEvent
+  # fx_mouse_handler is for MouseEvent
+  # fx_touch_handler is for TouchEvent
+  # fx_gesture_handler is for GestureEvent
+  # fx_context_handler is for ContextMenuEvent
+  # fx_context_menu_handler is for ContextMenuEvent
+  # fx_drag_handler is for DragEvent
+  # fx_ime_handler is for InputMethodEvent
+  # fx_input_method_handler is for InputMethodEvent
+  # fx_window_handler is for WindowEvent
+  # fx_action_handler is for ActionEvent
+  # fx_generic_handler is for Event
+  # 
+  # And if you need a custom Event, you can use:
+  # fx_handler :name, YourCustomEvent do |e| ... end
 end
 
 # Launch our application!
