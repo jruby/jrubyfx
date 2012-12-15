@@ -17,7 +17,7 @@ task :clean do
 end
 
 task :run do
-  ruby "-I lib '#{main_script}'"
+  ruby "-I lib '#{main_script||'samples/SimpleFXMLDemo.rb'}'"
 end
 
 task :build => :clean do
