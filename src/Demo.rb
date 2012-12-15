@@ -35,7 +35,7 @@ class SimpleFXMLApplication < FXMLApplication
     ctrlr = SimpleFXMLController.new_java
     
     # Load the FXML file with our controller
-    fxml = load_fxml("Sample.fxml", ctrlr)
+    fxml = load_fxml("Demo.fxml", ctrlr)
     
     # Create a new Scene with our parsed FXML
     stage.scene = Scene.new(fxml)

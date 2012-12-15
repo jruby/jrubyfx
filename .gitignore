@@ -1,6 +1,5 @@
 target/
 dist/
-src/
 *~
 *.jar
 *.gem

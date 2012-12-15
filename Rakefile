@@ -6,7 +6,7 @@ target = ENV['target'] || "target"
 dist = ENV['dist'] || "dist"
 output_jar = ENV['output_jar'] || "rubyfx-app.jar"
 main_script = ENV['main_script'] || nil
-src = ENV['src'] || 'samples/*'
+src = ENV['src'] || 'src/*'
 jruby_version = ENV['jruby_version'] || JRUBY_VERSION || "1.7.1" #if they want speedy raking, use the default so they can use MRI or other rubies
 
 base_dir = File.dirname(__FILE__)
@@ -17,7 +17,7 @@ task :clean do
 end
 
 task :run do
-  ruby "-I lib '#{main_script||'samples/SimpleFXMLDemo.rb'}'"
+  ruby "-I lib '#{main_script||'src/Demo.rb'}'"
 end
 
 task :build => :clean do
