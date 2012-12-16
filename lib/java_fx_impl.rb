@@ -21,10 +21,12 @@ require 'jrubyfxml'
 # Due to certain bugs in JRuby 1.7 (namely some newInstance mapping bugs), we
 # are forced to re-create the Launcher if we want a pure ruby wrapper
 module JavaFXImpl
+  java_import 'com.sun.javafx.application.PlatformImpl'
+  java_import 'javafx.stage.Stage'
   
   #JRuby, you make me have to create real classes!
   class FinisherInterface
-    include Java.com.sun.javafx.application.PlatformImpl::FinishListener
+    include PlatformImpl::FinishListener
     
     def initialize(&block)
       @exitBlock = block
@@ -78,7 +80,7 @@ module JavaFXImpl
     def self.launch_app_from_thread(classO)
       #platformImpl startup?
       finished_latch = CountDownLatch.new(1)
-      Java.com.sun.javafx.application.PlatformImpl.startup do
+      PlatformImpl.startup do
         finished_latch.countDown
       end
       finished_latch.await
@@ -92,7 +94,7 @@ module JavaFXImpl
       end
       
       #kill the toolkit and exit
-      Java.com.sun.javafx.application.PlatformImpl.tkExit
+      PlatformImpl.tkExit
     end
     
     def self.launch_app_after_platform(classO)
@@ -100,7 +102,7 @@ module JavaFXImpl
       finished_latch = CountDownLatch.new(1)
       
       # register for shutdown
-      Java.com.sun.javafx.application.PlatformImpl.addListener(FinisherInterface.new {
+      PlatformImpl.addListener(FinisherInterface.new {
           # this is called when the stage exits
           finished_latch.countDown
         })
@@ -111,9 +113,9 @@ module JavaFXImpl
       
       error = false
       #RUN! and hope it works!
-      Java.com.sun.javafx.application.PlatformImpl.runAndWait do
+      PlatformImpl.runAndWait do
         begin
-          stage = Java.javafx.stage.Stage.new
+          stage = Stage.new
           stage.impl_setPrimary(true)
           app.start(stage)
           # no countDown here because its up top... yes I know

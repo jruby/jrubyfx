@@ -17,23 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 require 'jrubyfxml'
+
 # inherit from this class for FXML controllers
 class FXMLController
-  java_import 'javafx.event.Event'
-  java_import 'javafx.event.ActionEvent'
-  java_import 'javafx.scene.input.KeyEvent'
-  java_import 'javafx.scene.input.MouseEvent'
-  java_import 'javafx.scene.input.TouchEvent'
-  java_import 'javafx.scene.input.DragEvent'
-  java_import 'javafx.scene.input.GestureEvent'
-  java_import 'javafx.scene.input.ContextMenuEvent'
-  java_import 'javafx.scene.input.InputMethodEvent'
-  java_import 'javafx.stage.WindowEvent'
-  java_import 'java.lang.Void'
+  include JFXImports
   java_import 'java.net.URL'
   java_import 'java.util.ResourceBundle'
-  java_import 'javafx.scene.Scene'
-  java_import 'javafx.scene.paint.Color'
   
   # block construct to define methods and automatically add action events
   def self.fx_handler(name, type=ActionEvent, &block)
@@ -47,9 +36,10 @@ class FXMLController
   
   #get the singleton class, and add special overloads as fx_EVENT_handler
   class << self
+    include JFXImports
     {:key => KeyEvent,
       :mouse => MouseEvent,
-      :touch => TouchEvent, 
+      :touch => TouchEvent,
       :gesture => GestureEvent,
       :context => ContextMenuEvent,
       :context_menu => ContextMenuEvent,
