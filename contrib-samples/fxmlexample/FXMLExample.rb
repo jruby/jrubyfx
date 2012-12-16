@@ -40,11 +40,9 @@ require_relative 'FXMLExampleController'
 class FXMLExample < FXMLApplication
     
     def start(stage)
-        ctrlr = FXMLExampleController.new_java
-        root = load_fxml("fxml_example.fxml", ctrlr)
+        FXMLExampleController.load_fxml("fxml_example.fxml", stage)
         
         stage.title = "FXML Welcome"
-        ctrlr.scene = stage.scene = Scene.new(root)
         stage.show()
     end
 end

@@ -241,7 +241,7 @@ class FXMLController
     self.new(*args)
   end
   
-  def self.load_fxml(fxml, stage, settings)
+  def self.load_fxml(fxml, stage, settings={})
     ctrl = self.new_java *(settings[:initialize] || [])
     parent = FXMLApplication.load_fxml(fxml, ctrl)
     ctrl.scene = stage.scene = if settings.has_key? :fill
