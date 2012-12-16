@@ -19,10 +19,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 require 'java'
 require 'jruby/core_ext'
 
-#not sure if I like this hackyness, but is nice for just running scripts.
-#This is also in the rakefile
-require ((Java.java.lang.System.getProperties["java.runtime.version"].match(/^1.7.[0123456789]+.(0[456789]|[1])/) != nil) ?
-    Java.java.lang.System.getProperties["sun.boot.library.path"].gsub(/[\/\\][amdix345678_]+$/, "") + "/" : "") + 'jfxrt.jar'
+# Update load path to include the JavaFX runtime and fail nicely if we can't find it
+begin
+  if ENV['JFX_DIR']
+    $LOAD_PATH << ENV['JFX_DIR']
+  else #should we check for 1.7 vs 1.8? oh well, adding extra paths won't hurt anybody (maybe performance loading)
+    $LOAD_PATH << ENV_JAVA["sun.boot.library.path"].gsub(/[\/\\][amdix345678_]+$/, "") # strip i386 or amd64 (including variants). TODO: ARM
+  end
+  require 'jfxrt.jar'
+rescue
+  fail "JavaFX runtime not found.  Please install Java 7u4 or newer or set environment variable JAVAFX_DIR to the folder that contains jfxrt.jar"
+end
 
 require_relative 'fxml_application'
 require_relative 'fxml_controller'
