@@ -106,7 +106,9 @@ class FXMLController
   def self.load_fxml(fxml, stage, settings={})
     ctrl = self.new_java *(settings[:initialize] || [])
     parent = FXMLApplication.load_fxml(fxml, ctrl)
-    ctrl.scene = stage.scene = if settings.has_key? :fill
+    ctrl.scene = stage.scene = if parent.is_a? Scene
+      parent
+    elsif settings.has_key? :fill
       Scene.new(parent, settings[:width] || -1, settings[:height] || -1, settings[:fill] || Color::WHITE)
     else
       Scene.new(parent, settings[:width] || -1, settings[:height] || -1, settings[:depth_buffer] || settings[:depthBuffer] || false)

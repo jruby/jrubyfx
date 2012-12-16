@@ -39,9 +39,6 @@ class FXMLExampleController < FXMLController
     fx_id :actiontarget
     fx_id :passwordField
     
-    def initialize(url=nil,res=nil)
-    end
-    
     fx_handler :handleSubmitButtonAction do
         @actiontarget.text = "Sign in button pressed"
     end

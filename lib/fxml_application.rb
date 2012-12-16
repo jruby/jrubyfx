@@ -93,7 +93,7 @@ class FXMLApplication < Java.javafx.application.Application
         Java.java.net.URL.new("file:"), "#{File.dirname($0)}/#{filename}") #hope the start file is relative!
     end
     fx.controller = ctrlr
-    return fx.load
+    return fx.load()
   end
 
   ##
