@@ -65,7 +65,9 @@ task :jar => :download_jruby_jar do
   cp main_script, "#{target}/jar-bootstrap.rb" unless main_script == nil
   
   #copy our libs in
-  cp "lib/jrubyfxml.rb", "#{target}/jrubyfxml.rb"
+  FileList['lib/*.rb'].each do |librb|
+    cp librb, target
+  end
   
   # edit the jar
   cd target
