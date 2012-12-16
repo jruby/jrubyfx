@@ -79,6 +79,7 @@ class FXMLApplication < Java.javafx.application.Application
   java_import 'javafx.stage.Stage'
   java_import 'javafx.stage.StageStyle'
   java_import 'javafx.util.Duration'
+  java_import 'javafx.scene.paint.Color'
 
   def self.in_jar?()
     $LOAD_PATH.inject(false) { |res,i| res || i.include?(".jar!/META-INF/jruby.home/lib/ruby/")}
@@ -89,9 +90,9 @@ class FXMLApplication < Java.javafx.application.Application
     JavaFXImpl::Launcher.launch_app(self, *args)
   end
   
-  def load_fxml(filename, ctrlr)
+  def self.load_fxml(filename, ctrlr)
     fx = Java.javafx.fxml.FXMLLoader.new()
-    fx.location = if self.class.in_jar?
+    fx.location = if in_jar?
       JRuby.runtime.jruby_class_loader.get_resource(filename)
     else
       Java.java.net.URL.new(
@@ -169,8 +170,8 @@ class FXMLController
   java_import 'java.lang.Void'
   java_import 'java.net.URL'
   java_import 'java.util.ResourceBundle'
-  
-  include Java.javafx.fxml.Initializable #interfaces. Do we really need this?
+  java_import 'javafx.scene.Scene'
+  java_import 'javafx.scene.paint.Color'
   
   # block construct to define methods and automatically add action events
   def self.fx_handler(name, type=ActionEvent, &block)
@@ -185,17 +186,17 @@ class FXMLController
   #get the singleton class, and add special overloads as fx_EVENT_handler
   class << self
     {:key => KeyEvent,
-    :mouse => MouseEvent,
-    :touch => TouchEvent, 
-    :gesture => GestureEvent,
-    :context => ContextMenuEvent,
-    :context_menu => ContextMenuEvent,
-    :drag => DragEvent,
-    :ime => InputMethodEvent,
-    :input_method => InputMethodEvent,
-    :window => WindowEvent,
-    :action => ActionEvent,
-    :generic => Event}.each do |method, klass|
+      :mouse => MouseEvent,
+      :touch => TouchEvent, 
+      :gesture => GestureEvent,
+      :context => ContextMenuEvent,
+      :context_menu => ContextMenuEvent,
+      :drag => DragEvent,
+      :ime => InputMethodEvent,
+      :input_method => InputMethodEvent,
+      :window => WindowEvent,
+      :action => ActionEvent,
+      :generic => Event}.each do |method, klass|
       #instance_eval on the self instance so that these are defined as class methods
       self.instance_eval do
         define_method("fx_#{method}_handler") do |name, &block|
@@ -235,9 +236,20 @@ class FXMLController
   end
   
   #magic self-java-ifying new call
-  def self.new_java
+  def self.new_java(*args)
     self.become_java!
-    self.new
+    self.new(*args)
+  end
+  
+  def self.load_fxml(fxml, stage, settings)
+    ctrl = self.new_java *(settings[:initialize] || [])
+    parent = FXMLApplication.load_fxml(fxml, ctrl)
+    ctrl.scene = stage.scene = if settings.has_key? :fill
+      Scene.new(parent, settings[:width] || -1, settings[:height] || -1, settings[:fill] || Color::WHITE)
+    else
+      Scene.new(parent, settings[:width] || -1, settings[:height] || -1, settings[:depth_buffer] || settings[:depthBuffer] || false)
+    end
+    return ctrl
   end
 end
 
@@ -321,9 +333,9 @@ module JavaFXImpl
       
       # register for shutdown
       Java.com.sun.javafx.application.PlatformImpl.addListener(FinisherInterface.new {
-        # this is called when the stage exits
-        finished_latch.countDown
-      })
+          # this is called when the stage exits
+          finished_latch.countDown
+        })
     
       app = classO.new
       # do we need to register the params if there are none?

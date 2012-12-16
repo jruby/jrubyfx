@@ -24,26 +24,14 @@ require 'jrubyfxml'
 class SimpleFXMLApplication < FXMLApplication
   # we must override start to get a stage on application initialization
   def start(stage)
-    # assign the title, width, and height
+    # assign the title
     stage.title = "Simple JavaFX FXML App in pure Ruby"
-    stage.width = 620
-    stage.height = 480
     
-    # create a new instance of our controller. Note that you MUST use new_java
-    # to ensure that it is really a java object. new_java is specific to 
-    # the FXMLController class
-    ctrlr = SimpleFXMLController.new_java
-    
-    # Load the FXML file with our controller. NEVER make this an absoloute path,
-    # or Java will fail to load it if we are in a jar
-    fxml = load_fxml("Demo.fxml", ctrlr)
-    
-    # Create a new Scene with our parsed FXML
-    stage.scene = Scene.new(fxml)
-    
-    # Give our controller the scene also. THIS IS CRITICAL if you have fx:id
-    # properties. Not setting this prevents the fx:id's from binding properly
-    ctrlr.scene = stage.scene
+    # Load our FXML using our controller. width and height are optional, as is
+    # either :fill => Color:: OR (not both) :depth_buffer => boolean. If you
+    # have a custom initialize function, pass in arguments as :intialize => [args]
+    @ctrlr = SimpleFXMLController.load_fxml("Demo.fxml", stage, :width => 620,
+      :height => 480, :initialize => ["Arguments", "are supported"])
     
     # finally, show our app
     stage.show
@@ -57,15 +45,10 @@ class SimpleFXMLController < FXMLController
   # Here we declare that AnchorPane is a fx:id in the file
   fx_id :AnchorPane
   
-  # Initialize must have url and resources as it is actually an interface method
-  def initialize(url = nil, resources = nil)
-    if url == nil
-      # ruby new
-      puts "ruby new"
-    else
-      # Java interface call
-      puts "initalized"
-    end
+  # Initialize is optional
+  def initialize(first, second)
+    puts "Ruby new"
+    puts "#{first} #{second}"
   end
   
   # This is how events are defined in code.
