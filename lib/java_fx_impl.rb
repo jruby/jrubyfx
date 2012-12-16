@@ -61,6 +61,7 @@ module JavaFXImpl
           rescue => ex
             puts "Exception starting app:"
             p ex
+            p ex.backtrace
           end
           count_down_latch.countDown #always count down
         end
@@ -70,6 +71,7 @@ module JavaFXImpl
       rescue => ex
         puts "Exception launching JavaFX-Launcher thread:"
         p ex
+        puts ex.backtrace
       end
     end
     
@@ -86,6 +88,7 @@ module JavaFXImpl
       rescue => ex
         puts "Error running Application:"
         p ex
+        puts ex.backtrace
       end
       
       #kill the toolkit and exit
@@ -117,6 +120,7 @@ module JavaFXImpl
         rescue => ex
           puts "Exception running Application:"
           p ex
+          puts ex.backtrace
           error = true
           finished_latch.countDown # but if we fail, we need to unlatch it
         end
