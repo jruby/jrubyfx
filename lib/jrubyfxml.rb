@@ -170,7 +170,7 @@ class FXMLController
   java_import 'java.net.URL'
   java_import 'java.util.ResourceBundle'
   
-  include Java.javafx.fxml.Initializable #interfaces
+  include Java.javafx.fxml.Initializable #interfaces. Do we really need this?
   
   # block construct to define methods and automatically add action events
   def self.fx_handler(name, type=ActionEvent, &block)
@@ -225,7 +225,7 @@ class FXMLController
     @scene = s
     (@@fxml_linked_args[self.class] ||= []).each do |name|
       #set each instance variable from the lookup on the scene
-      instance_variable_set("@#{name}".to_sym, s.lookup(name.to_s))
+      instance_variable_set("@#{name}".to_sym, s.lookup("##{name}"))
     end
   end
   
