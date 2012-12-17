@@ -29,7 +29,8 @@ rescue
   fail "JavaFX runtime not found.  Please install Java 7u4 or newer or set environment variable JAVAFX_DIR to the folder that contains jfxrt.jar"
 end
 
-
+# If you need JavaFX, just include this module. Its sole purpose in life is to
+# import all JavaFX stuff, plus a few useful Java classes (like Void)
 module JFXImports
   java_import 'javafx.animation.FadeTransition'
   java_import 'javafx.animation.Interpolator'

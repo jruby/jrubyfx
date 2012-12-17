@@ -34,7 +34,9 @@ class FXController
     end
   end
   
-  #get the singleton class, and add special overloads as fx_EVENT_handler
+  # get the singleton class, and add special overloads as fx_EVENT_handler
+  # This funky syntax allows us to define methods on self (like define_method("self.method"),
+  # except that does not work)
   class << self
     include JFXImports
     {:key => KeyEvent,
@@ -51,6 +53,7 @@ class FXController
       :generic => Event}.each do |method, klass|
       #instance_eval on the self instance so that these are defined as class methods
       self.instance_eval do
+        # define the handy overloads that just pass our arguments in
         define_method("fx_#{method}_handler") do |name, &block|
           fx_handler(name, klass, &block)
         end
@@ -58,7 +61,7 @@ class FXController
     end
   end
   
-  # FXML linked variable names by class
+  # FXML linked variable names by subclass
   @@fxml_linked_args = {}
   
   def self.fx_id(name)
@@ -70,7 +73,7 @@ class FXController
   def scene=(s)
     @scene = s
     (@@fxml_linked_args[self.class] ||= []).each do |name|
-      #set each instance variable from the lookup on the scene
+      # set each instance variable from the lookup on the scene
       instance_variable_set("@#{name}".to_sym, s.lookup("##{name}"))
     end
   end
@@ -86,9 +89,13 @@ class FXController
     self.new(*args)
   end
   
+  # Load given fxml file onto the given stage.
   def self.load_fxml(filename, stage, settings={})
+    # Create our class as a java class with any arguments it wants
     ctrl = self.new_java *(settings[:initialize] || [])
+    # load the FXML file
     parent = load_fxml_resource(filename, ctrl)
+    # set the controller and stage scene, so that all the fx_id variables are hooked up
     ctrl.scene = stage.scene = if parent.is_a? Scene
       parent
     elsif settings.has_key? :fill
@@ -96,6 +103,7 @@ class FXController
     else
       Scene.new(parent, settings[:width] || -1, settings[:height] || -1, settings[:depth_buffer] || settings[:depthBuffer] || false)
     end
+    # return the controller. If they want the new scene, they can call the scene() method on it
     return ctrl
   end
   
@@ -103,10 +111,13 @@ class FXController
   def self.load_fxml_resource(filename, ctrlr)
     fx = FXMLLoader.new()
     fx.location = if FXApplication.in_jar?
+      # If we are in a jar file, use the class loader to get the file from the jar (like java)
       JRuby.runtime.jruby_class_loader.get_resource(filename)
     else
+      # If we are in the normal filesystem, create a normal file url path relative to the main file
       URL.new(URL.new("file:"), "#{File.dirname($0)}/#{filename}") #hope the start file is relative!
     end
+    # we must set this here for JFX to call our events
     fx.controller = ctrlr
     return fx.load()
   end

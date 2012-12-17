@@ -16,15 +16,17 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-require 'java'
-require 'jruby/core_ext'
+require 'java' # for java_import
+require 'jruby/core_ext' # for the become_java!
 
+# JRubyFXML includes
 require_relative 'jfx_imports'
 require_relative 'fxml_module'
 require_relative 'fxml_application'
 require_relative 'fxml_controller'
 require_relative 'java_fx_impl'
 
+# JRubyFX DSL
 # FIXME: core_ext could be loaded on demand through dsl API if we only had
 # dsl API.
 require_relative 'jrubyfx/core_ext/node'

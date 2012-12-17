@@ -20,6 +20,8 @@ require 'jrubyfxml'
 
 # Due to certain bugs in JRuby 1.7 (namely some newInstance mapping bugs), we
 # are forced to re-create the Launcher if we want a pure ruby wrapper
+# I can't wait to delete this. The _ONLY_ code that should use this is
+# FXApplication.launch. Do _NOT_ use this code anywhere else.
 module JavaFXImpl
   java_import 'com.sun.javafx.application.PlatformImpl'
   java_import 'javafx.stage.Stage'
@@ -108,7 +110,7 @@ module JavaFXImpl
         })
     
       app = classO.new
-      # do we need to register the params if there are none?
+      # do we need to register the params if there are none? - apparently not
       app.init()
       
       error = false

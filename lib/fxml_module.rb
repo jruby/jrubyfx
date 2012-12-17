@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 require 'jrubyfxml'
 require 'jrubyfx/utils/common_utils'
 
+# This module contains useful methods for defining JavaFX code.
 module JRubyFX
   include JFXImports
   include JRubyFX::Utils::CommonUtils

@@ -21,10 +21,14 @@ require 'jrubyfxml'
 class FXApplication < Java.javafx.application.Application
   include JRubyFX
 
+  # Are we packaged in a jar? This does some comparison, and may get false positives
+  # and, if jruby changes, false negatives. If you are using this, it might be a
+  # very bad idea...
   def self.in_jar?()
     $LOAD_PATH.inject(false) { |res,i| res || i.include?(".jar!/META-INF/jruby.home/lib/ruby/")}
   end
 
+  # this is effectively our main method. Call it on the subclass!
   def self.launch(*args)
     #call our custom launcher to avoid a java shim
     JavaFXImpl::Launcher.launch_app(self, *args)
