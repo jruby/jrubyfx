@@ -20,6 +20,7 @@ require 'jrubyfxml'
 
 class FXMLApplication < Java.javafx.application.Application
   include JFXImports
+  include JRubyFX::Utils::CommonUtils
 
   def self.in_jar?()
     $LOAD_PATH.inject(false) { |res,i| res || i.include?(".jar!/META-INF/jruby.home/lib/ruby/")}
@@ -53,18 +54,29 @@ class FXMLApplication < Java.javafx.application.Application
   #   end
   #
   def with(obj, properties = {}, &block)
+    populate_properties(obj, properties)
+
     if block_given?
       obj.extend(JRubyFX)
       obj.instance_eval(&block)
     end
-    properties.each_pair { |k, v| obj.send(k.to_s + '=', v) }
+    
     obj
+  end
+
+  ##
+  # Convenience method so anything can safely schedule to run on JavaFX
+  # main thread.
+  def run_later(&block)
+    Platform.run_later &block
   end
 
   ##
   # Create "build" a new JavaFX instance with the provided class and
   # set properties (e.g. setters) on that new instance plus also invoke
-  # any block passed against this new instance
+  # any block passed against this new instance.  This also can build a proc
+  # or lambda form in which case the return value of the block will be what 
+  # is used to set the additional properties on.
   # === Examples
   #
   #   grid = build(GridPane, vgap: 2, hgap: 2) do
@@ -72,14 +84,18 @@ class FXMLApplication < Java.javafx.application.Application
   #     children << location << go << view
   #   end
   #
+  #  build(proc { Foo.new }, vgap: 2, hgap: 2)
+  #
   def build(klass, *args, &block)
-    if !args.empty? and args.last.respond_to? :each_pair
-      properties = args.pop 
-    else 
-      properties = {}
+    args, properties = split_args_from_properties(*args)
+
+    obj = if klass.kind_of? Proc
+      klass.call(*args)
+    else
+      klass.new(*attempt_conversion(klass, :new, *args))
     end
 
-    with(klass.new(*args), properties, &block)
+    with(obj, properties, &block)
   end
 
   def listener(mod, name, &block)
@@ -93,4 +109,5 @@ class FXMLApplication < Java.javafx.application.Application
     end
     obj
   end
+  module_function :listener
 end
