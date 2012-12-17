@@ -5,7 +5,8 @@ JRubyFXML is a pure ruby wrapper for JavaFX 2.x with FXML support (based on JRub
 Status
 ------
 JRubyFXML should be usable in its current form and able to run FXML apps if used properly (see Issues).
-The syntax of JRubyFXML should be fairly stable. At this point in time, no custom ruby controls are supported.
+The syntax of the FXML side of JRubyFXML should be fairly stable, but the JavaFX DSL may change.
+At this point in time, no custom ruby controls are supported.
 
 Build
 -----
@@ -41,7 +42,7 @@ jruby src/Demo.rb
 Or, if you have not installed the gem, or are testing edits to jrubyfxml.rb:
 
 ```text
-rake run
+rake run main_script=src/Demo.rb
 ```
 
 Creating Application and Controller
