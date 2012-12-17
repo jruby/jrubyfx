@@ -28,7 +28,7 @@ end
 
 desc "Run a script without installing the gem"
 task :run do
-  ruby "-I lib '#{main_script||'src/Demo.rb'}'"
+  ruby "-I lib '#{main_script||'samples/fxml/Demo.rb'}'"
 end
 
 desc "Build the gem"
