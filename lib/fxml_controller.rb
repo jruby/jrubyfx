@@ -21,8 +21,6 @@ require 'jrubyfxml'
 # inherit from this class for FXML controllers
 class FXController
   include JFXImports
-  java_import 'java.net.URL'
-  java_import 'java.util.ResourceBundle'
   
   # block construct to define methods and automatically add action events
   def self.fx_handler(name, type=ActionEvent, &block)
@@ -55,13 +53,6 @@ class FXController
           fx_handler(name, klass, &block)
         end
       end
-    end
-  end
-  
-  # when initialize method is created, add java signature
-  def self.method_added(name)
-    if name == :initialize
-      add_method_signature :initialize, [Void::TYPE, URL, ResourceBundle]
     end
   end
   
