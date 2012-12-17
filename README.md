@@ -66,7 +66,8 @@ Issues
 
 License
 -------
-LGPLv3+. See LICENSE.
+Main code is LGPLv3+. See LICENSE.
+Some samples may have other licenses.
 
 Authors
 -------
