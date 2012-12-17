@@ -20,6 +20,8 @@ require 'jrubyfxml'
 
 class FXApplication < Java.javafx.application.Application
   include JRubyFX
+  java_import 'java.net.URL'
+  java_import 'javafx.fxml.FXMLLoader'
 
   def self.in_jar?()
     $LOAD_PATH.inject(false) { |res,i| res || i.include?(".jar!/META-INF/jruby.home/lib/ruby/")}
@@ -31,12 +33,11 @@ class FXApplication < Java.javafx.application.Application
   end
   
   def self.load_fxml(filename, ctrlr)
-    fx = Java.javafx.fxml.FXMLLoader.new()
+    fx = FXMLLoader.new()
     fx.location = if in_jar?
       JRuby.runtime.jruby_class_loader.get_resource(filename)
     else
-      Java.java.net.URL.new(
-        Java.java.net.URL.new("file:"), "#{File.dirname($0)}/#{filename}") #hope the start file is relative!
+      URL.new(URL.new("file:"), "#{File.dirname($0)}/#{filename}") #hope the start file is relative!
     end
     fx.controller = ctrlr
     return fx.load()
