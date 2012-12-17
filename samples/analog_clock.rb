@@ -1,7 +1,6 @@
-require 'jrubyfx'
+require 'jrubyfxml'
 
-class AnalogClock
-  include JRubyFX
+class AnalogClock < FXMLApplication
 
   def start(stage)
     @stage = stage
@@ -68,5 +67,5 @@ class AnalogClock
     time.play
   end
 end
- 
-AnalogClock.start
+
+AnalogClock.launch

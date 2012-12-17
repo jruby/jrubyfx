@@ -1,10 +1,9 @@
 require 'java'
-require 'jrubyfx'
+require 'jrubyfxml'
 
 module JRubyFX
   module DSL
     include JRubyFX
-    include JRubyFX::Utils::CommonUtils
 
     module ClassUtils
       def register_type(name, type)

@@ -1,10 +1,9 @@
 # Original version is for GroovyFX by @kazuchika
 # https://gist.github.com/1362259G
 
-require 'jrubyfx'
+require 'jrubyfxml'
 
-class MovieApp
-  include JRubyFX
+class MovieApp < FXMLApplication
   include JRubyFX::DSL
 
   def start(stage)
@@ -40,4 +39,4 @@ class MovieApp
   end
 end
 
-MovieApp.start
+MovieApp.launch

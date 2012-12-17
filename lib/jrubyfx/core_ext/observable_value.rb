@@ -1,4 +1,4 @@
-require 'jrubyfx'
+require 'jrubyfxml'
 
 module Java::javafx::beans::value::ObservableValue
   include JRubyFX # FIXME: Listener support should be own module

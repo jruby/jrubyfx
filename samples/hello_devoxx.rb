@@ -1,9 +1,8 @@
 # Original version is here: http://www.slideshare.net/steveonjava/java-fx-20-a-developers-guide
 
-require 'jrubyfx'
+require 'jrubyfxml'
 
-class HelloDevoxx
-  include JRubyFX
+class HelloDevoxx < FXMLApplication
 
   def start(stage)
     with(stage, title: "Hello Devoxx", x: 105, y: 140) do
@@ -17,4 +16,4 @@ class HelloDevoxx
   end
 end
 
-HelloDevoxx.start
+HelloDevoxx.launch

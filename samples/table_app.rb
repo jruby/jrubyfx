@@ -1,8 +1,7 @@
 # Original version is here: http://drdobbs.com/blogs/java/231903245 (BindingEx1)
-require 'jrubyfx'
+require 'jrubyfxml'
 
-class TableApp
-  include JRubyFX
+class TableApp < FXMLApplication
 
   def start(stage)
     with(stage, title: 'MyTable') do
@@ -27,4 +26,4 @@ class TableApp
   end
 end
 
-TableApp.start
+TableApp.launch
