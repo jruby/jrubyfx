@@ -35,7 +35,7 @@
           <menus>
             <Menu mnemonicParsing="false" text="File">
               <items>
-                <MenuItem mnemonicParsing="false" text="Close" />
+                <MenuItem mnemonicParsing="false" text="Export this example as a Jar (takes awhile as it has to download 20M of JRuby)" onAction="#export_jar" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Edit">

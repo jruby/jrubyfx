@@ -69,6 +69,31 @@ class SimpleFXController < FXController
     p arg
   end
   
+  # Actually do something: export jar! Found under file menu
+  fx_handler :export_jar do
+    
+    # the build function lets you set properties and call functions on an object
+    # however, you can't reference stage, scene, or any local methods
+    # note the title: "bla" is ruby 1.9 syntax, and equivalent to :title => "bla"
+    dialog = build(FileChooser, :title => "Export Demo.rb as jar...") do
+      # if we did not use the magic build method, this is the same as FileChooserInstance.extension_filters.add(...)
+      extension_filters.add(FileChooser::ExtensionFilter.new("Java Archive (*.jar)", "*.jar"))
+    end
+    # Show the dialog!
+    file = dialog.showSaveDialog(stage)
+    
+    unless file == nil
+      output_jar = file.path
+      jar_folder = "#{ENV['HOME']}/.jruby-jar"
+      # import the jarification tasks
+      require 'jrubyfxml_tasks'
+      # Download jruby and then jarify it
+      JRubyFXTasks::download_jruby(JRUBY_VERSION, jar_folder)
+      JRubyFXTasks::jarify_jrubyfxml("#{File.dirname(__FILE__)}/*", __FILE__, jar_folder, nil, output_jar)
+      puts "Success!"
+    end
+  end
+  
   # For key events, you must use fx_key_handler
   fx_key_handler :keyPressed do |e|
     puts "You pressed a key!"
