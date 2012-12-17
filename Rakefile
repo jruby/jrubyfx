@@ -52,7 +52,7 @@ task :download_jruby_jar do
 end
 
 desc "Create a full jar with embedded JRuby and given script (via main_script and src ENV var)"
-task :jar => :download_jruby_jar do
+task :jar => [:clean, :download_jruby_jar] do
   mkdir_p target
   
   #copy jruby jar file in, along with script and our rb files
@@ -64,9 +64,17 @@ task :jar => :download_jruby_jar do
   end
   cp main_script, "#{target}/jar-bootstrap.rb" unless main_script == nil
   
+  unless File.exists? "#{target}/jar-bootstrap.rb"
+    puts "@"*79
+    puts "@#{"!!!WARNING!!!".center(79-2)}@"
+    puts "@#{"jar-bootstrap.rb NOT FOUND!".center(79-2)}@"
+    puts "@#{"Did you set main_src= or have jar-bootstrap in src= ?".center(79-2)}@"
+    puts "@"*79
+  end
+  
   #copy our libs in
-  FileList['lib/*.rb'].each do |librb|
-    cp librb, target
+  FileList['lib/*'].each do |librb|
+    cp_r librb, target
   end
   
   # edit the jar
