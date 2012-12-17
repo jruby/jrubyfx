@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # DO NOT INCLUDE ANY JRUBYFX CODE DIRECTLY!!! THIS IS A RAKEFILE EXTENSION!!!
 require 'open-uri'
 require 'rake'
+require 'tmpdir'
 
 module JRubyFXTasks 
   extend Rake::DSL
@@ -37,6 +38,12 @@ module JRubyFXTasks
   end
 
   def jarify_jrubyfxml(src="src/*" ,main_script=nil, dist="dist", target="target", output_jar="jrubyfx-app.jar", jar="jar")
+    if target_was_nil = target == nil
+      target = Dir.mktmpdir("jrubyfxml")
+      final_jar = output_jar
+      output_jar = File.basename output_jar
+    end
+    
     mkdir_p target
   
     #copy jruby jar file in, along with script and our rb files
@@ -67,6 +74,11 @@ module JRubyFXTasks
     sh "#{jar} ufe '#{output_jar}' org.jruby.JarBootstrapMain *"
     chmod 0775, output_jar
     cd base_dir
+    
+    if target_was_nil
+      mv "#{target}/#{output_jar}", final_jar
+      rm_rf target
+    end
   end
 
   def download(version_string)
@@ -77,4 +89,5 @@ module JRubyFXTasks
   
   module_function :jarify_jrubyfxml
   module_function :download_jruby
+  module_function :download
 end
