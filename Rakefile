@@ -36,6 +36,10 @@ task :build => :clean do
   sh "gem build jrubyfxml.gemspec"
 end
 
+# Alias :)
+desc "Build the gem"
+task :gem => :build
+
 desc "Build and install the gem"
 task :install => :build do
   sh "gem install jrubyfxml-*-java.gem"
