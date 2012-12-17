@@ -24,7 +24,7 @@ Place all your sources in the src folder (you can use any folder, but you must p
 pattern will match the files in the folder), and run (replacing Demo.rb with your main file):
 
 ```text
-rake jar main_script=src/Demo.rb
+rake jar main_script=samples/fxml/Demo.rb
 ```
 This jar can then run anywhere there is a JVM with JavaFX. Note than the main file is
 renamed to jar-bootstrap.rb inside the jar. If you need to detect if you are in a jar,
@@ -36,13 +36,13 @@ Sample
 To run sample:
 
 ```text
-jruby src/Demo.rb
+jruby samples/fxml/Demo.rb
 ```
 
 Or, if you have not installed the gem, or are testing edits to jrubyfxml.rb:
 
 ```text
-rake run main_script=src/Demo.rb
+rake run main_script=samples/fxml/Demo.rb
 ```
 
 Creating Application and Controller
@@ -51,7 +51,7 @@ Creating Application and Controller
 Import jrubyfxml file, and subclass FXApplication and FXController.
 At the bottom of the file, call _yourFXApplicationClass_.launch().
 Override start(stage) in the application, and initialize(url, resources) in 
-the controller. See src/Demo.rb for commented example.
+the controller. See samples/fxml/Demo.rb for commented example.
 
 Issues
 ------
