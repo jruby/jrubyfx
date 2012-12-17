@@ -21,6 +21,8 @@ require 'jrubyfxml'
 # inherit from this class for FXML controllers
 class FXController
   include JFXImports
+  java_import 'java.net.URL'
+  java_import 'javafx.fxml.FXMLLoader'
   
   # block construct to define methods and automatically add action events
   def self.fx_handler(name, type=ActionEvent, &block)
@@ -84,9 +86,9 @@ class FXController
     self.new(*args)
   end
   
-  def self.load_fxml(fxml, stage, settings={})
+  def self.load_fxml(filename, stage, settings={})
     ctrl = self.new_java *(settings[:initialize] || [])
-    parent = FXApplication.load_fxml(fxml, ctrl)
+    parent = load_fxml_resource(filename, ctrl)
     ctrl.scene = stage.scene = if parent.is_a? Scene
       parent
     elsif settings.has_key? :fill
@@ -95,5 +97,17 @@ class FXController
       Scene.new(parent, settings[:width] || -1, settings[:height] || -1, settings[:depth_buffer] || settings[:depthBuffer] || false)
     end
     return ctrl
+  end
+  
+  # Load a FXML file given a filename and a controller and return the root element
+  def self.load_fxml_resource(filename, ctrlr)
+    fx = FXMLLoader.new()
+    fx.location = if FXApplication.in_jar?
+      JRuby.runtime.jruby_class_loader.get_resource(filename)
+    else
+      URL.new(URL.new("file:"), "#{File.dirname($0)}/#{filename}") #hope the start file is relative!
+    end
+    fx.controller = ctrlr
+    return fx.load()
   end
 end
