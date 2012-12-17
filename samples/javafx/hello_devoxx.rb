@@ -2,7 +2,7 @@
 
 require 'jrubyfxml'
 
-class HelloDevoxx < FXMLApplication
+class HelloDevoxx < FXApplication
 
   def start(stage)
     with(stage, title: "Hello Devoxx", x: 105, y: 140) do

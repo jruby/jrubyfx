@@ -1,7 +1,7 @@
 # Original version is here: http://drdobbs.com/blogs/java/231903245 (BindingEx1)
 require 'jrubyfxml'
 
-class TableApp < FXMLApplication
+class TableApp < FXApplication
 
   def start(stage)
     with(stage, title: 'MyTable') do

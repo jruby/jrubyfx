@@ -1,6 +1,6 @@
 require 'jrubyfxml'
 
-class LineChart < FXMLApplication
+class LineChart < FXApplication
 
   def start(stage)
     months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 

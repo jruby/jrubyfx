@@ -3,7 +3,7 @@
 
 require 'jrubyfxml'
 
-class MovieApp < FXMLApplication
+class MovieApp < FXApplication
   include JRubyFX::DSL
 
   def start(stage)

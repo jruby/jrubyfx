@@ -35,7 +35,7 @@ Original Java source from: http://docs.oracle.com/javafx/2/get_started/jfxpub-ge
 
 require 'jrubyfxml'
 
-class FXMLExampleController < FXMLController
+class FXMLExampleController < FXController
     fx_id :actiontarget
     fx_id :passwordField
     

@@ -3,7 +3,7 @@
 
 require 'jrubyfxml'
 
-class HelloJRubyFX < FXMLApplication
+class HelloJRubyFX < FXApplication
 
   def start(stage)
     with(stage, width: 300, height: 300, title: 'Hello JRubyFX') do

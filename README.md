@@ -27,7 +27,7 @@ rake jar main_script=src/Demo.rb
 ```
 This jar can then run anywhere there is a JVM with JavaFX. Note than the main file is
 renamed to jar-bootstrap.rb inside the jar. If you need to detect if you are in a jar,
-use the FXMLApplication.in_jar? method.
+use the FXApplication.in_jar? method.
 
 Sample
 -------
@@ -47,8 +47,8 @@ rake run
 Creating Application and Controller
 -----------------------------------
 
-Import jrubyfxml file, and subclass FXMLApplication and FXMLController.
-At the bottom of the file, call _yourFxmlApplicationClass_.launch().
+Import jrubyfxml file, and subclass FXApplication and FXController.
+At the bottom of the file, call _yourFXApplicationClass_.launch().
 Override start(stage) in the application, and initialize(url, resources) in 
 the controller. See src/Demo.rb for commented example.
 

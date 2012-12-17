@@ -1,6 +1,6 @@
 require 'jrubyfxml'
 
-class AnalogClock < FXMLApplication
+class AnalogClock < FXApplication
 
   def start(stage)
     @stage = stage

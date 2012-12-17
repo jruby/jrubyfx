@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 require 'jrubyfxml'
 
 # inherit from this class for FXML controllers
-class FXMLController
+class FXController
   include JFXImports
   java_import 'java.net.URL'
   java_import 'java.util.ResourceBundle'
@@ -95,7 +95,7 @@ class FXMLController
   
   def self.load_fxml(fxml, stage, settings={})
     ctrl = self.new_java *(settings[:initialize] || [])
-    parent = FXMLApplication.load_fxml(fxml, ctrl)
+    parent = FXApplication.load_fxml(fxml, ctrl)
     ctrl.scene = stage.scene = if parent.is_a? Scene
       parent
     elsif settings.has_key? :fill

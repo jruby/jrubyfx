@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'jrubyfxml'
 
-class FXMLApplication < Java.javafx.application.Application
+class FXApplication < Java.javafx.application.Application
   include JRubyFX
 
   def self.in_jar?()

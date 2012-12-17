@@ -17,11 +17,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-# Require JRubyFXML library so we can get FXMLApplication and FXMLController
+# Require JRubyFXML library so we can get FXApplication and FXController
 require 'jrubyfxml'
 
-# Inherit from FXMLApplication to create our Application
-class SimpleFXMLApplication < FXMLApplication
+# Inherit from FXApplication to create our Application
+class SimpleFXApplication < FXApplication
   # we must override start to get a stage on application initialization
   def start(stage)
     # assign the title
@@ -30,7 +30,7 @@ class SimpleFXMLApplication < FXMLApplication
     # Load our FXML using our controller. width and height are optional, as is
     # either :fill => Color:: OR (not both) :depth_buffer => boolean. If you
     # have a custom initialize function, pass in arguments as :intialize => [args]
-    @ctrlr = SimpleFXMLController.load_fxml("Demo.fxml", stage, :width => 620,
+    @ctrlr = SimpleFXController.load_fxml("Demo.fxml", stage, :width => 620,
       :height => 480, :initialize => ["Arguments", "are supported"])
     
     # finally, show our app
@@ -38,9 +38,9 @@ class SimpleFXMLApplication < FXMLApplication
   end
 end
 
-# Inherit from FXMLController to create our controller for this FXML file.
+# Inherit from FXController to create our controller for this FXML file.
 # You will need one Controller per FXML file under normal conditions.
-class SimpleFXMLController < FXMLController
+class SimpleFXController < FXController
   
   # Here we declare that AnchorPane is a fx:id in the file
   fx_id :AnchorPane
@@ -100,4 +100,4 @@ class SimpleFXMLController < FXMLController
 end
 
 # Launch our application!
-SimpleFXMLApplication.launch
+SimpleFXApplication.launch

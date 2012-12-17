@@ -1,6 +1,6 @@
 require 'jrubyfxml'
 
-class BindingApp < FXMLApplication
+class BindingApp < FXApplication
 
   def start(stage)
     with(stage, title: 'Binding App', width: 300, height: 250) do
