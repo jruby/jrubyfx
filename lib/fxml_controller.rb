@@ -24,6 +24,8 @@ class FXController
   java_import 'java.net.URL'
   java_import 'javafx.fxml.FXMLLoader'
   
+  attr_accessor :stage
+  
   # block construct to define methods and automatically add action events
   def self.fx_handler(name, type=ActionEvent, &block)
     class_eval do
@@ -93,6 +95,8 @@ class FXController
   def self.load_fxml(filename, stage, settings={})
     # Create our class as a java class with any arguments it wants
     ctrl = self.new_java *(settings[:initialize] || [])
+    # save the stage so we can reference it if needed later
+    ctrl.stage = stage
     # load the FXML file
     parent = load_fxml_resource(filename, ctrl)
     # set the controller and stage scene, so that all the fx_id variables are hooked up
