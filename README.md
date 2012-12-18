@@ -6,11 +6,12 @@ Status
 ------
 JRubyFXML should be usable in its current form and able to run FXML apps if used properly (see Issues).
 The syntax of the FXML side of JRubyFXML should be fairly stable, but the JavaFX DSL may change.
-At this point in time, no custom ruby controls are supported.
+At this point in time, no custom ruby controls are supported from FXML, though you
+can certainly create them in code.
 
 Build
 -----
-Build is done using rake/gem. You obviously need JRuby, Java 1.7 (with JavaFX) also.
+Build is done using rake/gem/bundler. You obviously need JRuby, Java 1.7 (with JavaFX) also.
 
 ```text
 rake install
