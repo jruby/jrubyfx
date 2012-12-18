@@ -98,7 +98,7 @@ class FXController
     # save the stage so we can reference it if needed later
     ctrl.stage = stage
     # load the FXML file
-    parent = load_fxml_resource(filename, ctrl)
+    parent = load_fxml_resource(filename, ctrl, settings[:relative_to] || $0)
     # set the controller and stage scene, so that all the fx_id variables are hooked up
     ctrl.scene = stage.scene = if parent.is_a? Scene
       parent
@@ -112,14 +112,14 @@ class FXController
   end
   
   # Load a FXML file given a filename and a controller and return the root element
-  def self.load_fxml_resource(filename, ctrlr)
+  def self.load_fxml_resource(filename, ctrlr, relative_to=$0)
     fx = FXMLLoader.new()
     fx.location = if FXApplication.in_jar?
       # If we are in a jar file, use the class loader to get the file from the jar (like java)
       JRuby.runtime.jruby_class_loader.get_resource(filename)
     else
       # If we are in the normal filesystem, create a normal file url path relative to the main file
-      URL.new(URL.new("file:"), "#{File.dirname($0)}/#{filename}") #hope the start file is relative!
+      URL.new(URL.new("file:"), "#{File.dirname(relative_to)}/#{filename}")
     end
     # we must set this here for JFX to call our events
     fx.controller = ctrlr
