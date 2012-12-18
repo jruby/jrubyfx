@@ -38,6 +38,8 @@ module JRubyFX
     populate_properties(obj, properties)
 
     if block_given?
+      # cache the proxy - http://wiki.jruby.org/Persistence
+      obj.class.__persistent__ = true if obj.class.ancestors.include? JavaProxy
       obj.extend(JRubyFX)
       obj.instance_eval(&block)
     end
