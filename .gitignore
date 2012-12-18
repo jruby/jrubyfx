@@ -1,5 +1,6 @@
 target/
-dist/
 *~
 *.jar
 *.gem
+/pkg/
+Gemfile.lock

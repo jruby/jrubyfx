@@ -26,7 +26,8 @@ module JRubyFXTasks
   BASE_URL='http://repository.codehaus.org/org/jruby/jruby-complete'
   
 
-  def download_jruby(jruby_version, dist="dist", force=false)
+  def download_jruby(jruby_version, force=false)
+    dist = "#{ENV['HOME']}/.jruby-jar"
     unless force || (File.exists?("#{dist}/jruby-complete.jar") && File.size("#{dist}/jruby-complete.jar") > 0)
       mkdir_p dist
       base_dir = Dir.pwd
@@ -37,7 +38,7 @@ module JRubyFXTasks
     end
   end
 
-  def jarify_jrubyfxml(src="src/*" ,main_script=nil, dist="dist", target="target", output_jar="jrubyfx-app.jar", jar="jar")
+  def jarify_jrubyfxml(src="src/*" ,main_script=nil, target="target", output_jar="jrubyfx-app.jar", jar="jar")
     if target_was_nil = target == nil
       target = Dir.mktmpdir("jrubyfxml")
       final_jar = output_jar
@@ -47,7 +48,7 @@ module JRubyFXTasks
     mkdir_p target
   
     #copy jruby jar file in, along with script and our rb files
-    cp "#{dist}/jruby-complete.jar", "#{target}/#{output_jar}"
+    cp "#{ENV['HOME']}/.jruby-jar/jruby-complete.jar", "#{target}/#{output_jar}"
   
     #copy source in
     FileList[src].each do |iv_srv|
