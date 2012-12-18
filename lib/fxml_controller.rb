@@ -66,9 +66,9 @@ class FXController
   # FXML linked variable names by subclass
   @@fxml_linked_args = {}
   
-  def self.fx_id(name)
+  def self.fx_id(*name)
     # we must distinguish between subclasses, hence self.
-    (@@fxml_linked_args[self] ||= []) << name
+    ((@@fxml_linked_args[self] ||= []) << name).flatten!
   end
   
   # set scene object (setter), and update fxml-injected values
