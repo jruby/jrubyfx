@@ -74,10 +74,7 @@ class FXController
   end
   
   def self.fx_id_optional(*names)
-    names.each do |name|
-      # we must distinguish between subclasses, hence self.
-      (@@fxml_linked_args[self] ||= []) << {name => :quiet}
-    end
+    fx_id names.map {|i| {i => :quiet} }
   end
   
   # set scene object (setter), and update fxml-injected values
