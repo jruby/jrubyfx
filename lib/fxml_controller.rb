@@ -27,12 +27,14 @@ class FXController
   attr_accessor :stage
   
   # block construct to define methods and automatically add action events
-  def self.fx_handler(name, type=ActionEvent, &block)
-    class_eval do
-      #must define this way so block executes in class scope, not static scope
-      define_method(name, block)
-      #the first arg is the return type, the rest are params
-      add_method_signature name, [Void::TYPE, type]
+  def self.fx_handler(names, type=ActionEvent, &block)
+    [names].flatten.each do |name|
+      class_eval do
+        #must define this way so block executes in class scope, not static scope
+        define_method(name, block)
+        #the first arg is the return type, the rest are params
+        add_method_signature name, [Void::TYPE, type]
+      end
     end
   end
   
