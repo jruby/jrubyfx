@@ -70,7 +70,7 @@ class FXController
   
   def self.fx_id(*name)
     # we must distinguish between subclasses, hence self.
-    ((@@fxml_linked_args[self] ||= []) << name).flatten!
+    (@@fxml_linked_args[self] ||= []).concat(name)
   end
   
   def self.fx_id_optional(*names)
