@@ -32,77 +32,220 @@ end
 # If you need JavaFX, just include this module. Its sole purpose in life is to
 # import all JavaFX stuff, plus a few useful Java classes (like Void)
 module JFXImports
-  java_import 'javafx.animation.FadeTransition'
-  java_import 'javafx.animation.Interpolator'
-  java_import 'javafx.animation.KeyFrame'
-  java_import 'javafx.animation.KeyValue'
-  java_import 'javafx.animation.ParallelTransition'
-  java_import 'javafx.animation.RotateTransition'
-  java_import 'javafx.animation.ScaleTransition'
-  java_import 'javafx.animation.Timeline'
-  java_import 'javafx.application.Platform'
-  java_import 'javafx.beans.property.SimpleDoubleProperty'
-  java_import 'javafx.beans.value.ChangeListener'
-  java_import 'javafx.collections.FXCollections'
-  java_import 'javafx.event.Event'
-  java_import 'javafx.event.ActionEvent'
-  java_import 'javafx.event.EventHandler'
-  java_import 'javafx.geometry.HPos'
-  java_import 'javafx.geometry.VPos'
-  java_import 'javafx.scene.Group'
-  java_import 'javafx.scene.Scene'
-  java_import 'javafx.scene.chart.CategoryAxis'
-  java_import 'javafx.scene.chart.LineChart'
-  java_import 'javafx.scene.chart.NumberAxis'
-  java_import 'javafx.scene.chart.XYChart'
-  java_import 'javafx.scene.control.Button'
-  java_import 'javafx.scene.control.Label'
-  java_import 'javafx.scene.control.TableColumn'
-  java_import 'javafx.scene.control.TableView'
-  java_import 'javafx.scene.control.TextField'
-  java_import 'javafx.scene.effect.Bloom'
-  java_import 'javafx.scene.effect.GaussianBlur'
-  java_import 'javafx.scene.effect.Reflection'
-  java_import 'javafx.scene.effect.SepiaTone'
-  java_import 'javafx.scene.image.Image'
-  java_import 'javafx.scene.image.ImageView'
-  java_import 'javafx.scene.input.KeyEvent'
-  java_import 'javafx.scene.input.MouseEvent'
-  java_import 'javafx.scene.input.TouchEvent'
-  java_import 'javafx.scene.input.DragEvent'
-  java_import 'javafx.scene.input.GestureEvent'
-  java_import 'javafx.scene.input.ContextMenuEvent'
-  java_import 'javafx.scene.input.InputMethodEvent'
-  java_import 'javafx.scene.layout.ColumnConstraints'
-  java_import 'javafx.scene.layout.GridPane'
-  java_import 'javafx.scene.layout.Priority'
-  java_import 'javafx.scene.layout.HBox'
-  java_import 'javafx.scene.layout.VBox'
-  java_import 'javafx.scene.layout.StackPane'
-  java_import 'javafx.scene.media.Media'
-  java_import 'javafx.scene.media.MediaPlayer'
-  java_import 'javafx.scene.media.MediaView'
-  java_import 'javafx.scene.paint.Color'
-  java_import 'javafx.scene.paint.CycleMethod'
-  java_import 'javafx.scene.paint.RadialGradient'
-  java_import 'javafx.scene.paint.Stop'
-  java_import 'javafx.scene.shape.ArcTo'
-  java_import 'javafx.scene.shape.Circle'
-  java_import 'javafx.scene.shape.Line'
-  java_import 'javafx.scene.shape.LineTo'
-  java_import 'javafx.scene.shape.MoveTo'
-  java_import 'javafx.scene.shape.Path'
-  java_import 'javafx.scene.shape.Rectangle'
-  java_import 'javafx.scene.shape.StrokeType'
-  java_import 'javafx.scene.shape.StrokeLineJoin'
-  java_import 'javafx.scene.text.Font'
-  java_import 'javafx.scene.text.Text'
-  java_import 'javafx.scene.transform.Rotate'
-  java_import 'javafx.scene.web.WebView'
-  java_import 'javafx.stage.Stage'
-  java_import 'javafx.stage.FileChooser'
-  java_import 'javafx.stage.StageStyle'
-  java_import 'javafx.stage.WindowEvent'
-  java_import 'javafx.util.Duration'
-  java_import 'java.lang.Void'
+  # If something is missing, just java_import it in your code.
+  # And then ask us to put it in this list
+  java_import \
+    'javafx.animation.FadeTransition',
+    'javafx.animation.Interpolator',
+    'javafx.animation.KeyFrame',
+    'javafx.animation.KeyValue',
+    'javafx.animation.ParallelTransition',
+    'javafx.animation.RotateTransition',
+    'javafx.animation.ScaleTransition',
+    'javafx.animation.Timeline'
+    # TODO: Add more
+  java_import \
+    'javafx.application.Platform'
+  java_import \
+    'javafx.beans.property.SimpleDoubleProperty'
+    #TODO: import more
+  java_import \
+    'javafx.beans.value.ChangeListener'
+  java_import \
+    'javafx.collections.FXCollections'
+  java_import \
+    'javafx.event.Event',
+    'javafx.event.ActionEvent',
+    'javafx.event.EventHandler'
+  java_import \
+    'javafx.fxml.Initializable',
+    'javafx.fxml.LoadException'
+  java_import \
+    'javafx.geometry.HorizontalDirection',
+    'javafx.geometry.HPos',
+    'javafx.geometry.Insets',
+    'javafx.geometry.Orientation',
+    'javafx.geometry.Pos',
+    'javafx.geometry.Side',
+    'javafx.geometry.VerticalDirection',
+    'javafx.geometry.VPos'
+  java_import \
+    'javafx.scene.Group',
+    'javafx.scene.Scene'
+  java_import \
+    'javafx.scene.canvas.Canvas'
+  java_import \
+    'javafx.scene.chart.CategoryAxis',
+    'javafx.scene.chart.LineChart',
+    'javafx.scene.chart.NumberAxis',
+    'javafx.scene.chart.XYChart'
+  # TODO: import more of these
+  java_import *%w{
+      Accordion
+      Button
+      CheckBox
+      CheckBoxTreeItem
+      CheckMenuItem
+      ChoiceBox
+      ColorPicker
+      ComboBox
+      ContextMenu
+      Hyperlink
+      Label
+      ListCell
+      ListView
+      Menu
+      MenuBar
+      MenuButton
+      MenuItem
+      Pagination
+      PasswordField
+      PopupControl
+      ProgressBar
+      ProgressIndicator
+      RadioButton
+      RadioMenuItem
+      ScrollBar
+      ScrollPane
+      Separator
+      SeparatorMenuItem
+      Slider
+      SplitMenuButton
+      SplitPane
+      Tab
+      TableView
+      TabPane
+      TextArea
+      TextField
+      ToggleButton
+      ToggleGroup
+      ToolBar
+      Tooltip
+      TreeItem
+      TreeView
+      ContentDisplay
+      OverrunStyle
+      SelectionMode
+    }.map{|i| "javafx.scene.control.#{i}"}
+  java_import *%w{
+      Blend
+      BlendMode
+      Bloom
+      BlurType
+      DropShadow
+      GaussianBlur
+      Reflection
+      SepiaTone
+    }.map{|i| "javafx.scene.effect.#{i}"}
+  java_import *%w{
+      Image
+      ImageView PixelReader
+      PixelWriter
+    }.map{|i| "javafx.scene.image.#{i}"}
+  java_import *%w{
+      Clipboard
+      ContextMenuEvent
+      DragEvent
+      GestureEvent
+      InputEvent
+      InputMethodEvent
+      KeyEvent
+      Mnemonic
+      MouseDragEvent
+      MouseEvent
+      RotateEvent
+      ScrollEvent
+      SwipeEvent
+      TouchEvent
+      ZoomEvent
+    }.map{|i| "javafx.scene.input.#{i}"}
+  java_import *%w{
+      AnchorPane
+      BorderPane
+      ColumnConstraints
+      FlowPane
+      GridPane
+      HBox
+      Priority
+      RowConstraints
+      StackPane
+      TilePane
+      VBox
+    }.map{|i| "javafx.scene.layout.#{i}"}
+  java_import \
+    'javafx.scene.media.Media',
+    'javafx.scene.media.MediaPlayer',
+    'javafx.scene.media.MediaView'
+    # TODO: fill this out
+  java_import *%w{
+      Color
+      CycleMethod
+      ImagePattern
+      LinearGradient
+      Paint
+      RadialGradient
+      Stop
+    }.map{|i| "javafx.scene.paint.#{i}"}
+  java_import *%w{
+      Arc
+      ArcTo
+      ArcType
+      Circle
+      ClosePath
+      CubicCurve
+      CubicCurveTo
+      Ellipse
+      FillRule
+      HLineTo
+      Line
+      LineTo
+      MoveTo
+      Path
+      PathElement
+      Polygon
+      Polyline
+      QuadCurve
+      QuadCurveTo
+      Rectangle
+      Shape
+      StrokeLineCap
+      StrokeLineJoin
+      StrokeType
+      SVGPath
+      VLineTo
+    }.map{|i| "javafx.scene.shape.#{i}"}
+  java_import *%w{
+      Font
+      FontPosture
+      FontSmoothingType
+      FontWeight
+      Text
+      TextAlignment
+      TextBoundsType
+    }.map{|i| "javafx.scene.text.#{i}"}
+  java_import *%w{
+      Affine
+      Rotate
+      Scale
+      Shear
+      Translate
+    }.map{|i| "javafx.scene.transform.#{i}"}
+  java_import \
+    'javafx.scene.web.WebView'
+  java_import *%w{
+      DirectoryChooser
+      FileChooser
+      Modality
+      Popup
+      PopupWindow
+      Screen
+      Stage
+      StageStyle
+      Window
+      WindowEvent
+    }.map{|i| "javafx.stage.#{i}"}
+  java_import \
+    'javafx.util.Duration'
+  java_import \
+    'java.lang.Void'
 end
