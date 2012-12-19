@@ -44,7 +44,8 @@ class SimpleFXController < FXController
   
   # Here we declare that AnchorPane is a fx:id in the file
   # if you have multiple you can comma separate them, or add another
-  # fx_id statement
+  # fx_id statement. NOTE! If fx:id and id are different, then this will look
+  # at the id value, NOT the fx:id value. Get rid of id or keep it the same
   fx_id :AnchorPane
   
   # Initialize is optional
