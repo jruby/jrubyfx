@@ -48,6 +48,9 @@ class SimpleFXController < FXController
   # at the id value, NOT the fx:id value. Get rid of id or keep it the same
   fx_id :AnchorPane
   
+  # if one controller will be used for multiple forms, use fx_id_optional 
+  # instead of fx_id to avoid warnings that the id can't be found
+  
   # Initialize is optional
   def initialize(first, second)
     puts "Ruby new"
