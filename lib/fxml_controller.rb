@@ -73,18 +73,32 @@ class FXController
     ((@@fxml_linked_args[self] ||= []) << name).flatten!
   end
   
-  def self.silence_id_warnings()
+  def self.fx_id_optional(*names)
+    names.each do |name|
+      # we must distinguish between subclasses, hence self.
+      (@@fxml_linked_args[self] ||= []) << {name => :quiet}
+    end
+  end
+  
+  def self.silence_all_id_warnings()
     @@fxml_linked_args[:silent] = true
   end
   
   # set scene object (setter), and update fxml-injected values
   def scene=(s)
     @scene = s
+    silent = @@fxml_linked_args[:silent]
     (@@fxml_linked_args[self.class] ||= []).each do |name|
+      quiet = silent
+      # you can specify name => [quiet/verbose], so we need to check for that
+      if name.is_a? Hash
+        quiet = name.values[0] == :quiet
+        name = name.keys[0]
+      end
       # set each instance variable from the lookup on the scene
       val = s.lookup("##{name}")
-      if val == nil && !@@fxml_linked_args[:silent]
-        puts "[WARNING] fx_id not found: #{name}. Is id set to a different value than fx:id? (if this is expected, call silence_id_warnings)"
+      if val == nil && !quiet
+        puts "[WARNING] fx_id not found: #{name}. Is id set to a different value than fx:id? (if this is expected, use fx_id_optional)"
       end
       instance_variable_set("@#{name}".to_sym, val)
     end
