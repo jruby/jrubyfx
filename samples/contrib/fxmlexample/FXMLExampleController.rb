@@ -36,8 +36,8 @@ Original Java source from: http://docs.oracle.com/javafx/2/get_started/jfxpub-ge
 require 'jrubyfxml'
 
 class FXMLExampleController < FXController
-    fx_id :actiontarget
-    fx_id :passwordField
+    # you can comma separate them, or provide multiple definitions
+    fx_id :actiontarget, :passwordField
     
     fx_handler :handleSubmitButtonAction do
         @actiontarget.text = "Sign in button pressed"

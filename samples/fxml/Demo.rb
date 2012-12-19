@@ -43,6 +43,8 @@ end
 class SimpleFXController < FXController
   
   # Here we declare that AnchorPane is a fx:id in the file
+  # if you have multiple you can comma separate them, or add another
+  # fx_id statement
   fx_id :AnchorPane
   
   # Initialize is optional
@@ -58,6 +60,9 @@ class SimpleFXController < FXController
   end
   
   # fx_action_handler and fx_handler all the same for standard ActionEvents
+  # you can even register one handler for multiple events by using an array
+  # of names like so:
+  # fx_handler [:event1, :event2] do ... end
   fx_action_handler :clickbl do
     puts "Clicked Black"
     p @AnchorPane
