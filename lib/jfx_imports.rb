@@ -69,9 +69,12 @@ module JFXImports
     'javafx.geometry.Side',
     'javafx.geometry.VerticalDirection',
     'javafx.geometry.VPos'
-  java_import \
-    'javafx.scene.Group',
-    'javafx.scene.Scene'
+  java_import *%w{
+      Group
+      Node
+      Parent
+      Scene
+    }.map{|i| "javafx.scene.#{i}"}
   java_import \
     'javafx.scene.canvas.Canvas'
   java_import \
