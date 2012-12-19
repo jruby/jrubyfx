@@ -66,7 +66,7 @@ class FXController
   end
   
   # FXML linked variable names by subclass
-  @@fxml_linked_args = {:silent => false}
+  @@fxml_linked_args = {}
   
   def self.fx_id(*name)
     # we must distinguish between subclasses, hence self.
@@ -80,16 +80,11 @@ class FXController
     end
   end
   
-  def self.silence_all_id_warnings()
-    @@fxml_linked_args[:silent] = true
-  end
-  
   # set scene object (setter), and update fxml-injected values
   def scene=(s)
     @scene = s
-    silent = @@fxml_linked_args[:silent]
     (@@fxml_linked_args[self.class] ||= []).each do |name|
-      quiet = silent
+      quiet = false
       # you can specify name => [quiet/verbose], so we need to check for that
       if name.is_a? Hash
         quiet = name.values[0] == :quiet
