@@ -100,7 +100,7 @@ class FXController
     # save the stage so we can reference it if needed later
     ctrl.stage = stage
     # load the FXML file
-    parent = load_fxml_resource(filename, ctrl, settings[:relative_to] || $0)
+    parent = load_fxml_resource(filename, ctrl, settings[:relative_to] || 1)
     # set the controller and stage scene, so that all the fx_id variables are hooked up
     ctrl.scene = stage.scene = if parent.is_a? Scene
       parent
@@ -114,12 +114,21 @@ class FXController
   end
   
   # Load a FXML file given a filename and a controller and return the root element
-  def self.load_fxml_resource(filename, ctrlr, relative_to=$0)
+  # relative_to can be a file that this should be relative to, or an index
+  # of the caller number. If you are calling this from a function, pass 0 
+  # as you are the immediate caller of this function
+  def self.load_fxml_resource(filename, ctrlr=nil, relative_to=0)
     fx = FXMLLoader.new()
     fx.location = if FXApplication.in_jar?
       # If we are in a jar file, use the class loader to get the file from the jar (like java)
       JRuby.runtime.jruby_class_loader.get_resource(filename)
     else
+      if relative_to.is_a? Fixnum or relative_to == nil
+        # caller[0] returns a string like so:
+        # "/home/user/.rvm/rubies/jruby-1.7.1/lib/ruby/1.9/irb/workspace.rb:80:in `eval'"
+        # and then we use a regex to filter out the filename
+        relative_to = caller[relative_to||0][/(.*):[0-9]+:in /, 1] # the 1 is the first match, aka everything up to the :
+      end
       # If we are in the normal filesystem, create a normal file url path relative to the main file
       URL.new(URL.new("file:"), "#{File.dirname(relative_to)}/#{filename}")
     end
