@@ -34,16 +34,25 @@ end
 module JFXImports
   # If something is missing, just java_import it in your code.
   # And then ask us to put it in this list
-  java_import \
-    'javafx.animation.FadeTransition',
-    'javafx.animation.Interpolator',
-    'javafx.animation.KeyFrame',
-    'javafx.animation.KeyValue',
-    'javafx.animation.ParallelTransition',
-    'javafx.animation.RotateTransition',
-    'javafx.animation.ScaleTransition',
-    'javafx.animation.Timeline'
-    # TODO: Add more
+  java_import *%w{
+      Animation
+      AnimationTimer
+      FadeTransition
+      FillTransition
+      Interpolator
+      KeyFrame
+      KeyValue
+      ParallelTransition
+      PathTransition
+      PauseTransition
+      RotateTransition
+      ScaleTransition
+      SequentialTransition
+      StrokeTransition
+      Timeline
+      Transition
+      TranslateTransition
+    }.map{|i| "javafx.animation.#{i}"}
   java_import \
     'javafx.application.Platform'
   java_import \
