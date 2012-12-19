@@ -66,11 +66,15 @@ class FXController
   end
   
   # FXML linked variable names by subclass
-  @@fxml_linked_args = {}
+  @@fxml_linked_args = {:silent => false}
   
   def self.fx_id(*name)
     # we must distinguish between subclasses, hence self.
     ((@@fxml_linked_args[self] ||= []) << name).flatten!
+  end
+  
+  def self.silence_id_warnings()
+    @@fxml_linked_args[:silent] = true
   end
   
   # set scene object (setter), and update fxml-injected values
@@ -78,7 +82,11 @@ class FXController
     @scene = s
     (@@fxml_linked_args[self.class] ||= []).each do |name|
       # set each instance variable from the lookup on the scene
-      instance_variable_set("@#{name}".to_sym, s.lookup("##{name}"))
+      val = s.lookup("##{name}")
+      if val == nil && !@@fxml_linked_args[:silent]
+        puts "[WARNING] fx_id not found: #{name}. Is id set to a different value than fx:id? (if this is expected, call silence_id_warnings)"
+      end
+      instance_variable_set("@#{name}".to_sym, val)
     end
   end
   
