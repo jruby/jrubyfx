@@ -4,3 +4,4 @@ target/
 *.gem
 /pkg/
 Gemfile.lock
+*.log
