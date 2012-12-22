@@ -34,7 +34,7 @@ class Hash
   def flat_tree_inject(klass=Array,&block)
     self.inject(klass.new) do |lres, pair|
       if pair[1].is_a? Hash
-        pair[1] = pair[1].flat_tree_inject(&block)
+        pair[1] = pair[1].flat_tree_inject(klass, &block)
       end
       block.call(lres, *pair)
     end
