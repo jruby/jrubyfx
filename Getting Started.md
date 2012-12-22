@@ -83,6 +83,11 @@ Whoa! So what does `build` do? Build takes a name of a class (`Label`), creates 
 
 For this single contrived example, it makes no sense, but for certain things (like animations and file save dialogs), it can save some serious typing.
 
+#### Creating a Label the JRubyFXML DSL way
+The DSL is very similar to the `build` way:
+
+	label = label(text: "Hello World!")
+
 ### Putting the Label on the Stage
 Now we can't just put the Label on the Stage, we must put it in a Scene so JavaFX knows how to layout the window.
 
@@ -97,8 +102,6 @@ Yes, they could be on the same line like so:
 	stage.scene = Scene.new(label)
 
 #### Creating a Scene the DSL way
-Astute readers might notice I have not mentioned the DSL way for the Label. This is because the DSL is not fully complete, and for certain things (like `Label`), it is overkill (though may be added later).
-
 `build()` has a cousin `with()` that works the exact same way, except it does not create an object, only sets properties on it. Using `with`, we can rewrite the first bit of our function that sets the title and width to:
 
 	def start(stage)
@@ -112,7 +115,7 @@ Fancy, huh? but now that we've used `with`, we can create our scene inside using
 	def start(stage)
 		with(stage, title: "Hello World!", width: 800, height: 600) do
 			layout_scene() do
-				Label.new("Hello World!")
+				label(text: "Hello World!")
 			end
 		end
 		stage.show()
