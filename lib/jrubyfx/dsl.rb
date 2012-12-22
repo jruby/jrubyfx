@@ -50,8 +50,8 @@ module JRubyFX
           end
           res
         else
-          # we are not at a leaf node anymore, just pass on their work
-          values
+          # we are not at a leaf node anymore, merge in previous work
+          res.merge!(values)
         end
       end)
 
