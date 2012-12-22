@@ -37,6 +37,7 @@ module JRubyFX
     NAME_TO_CLASSES = {
       # observable structs
       'observable_array_list' => proc { |*args| FXCollections.observable_array_list(*args) },
+      'double_property' => SimpleDoubleProperty,
     }.merge(JFX_CLASS_HIERARCHY.flat_tree_inject(Hash) do |res, name, values|
         # Merge in auto-generated list of classes from all the imported classes
         unless values.is_a? Hash
