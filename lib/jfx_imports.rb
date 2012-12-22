@@ -16,6 +16,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
+require 'jrubyfx/utils'
 
 # Update load path to include the JavaFX runtime and fail nicely if we can't find it
 begin
@@ -27,18 +28,6 @@ begin
   require 'jfxrt.jar'
 rescue
   fail "JavaFX runtime not found.  Please install Java 7u4 or newer or set environment variable JAVAFX_DIR to the folder that contains jfxrt.jar"
-end
-
-# This feels kinda like a hack. If anyone has a better idea, please let me know
-class Hash
-  def flat_tree_inject(klass=Array,&block)
-    self.inject(klass.new) do |lres, pair|
-      if pair[1].is_a? Hash
-        pair[1] = pair[1].flat_tree_inject(klass, &block)
-      end
-      block.call(lres, *pair)
-    end
-  end
 end
 
 # If you need JavaFX, just include this module. Its sole purpose in life is to

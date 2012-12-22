@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 require 'date'
+require_relative '../lib/jrubyfx/utils'
 
 if ARGV.length < 1
   puts "Please specify the fxml file to parse"
@@ -60,7 +61,7 @@ END
       # TODO: may not work with funky non-latin characters
       # Yes, I used regex, yes its xml, yes I now have two problems.
       line.scan(/on((([A-Z]*[a-z]*)*?)[A-Z]+[a-z]+)="#([^ "':]+)"/) do |match| 
-        handlers << "  fx_#{match[1].gsub(/(.)([A-Z])/,'\1_\2').downcase}#{(match[1].length >0 ? "_" : "")}handler :#{match[3]} do |event|\n    # TODO: Auto-generated event handler\n"
+        handlers << "  fx_#{match[1].snake_case}#{(match[1].length >0 ? "_" : "")}handler :#{match[3]} do |event|\n    # TODO: Auto-generated event handler\n"
         handlers << "    puts \"#{match[0]} event '#{match[3]}' called\"\n  end\n\n"
       end
     end

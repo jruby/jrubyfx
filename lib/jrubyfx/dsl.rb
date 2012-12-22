@@ -43,7 +43,7 @@ module JRubyFX
           values.map do |i|
             # this regexp does snake_casing
             # Anybody got a better way to get the java class instead of evaling its name?
-            res.merge!({i.gsub(/(.)([A-Z])/,'\1_\2').downcase => eval(i)})
+            res.merge!({i.snake_case.gsub(/(h|v)_(line|box)/, '\1\2') => eval(i)})
           end
           res
         else
