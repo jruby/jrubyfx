@@ -1,3 +1,4 @@
+#!/usr/bin/env jruby
 require 'jrubyfxml'
 
 class LineChart < FXApplication

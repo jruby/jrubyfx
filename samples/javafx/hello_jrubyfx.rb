@@ -1,3 +1,4 @@
+#!/usr/bin/env jruby
 # Original version is here: http://www.oracle.com/technetwork/jp/ondemand/java/20110519-java-a-2-sato-400530-ja.pdf
 # Modified by Hiroshi Nakamura <nahi@ruby-lang.org>
 

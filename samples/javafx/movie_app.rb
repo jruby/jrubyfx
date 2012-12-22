@@ -1,3 +1,4 @@
+#!/usr/bin/env jruby
 # Original version is for GroovyFX by @kazuchika
 # https://gist.github.com/1362259G
 
