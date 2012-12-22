@@ -52,7 +52,7 @@ Creating Application and Controller
 Import jrubyfxml file, and subclass FXApplication and FXController.
 At the bottom of the file, call _yourFXApplicationClass_.launch().
 Override start(stage) in the application, and initialize(url, resources) in 
-the controller. See samples/fxml/Demo.rb for commented example.
+the controller. See samples/fxml/Demo.rb for commented example, or see the Getting Started guide
 
 Issues
 ------
