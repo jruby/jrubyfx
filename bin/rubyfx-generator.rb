@@ -25,7 +25,7 @@ if ARGV.length < 1
 end
 
 fxml = ARGV[0]
-rb = fxml.gsub(/\.fxml$/i, ".rb")
+rb = File.basename(fxml.gsub(/\.fxml$/i, ".rb"))
 rb = ARGV[1] if ARGV.length > 1
 name_guess = "My" + File.basename(fxml).gsub(/\.fxml$/i, "").gsub(/[^a-zA-Z0-9_]/i, "") # better guess would be better
 name_guess = ARGV[2] if ARGV.length > 2
@@ -74,7 +74,7 @@ END
 
 end
 
-puts "Done"
-puts "Launching..."
+puts "Done!"
+puts "Launching 'ruby #{rb}' ..."
 
 require rb
