@@ -17,6 +17,6 @@ Gem::Specification.new do |s|
   s.rubyforge_project         = "jrubyfxml"
 
   s.files        = Dir.glob("lib/**/*") + %w(LICENSE README.md)
-  s.executables  = []
+  s.executables  = ['rubyfx-generator']
   s.require_path = 'lib'
 end
