@@ -29,235 +29,241 @@ rescue
   fail "JavaFX runtime not found.  Please install Java 7u4 or newer or set environment variable JAVAFX_DIR to the folder that contains jfxrt.jar"
 end
 
+# This feels kinda like a hack. If anyone has a better idea, please let me know
+class Hash
+  def stringify_tree
+    self.inject([]) do |res, pair|
+      name = "#{pair[0].to_s}."
+      name = "" if name == "."
+      
+      values = pair[1]
+      if values.is_a? Hash
+        values = values.stringify_tree
+      end
+      # assume its an array...
+      res.concat(values.map{|i| "#{name}#{i}"})
+    end
+  end
+end
+
 # If you need JavaFX, just include this module. Its sole purpose in life is to
 # import all JavaFX stuff, plus a few useful Java classes (like Void)
 module JFXImports
+  
   # If something is missing, just java_import it in your code.
   # And then ask us to put it in this list
-  java_import *%w{
-      Animation
-      AnimationTimer
-      FadeTransition
-      FillTransition
-      Interpolator
-      KeyFrame
-      KeyValue
-      ParallelTransition
-      PathTransition
-      PauseTransition
-      RotateTransition
-      ScaleTransition
-      SequentialTransition
-      StrokeTransition
-      Timeline
-      Transition
-      TranslateTransition
-    }.map{|i| "javafx.animation.#{i}"}
-  java_import \
-    'javafx.application.Platform'
-  java_import \
-    'javafx.beans.property.SimpleDoubleProperty'
-    #TODO: import more
-  java_import \
-    'javafx.beans.value.ChangeListener'
-  java_import \
-    'javafx.collections.FXCollections'
-  java_import \
-    'javafx.event.Event',
-    'javafx.event.ActionEvent',
-    'javafx.event.EventHandler'
-  java_import \
-    'javafx.fxml.Initializable',
-    'javafx.fxml.LoadException'
-  java_import \
-    'javafx.geometry.HorizontalDirection',
-    'javafx.geometry.HPos',
-    'javafx.geometry.Insets',
-    'javafx.geometry.Orientation',
-    'javafx.geometry.Pos',
-    'javafx.geometry.Side',
-    'javafx.geometry.VerticalDirection',
-    'javafx.geometry.VPos'
-  java_import *%w{
-      Group
-      Node
-      Parent
-      Scene
-    }.map{|i| "javafx.scene.#{i}"}
-  java_import \
-    'javafx.scene.canvas.Canvas'
-  java_import \
-    'javafx.scene.chart.CategoryAxis',
-    'javafx.scene.chart.LineChart',
-    'javafx.scene.chart.NumberAxis',
-    'javafx.scene.chart.XYChart'
-  # TODO: import more of these
-  java_import *%w{
-      Accordion
-      Button
-      CheckBox
-      CheckBoxTreeItem
-      CheckMenuItem
-      ChoiceBox
-      ColorPicker
-      ComboBox
-      ContextMenu
-      Hyperlink
-      Label
-      ListCell
-      ListView
-      Menu
-      MenuBar
-      MenuButton
-      MenuItem
-      Pagination
-      PasswordField
-      PopupControl
-      ProgressBar
-      ProgressIndicator
-      RadioButton
-      RadioMenuItem
-      ScrollBar
-      ScrollPane
-      Separator
-      SeparatorMenuItem
-      Slider
-      SplitMenuButton
-      SplitPane
-      Tab
-      TableView
-      TabPane
-      TextArea
-      TextField
-      ToggleButton
-      ToggleGroup
-      ToolBar
-      Tooltip
-      TreeItem
-      TreeView
-      ContentDisplay
-      OverrunStyle
-      SelectionMode
-    }.map{|i| "javafx.scene.control.#{i}"}
-  java_import *%w{
-      Blend
-      BlendMode
-      Bloom
-      BlurType
-      DropShadow
-      GaussianBlur
-      Reflection
-      SepiaTone
-    }.map{|i| "javafx.scene.effect.#{i}"}
-  java_import *%w{
-      Image
-      ImageView PixelReader
-      PixelWriter
-    }.map{|i| "javafx.scene.image.#{i}"}
-  java_import *%w{
-      Clipboard
-      ContextMenuEvent
-      DragEvent
-      GestureEvent
-      InputEvent
-      InputMethodEvent
-      KeyEvent
-      Mnemonic
-      MouseDragEvent
-      MouseEvent
-      RotateEvent
-      ScrollEvent
-      SwipeEvent
-      TouchEvent
-      ZoomEvent
-    }.map{|i| "javafx.scene.input.#{i}"}
-  java_import *%w{
-      AnchorPane
-      BorderPane
-      ColumnConstraints
-      FlowPane
-      GridPane
-      HBox
-      Priority
-      RowConstraints
-      StackPane
-      TilePane
-      VBox
-    }.map{|i| "javafx.scene.layout.#{i}"}
-  java_import \
-    'javafx.scene.media.Media',
-    'javafx.scene.media.MediaPlayer',
-    'javafx.scene.media.MediaView'
-    # TODO: fill this out
-  java_import *%w{
-      Color
-      CycleMethod
-      ImagePattern
-      LinearGradient
-      Paint
-      RadialGradient
-      Stop
-    }.map{|i| "javafx.scene.paint.#{i}"}
-  java_import *%w{
-      Arc
-      ArcTo
-      ArcType
-      Circle
-      ClosePath
-      CubicCurve
-      CubicCurveTo
-      Ellipse
-      FillRule
-      HLineTo
-      Line
-      LineTo
-      MoveTo
-      Path
-      PathElement
-      Polygon
-      Polyline
-      QuadCurve
-      QuadCurveTo
-      Rectangle
-      Shape
-      StrokeLineCap
-      StrokeLineJoin
-      StrokeType
-      SVGPath
-      VLineTo
-    }.map{|i| "javafx.scene.shape.#{i}"}
-  java_import *%w{
-      Font
-      FontPosture
-      FontSmoothingType
-      FontWeight
-      Text
-      TextAlignment
-      TextBoundsType
-    }.map{|i| "javafx.scene.text.#{i}"}
-  java_import *%w{
-      Affine
-      Rotate
-      Scale
-      Shear
-      Translate
-    }.map{|i| "javafx.scene.transform.#{i}"}
-  java_import \
-    'javafx.scene.web.WebView'
-  java_import *%w{
-      DirectoryChooser
-      FileChooser
-      Modality
-      Popup
-      PopupWindow
-      Screen
-      Stage
-      StageStyle
-      Window
-      WindowEvent
-    }.map{|i| "javafx.stage.#{i}"}
-  java_import \
-    'javafx.util.Duration'
-  java_import \
-    'java.lang.Void'
+  JFX_CLASS_HIERARCHY = { :javafx => {
+      :animation => %w[
+        Animation
+        AnimationTimer
+        FadeTransition
+        FillTransition
+        Interpolator
+        KeyFrame
+        KeyValue
+        ParallelTransition
+        PathTransition
+        PauseTransition
+        RotateTransition
+        ScaleTransition
+        SequentialTransition
+        StrokeTransition
+        Timeline
+        Transition
+        TranslateTransition],
+      :application => ['Platform'],
+      :beans => {
+        :property => ['SimpleDoubleProperty'],
+        #TODO: import more
+        :value => ['ChangeListener']  
+      },
+      :collections => ['FXCollections'],
+      :event => %w[
+        Event
+        ActionEvent
+        EventHandler],
+      :fxml => ['Initializable', 'LoadException'],
+      :geometry => %w[
+        HorizontalDirection
+        HPos
+        Insets
+        Orientation
+        Pos
+        Side
+        VerticalDirection
+        VPos],
+      :scene => {
+        :'' => %w[
+          Group
+          Node
+          Parent
+          Scene],
+        :canvas => ['Canvas'],
+        :chart => %w[
+          CategoryAxis
+          LineChart
+          NumberAxis
+          XYChart],
+        # TODO: import more of these
+        :control => %w[
+          Accordion
+          Button
+          CheckBox
+          CheckBoxTreeItem
+          CheckMenuItem
+          ChoiceBox
+          ColorPicker
+          ComboBox
+          ContextMenu
+          Hyperlink
+          Label
+          ListCell
+          ListView
+          Menu
+          MenuBar
+          MenuButton
+          MenuItem
+          Pagination
+          PasswordField
+          PopupControl
+          ProgressBar
+          ProgressIndicator
+          RadioButton
+          RadioMenuItem
+          ScrollBar
+          ScrollPane
+          Separator
+          SeparatorMenuItem
+          Slider
+          SplitMenuButton
+          SplitPane
+          Tab
+          TableView
+          TabPane
+          TextArea
+          TextField
+          ToggleButton
+          ToggleGroup
+          ToolBar
+          Tooltip
+          TreeItem
+          TreeView
+          ContentDisplay
+          OverrunStyle
+          SelectionMode],
+        :effect => %w[
+          Blend
+          BlendMode
+          Bloom
+          BlurType
+          DropShadow
+          GaussianBlur
+          Reflection
+          SepiaTone],
+        :image => %w[
+          Image
+          ImageView
+          PixelReader
+          PixelWriter],
+        :input => %w[
+          Clipboard
+          ContextMenuEvent
+          DragEvent
+          GestureEvent
+          InputEvent
+          InputMethodEvent
+          KeyEvent
+          Mnemonic
+          MouseDragEvent
+          MouseEvent
+          RotateEvent
+          ScrollEvent
+          SwipeEvent
+          TouchEvent
+          ZoomEvent],
+        :layout => %w[
+          AnchorPane
+          BorderPane
+          ColumnConstraints
+          FlowPane
+          GridPane
+          HBox
+          Priority
+          RowConstraints
+          StackPane
+          TilePane
+          VBox],
+        :media => %w[
+          Media
+          MediaPlayer
+          MediaView],
+        # TODO: fill this out
+        :paint => %w[
+          Color
+          CycleMethod
+          ImagePattern
+          LinearGradient
+          Paint
+          RadialGradient
+          Stop],
+        :shape => %w[
+          Arc
+          ArcTo
+          ArcType
+          Circle
+          ClosePath
+          CubicCurve
+          CubicCurveTo
+          Ellipse
+          FillRule
+          HLineTo
+          Line
+          LineTo
+          MoveTo
+          Path
+          PathElement
+          Polygon
+          Polyline
+          QuadCurve
+          QuadCurveTo
+          Rectangle
+          Shape
+          StrokeLineCap
+          StrokeLineJoin
+          StrokeType
+          SVGPath
+          VLineTo],
+        :text => %w[
+          Font
+          FontPosture
+          FontSmoothingType
+          FontWeight
+          Text
+          TextAlignment
+          TextBoundsType],
+        :transform => %w[
+          Affine
+          Rotate
+          Scale
+          Shear
+          Translate],
+        :web => ['WebView']
+      },
+      :stage => %w[
+        DirectoryChooser
+        FileChooser
+        Modality
+        Popup
+        PopupWindow
+        Screen
+        Stage
+        StageStyle
+        Window
+        WindowEvent],
+      :util => ['Duration']
+    }
+  }
+  
+  JF
+  java_import 'java.lang.Void'
 end
