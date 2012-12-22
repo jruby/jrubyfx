@@ -22,6 +22,7 @@ require 'date'
 if ARGV.length < 1
   puts "Please specify the fxml file to parse"
   puts "#{$0} some.fxml [output.rb [AppName]]"
+  exit -1
 end
 
 fxml = ARGV[0]
