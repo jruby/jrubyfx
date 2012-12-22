@@ -31,8 +31,8 @@ end
 
 # This feels kinda like a hack. If anyone has a better idea, please let me know
 class Hash
-  def flat_tree_inject(&block)
-    self.inject([]) do |lres, pair|
+  def flat_tree_inject(klass=Array,&block)
+    self.inject(klass.new) do |lres, pair|
       if pair[1].is_a? Hash
         pair[1] = pair[1].flat_tree_inject(&block)
       end
@@ -95,7 +95,9 @@ module JFXImports
           Scene],
         :canvas => ['Canvas'],
         :chart => %w[
+          Axis
           CategoryAxis
+          Chart
           LineChart
           NumberAxis
           XYChart],
@@ -103,6 +105,7 @@ module JFXImports
         :control => %w[
           Accordion
           Button
+          Cell
           CheckBox
           CheckBoxTreeItem
           CheckMenuItem
@@ -134,9 +137,11 @@ module JFXImports
           SplitPane
           Tab
           TableView
+          TableColumn
           TabPane
           TextArea
           TextField
+          TitledPane
           ToggleButton
           ToggleGroup
           ToolBar
@@ -151,10 +156,21 @@ module JFXImports
           BlendMode
           Bloom
           BlurType
+          BoxBlur
+          ColorAdjust
+          ColorInput
+          DisplacementMap
           DropShadow
           GaussianBlur
+          Glow
+          ImageInput
+          InnerShadow
+          Lighting
+          MotionBlur
+          PerspectiveTransform
           Reflection
-          SepiaTone],
+          SepiaTone
+          Shadow],
         :image => %w[
           Image
           ImageView
@@ -183,6 +199,7 @@ module JFXImports
           FlowPane
           GridPane
           HBox
+          Pane
           Priority
           RowConstraints
           StackPane
@@ -242,7 +259,7 @@ module JFXImports
           Scale
           Shear
           Translate],
-        :web => ['WebView']
+        :web => ['WebView', 'HTMLEditor']
       },
       :stage => %w[
         DirectoryChooser
