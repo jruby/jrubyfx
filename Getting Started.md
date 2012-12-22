@@ -270,5 +270,12 @@ Now what?
 ---------
 Now you know the basics of FXML and JRubyFXML! If you haven't already, I suggest looking over samples/fxml/Demo.rb for a bit more detail. JavaFX help is all around, and most of it is applicable to JRubyFXML.
 
+### Using the generator
+Got a large FXML file with dozens of fx:id's and events? Assuming you only have a FXML file:
+
+    $ rubyfx-generator YourComplex.fxml NewAppFile.rb MyComplexAppName
+
+And just like that, `NewAppFile.rb` contains all the fx_id and fx_*_handler declarations you need! Note that the generator is not well tested on complex documents with obscure handler types, so if it fails, please send the FXML so we can try to fix it.
+
 ### JavaFX Scene Builder vs Writing FXML by hand
 Note that all instances of using Scene Builder are replacable by writing FXML by hand, and in some cases it is less appropriate or even impossible to use Scene Builder to create FXML files (like changing root element). I HIGHLY suggest you start by using the Scene Builder, and looking at the FXML files it generates. Once you know enough FXML, you get rid of the Scene Builder from your workflow. On the other hand, it is very useful for tweaking values and getting immediate feedback. Unless you are allergic to it, I suggest keeping it around.
