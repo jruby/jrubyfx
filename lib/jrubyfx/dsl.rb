@@ -38,6 +38,8 @@ module JRubyFX
       # observable structs
       'observable_array_list' => proc { |*args| FXCollections.observable_array_list(*args) },
       'double_property' => SimpleDoubleProperty,
+      'xy_chart_series' => Java::javafx.scene.chart.XYChart::Series,
+      'xy_chart_data' => Java::javafx.scene.chart.XYChart::Data,
     }.merge(JFX_CLASS_HIERARCHY.flat_tree_inject(Hash) do |res, name, values|
         # Merge in auto-generated list of classes from all the imported classes
         unless values.is_a? Hash
