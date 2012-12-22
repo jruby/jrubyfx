@@ -31,17 +31,13 @@ end
 
 # This feels kinda like a hack. If anyone has a better idea, please let me know
 class Hash
-  def stringify_tree
-    self.inject([]) do |res, pair|
-      name = "#{pair[0].to_s}."
-      name = "" if name == "."
-      
-      values = pair[1]
-      if values.is_a? Hash
-        values = values.stringify_tree
+  # TODO: I can't get normal blocks working in normal JRuby. They work fine in IRB though...
+  def flat_tree_inject(ablock)
+    self.inject([]) do |lres, pair|
+      if pair[1].is_a? Hash
+        pair[1] = pair[1].flat_tree_inject(ablock)
       end
-      # assume its an array...
-      res.concat(values.map{|i| "#{name}#{i}"})
+      ablock.call(lres, *pair)
     end
   end
 end
@@ -264,6 +260,10 @@ module JFXImports
     }
   }
   
-  JF
+  java_import *JFX_CLASS_HIERARCHY.flat_tree_inject(lambda { |res, name, values|
+    name = "#{name.to_s}."
+    name = "" if name == "."
+    res.concat(values.map{|i| "#{name}#{i}"})
+  })
   java_import 'java.lang.Void'
 end
