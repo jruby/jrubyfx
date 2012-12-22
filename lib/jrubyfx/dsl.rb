@@ -50,7 +50,7 @@ module JRubyFX
           # we are not at a leaf node anymore, just pass on their work
           values
         end
-      end).tap{|i| p i}
+      end)
 
     def method_missing(name, *args, &block)
       clazz = NAME_TO_CLASSES[name.to_s]
