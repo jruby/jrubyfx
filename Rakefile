@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 require "bundler/gem_tasks"
-require 'lib/jrubyfxml_tasks'
+require_relative 'lib/jrubyfxml_tasks'
 task :default => [:build, :run]
 
 jar = ENV['jar'] || "jar"
