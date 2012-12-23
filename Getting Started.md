@@ -86,7 +86,7 @@ For this single contrived example, it makes no sense, but for certain things (li
 #### Creating a Label the JRubyFXML DSL way
 The DSL is very similar to the `build` way:
 
-	label = label(text: "Hello World!")
+	my_label_instance = label(text: "Hello World!")
 
 ### Putting the Label on the Stage
 Now we can't just put the Label on the Stage, we must put it in a Scene so JavaFX knows how to layout the window.
