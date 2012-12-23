@@ -1,6 +1,6 @@
 Using JRubyFXML
 ===============
-This guide assumes you have basic knowledge of Ruby, and have JRuby 1.7+ installed.
+This guide assumes you have basic knowledge of Ruby, and have JRuby 1.7 or greater and Java 7u6 or greater installed. Java 6 will also work if you are on Windows and download JavaFX runtime separately and put its path in JFX_DIR enviroment variable. At the moment, OpenJDK will unfortunatly not work as it does not have JavaFX.
 
 Installing JRubyFXML
 --------------------
