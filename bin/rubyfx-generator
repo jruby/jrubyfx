@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 require 'date'
-require_relative '../lib/jrubyfx/utils'
+require 'jrubyfx/utils'
 
 if ARGV.length < 1
   puts "Please specify the fxml file to parse"
