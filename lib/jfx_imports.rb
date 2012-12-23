@@ -37,24 +37,8 @@ module JFXImports
   # If something is missing, just java_import it in your code.
   # And then ask us to put it in this list
   JFX_CLASS_HIERARCHY = { :javafx => {
-      :animation => %w[
-        Animation
-        AnimationTimer
-        FadeTransition
-        FillTransition
-        Interpolator
-        KeyFrame
-        KeyValue
-        ParallelTransition
-        PathTransition
-        PauseTransition
-        RotateTransition
-        ScaleTransition
-        SequentialTransition
-        StrokeTransition
-        Timeline
-        Transition
-        TranslateTransition],
+      :animation => %w[Animation AnimationTimer FadeTransition FillTransition Interpolator KeyFrame KeyValue ParallelTransition PathTransition 
+        PauseTransition RotateTransition ScaleTransition SequentialTransition StrokeTransition Timeline Transition TranslateTransition],
       :application => ['Platform'],
       :beans => {
         :property => ['SimpleDoubleProperty'],
@@ -62,205 +46,34 @@ module JFXImports
         :value => ['ChangeListener']  
       },
       :collections => ['FXCollections'],
-      :event => %w[
-        Event
-        ActionEvent
-        EventHandler],
+      :event => %w[Event ActionEvent EventHandler],
       :fxml => ['Initializable', 'LoadException'],
-      :geometry => %w[
-        HorizontalDirection
-        HPos
-        Insets
-        Orientation
-        Pos
-        Side
-        VerticalDirection
-        VPos],
+      :geometry => %w[HorizontalDirection HPos Insets Orientation Pos Side VerticalDirection VPos], 
       :scene => {
-        :'' => %w[
-          Group
-          Node
-          Parent
-          Scene],
+        :'' => %w[Group Node Parent Scene],
         :canvas => ['Canvas'],
-        :chart => %w[
-          Axis
-          CategoryAxis
-          Chart
-          LineChart
-          NumberAxis
-          XYChart],
+        :chart => %w[Axis CategoryAxis Chart LineChart NumberAxis XYChart],
         # TODO: import more of these
-        :control => %w[
-          Accordion
-          Button
-          Cell
-          CheckBox
-          CheckBoxTreeItem
-          CheckMenuItem
-          ChoiceBox
-          ColorPicker
-          ComboBox
-          ContextMenu
-          Hyperlink
-          Label
-          ListCell
-          ListView
-          Menu
-          MenuBar
-          MenuButton
-          MenuItem
-          Pagination
-          PasswordField
-          PopupControl
-          ProgressBar
-          ProgressIndicator
-          RadioButton
-          RadioMenuItem
-          ScrollBar
-          ScrollPane
-          Separator
-          SeparatorMenuItem
-          Slider
-          SplitMenuButton
-          SplitPane
-          Tab
-          TableView
-          TableColumn
-          TabPane
-          TextArea
-          TextField
-          TitledPane
-          ToggleButton
-          ToggleGroup
-          ToolBar
-          Tooltip
-          TreeItem
-          TreeView
-          ContentDisplay
-          OverrunStyle
-          SelectionMode],
-        :effect => %w[
-          Blend
-          BlendMode
-          Bloom
-          BlurType
-          BoxBlur
-          ColorAdjust
-          ColorInput
-          DisplacementMap
-          DropShadow
-          GaussianBlur
-          Glow
-          ImageInput
-          InnerShadow
-          Lighting
-          MotionBlur
-          PerspectiveTransform
-          Reflection
-          SepiaTone
-          Shadow],
-        :image => %w[
-          Image
-          ImageView
-          PixelReader
-          PixelWriter],
-        :input => %w[
-          Clipboard
-          ContextMenuEvent
-          DragEvent
-          GestureEvent
-          InputEvent
-          InputMethodEvent
-          KeyEvent
-          Mnemonic
-          MouseDragEvent
-          MouseEvent
-          RotateEvent
-          ScrollEvent
-          SwipeEvent
-          TouchEvent
-          ZoomEvent],
-        :layout => %w[
-          AnchorPane
-          BorderPane
-          ColumnConstraints
-          FlowPane
-          GridPane
-          HBox
-          Pane
-          Priority
-          RowConstraints
-          StackPane
-          TilePane
-          VBox],
-        :media => %w[
-          Media
-          MediaPlayer
-          MediaView],
+        :control => %w[Accordion Button Cell CheckBox CheckBoxTreeItem CheckMenuItem ChoiceBox ColorPicker ComboBox ContextMenu Hyperlink 
+          Label ListCell ListView Menu MenuBar MenuButton MenuItem Pagination PasswordField PopupControl ProgressBar ProgressIndicator RadioButton 
+          RadioMenuItem ScrollBar ScrollPane Separator SeparatorMenuItem Slider SplitMenuButton SplitPane Tab TableView TableColumn TabPane TextArea 
+          TextField TitledPane ToggleButton ToggleGroup ToolBar Tooltip TreeItem TreeView ContentDisplay OverrunStyle SelectionMode],
+        :effect => %w[Blend BlendMode Bloom BlurType BoxBlur ColorAdjust ColorInput DisplacementMap DropShadow GaussianBlur Glow ImageInput 
+          InnerShadow Lighting MotionBlur PerspectiveTransform Reflection SepiaTone Shadow],
+        :image => %w[Image ImageView PixelReader PixelWriter],
+        :input => %w[Clipboard ContextMenuEvent DragEvent GestureEvent InputEvent InputMethodEvent KeyEvent 
+          Mnemonic MouseDragEvent MouseEvent RotateEvent ScrollEvent SwipeEvent TouchEvent ZoomEvent],
+        :layout => %w[AnchorPane BorderPane ColumnConstraints FlowPane GridPane HBox Pane Priority RowConstraints StackPane TilePane VBox],
+        :media => %w[Media MediaPlayer MediaView],
         # TODO: fill this out
-        :paint => %w[
-          Color
-          CycleMethod
-          ImagePattern
-          LinearGradient
-          Paint
-          RadialGradient
-          Stop],
-        :shape => %w[
-          Arc
-          ArcTo
-          ArcType
-          Circle
-          ClosePath
-          CubicCurve
-          CubicCurveTo
-          Ellipse
-          FillRule
-          HLineTo
-          Line
-          LineTo
-          MoveTo
-          Path
-          PathElement
-          Polygon
-          Polyline
-          QuadCurve
-          QuadCurveTo
-          Rectangle
-          Shape
-          StrokeLineCap
-          StrokeLineJoin
-          StrokeType
-          SVGPath
-          VLineTo],
-        :text => %w[
-          Font
-          FontPosture
-          FontSmoothingType
-          FontWeight
-          Text
-          TextAlignment
-          TextBoundsType],
-        :transform => %w[
-          Affine
-          Rotate
-          Scale
-          Shear
-          Translate],
+        :paint => %w[Color CycleMethod ImagePattern LinearGradient Paint RadialGradient Stop],
+        :shape => %w[Arc ArcTo ArcType Circle ClosePath CubicCurve CubicCurveTo Ellipse FillRule HLineTo Line LineTo MoveTo Path PathElement 
+          Polygon Polyline QuadCurve QuadCurveTo Rectangle Shape StrokeLineCap StrokeLineJoin StrokeType SVGPath VLineTo],
+        :text => %w[Font FontPosture FontSmoothingType FontWeight Text TextAlignment TextBoundsType],
+        :transform => %w[Affine Rotate Scale Shear Translate],
         :web => ['WebView', 'HTMLEditor']
       },
-      :stage => %w[
-        DirectoryChooser
-        FileChooser
-        Modality
-        Popup
-        PopupWindow
-        Screen
-        Stage
-        StageStyle
-        Window
-        WindowEvent],
+      :stage => %w[DirectoryChooser FileChooser Modality Popup PopupWindow Screen Stage StageStyle Window WindowEvent],
       :util => ['Duration']
     }
   }
