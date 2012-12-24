@@ -33,7 +33,7 @@ When we launch this application, JavaFX will call the `start` method, and will p
 		end
 	end
 
-With that stage, we can set the title and size:
+With that stage (which you can think of as the window border), we can set the title and size:
 
 	def start(stage)
 		stage.title = "Hello World!"
@@ -86,10 +86,10 @@ For this single contrived example, it makes no sense, but for certain things (li
 #### Creating a Label the JRubyFXML DSL way
 The DSL is very similar to the `build` way:
 
-	my_label_instance = label(text: "Hello World!")
+	label_variable = label(text: "Hello World!")
 
 ### Putting the Label on the Stage
-Now we can't just put the Label on the Stage, we must put it in a Scene so JavaFX knows how to layout the window.
+Now we can't just put the Label on the Stage, we must put it in a Scene so JavaFX knows how to layout the window. What is a Scene you ask? The Stage does not directly handle controls, it passes them onto the Scene object, which is the root of the UI tree. Scene normally contains at least one layout manager (like HBox, GridPanel, etc), and often more, however for the purposes of this demo, we will use the basic default layout manager Scene provides. The generated FXML later in this guide will use a proper layout manager. If you've used Java Swing before, JFrame is basically the Stage and the Scene combined.
 
 #### Creating a Scene the Java way
 Java always creates a scene of itself. Oh sorry, right:
@@ -167,7 +167,7 @@ FXML Controllers
 ----------------
 Without interaction, most programs are useless. FXML lets you specify what method should be called when something happens, like a button click or key press. However, in order to call code, it needs to know where its located, which is where the controller comes in. FXML allows multiple types of actions: script actions in embedded javascript, and controller actions in Java/JRuby. If you want to use embedded script actions in javascript, this is not the guide for you; look it up on the internet. 
 
-In the Scene Builder, drag a `Button` onto the surface of the designer, and click the Code section at the bottom of the properties on the right side. This is all the events that it supports. Yes, quite a few! Find the On Action one (it should be the first one), and set its value to `#click`. Lets have it so when we click this button, the "Hello World!" text changes to "You clicked me!".
+In the Scene Builder, drag a `Button` onto the surface of the designer, and click the Code section at the bottom of the properties on the right side. This is all the events that it supports. Yes, quite a few! Find the On Action one (it should be the first one), and set its value to `#sayClicked`. Lets have it so when we click this button, the "Hello World!" text changes to "You clicked me!".
 
 **NOTE:** If you are using the sample, you won't be able to move the button around, only in front of or after the label. This is how HBox'es work. Don't panic. If you _really_ want absoloute positiong (not really a good idea for proper apps), then use an `AnchorPane`.
 
@@ -189,21 +189,21 @@ We need to mark what id's to get, which we can do with `fx_id :name`:
 		fx_id :helloLabel
 	end
 
-And we need to add our event handlers:
+This basically says that there is a control in the FXML file with the fx:id property set to the value  "helloLabel" and that we want to be able to reference this object by the instance variable `@helloLabel`. Now we need to add our event handlers:
 
 	class HelloWorldController < FXController
 		fx_id :helloLabel
 	
-		fx_handler :click do
+		fx_handler :sayClick do
 			@helloLabel.text = "You clicked me!"
 		end
 	end
 
-Whoa, what is the fx_handler stuff? just think of it like a normal function, but annotated as an event handler:
+Whoa, what is the fx_handler stuff? Just think of it like a normal function, but annotated as an event handler:
 
 	(not valid code)
 	fx_handler
-	def click
+	def sayClick
 		@helloLabel.text = "You clicked me!"
 	end
 
