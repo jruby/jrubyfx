@@ -18,6 +18,8 @@ rake install
 ```
 Once the gem is installed, just run a ruby file that uses it normally.
 
+**NOTE:** If you don't have JRuby installed as the `ruby` command, use `jruby -S rake` instead of `rake`
+
 Creating a Jar
 --------------
 If you want to distribute your application, you can create a jar with embedded JRuby.
