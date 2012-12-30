@@ -15,8 +15,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
-
-require "bundler/gem_tasks"
+require 'rubygems'
+require 'rubygems/installer'
+require 'rubygems/package_task'
 require_relative 'lib/jrubyfxml_tasks'
 task :default => [:build, :run]
 
@@ -47,9 +48,16 @@ task :run do
   ruby "-I lib '#{main_script||'samples/fxml/Demo.rb'}'"
 end
 
-# Alias :)
-desc "Build the gem (alias)"
-task :gem => :build
+load 'jrubyfxml.gemspec'
+Gem::PackageTask.new($spec) do |pkg|
+  pkg.need_zip = false
+  pkg.need_tar = false
+end
+
+desc "Build and install the gem"
+task :install => :gem do
+  Gem::Installer.new("pkg/jrubyfxml-#{JRubyFX::VERSION}-java.gem").install
+end
 
 task :download_jruby_jar do
   JRubyFXTasks::download_jruby(jruby_version)

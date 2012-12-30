@@ -3,7 +3,7 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'jrubyfx/version'
 
-Gem::Specification.new do |s|
+$spec = Gem::Specification.new do |s|
   s.name        = "jrubyfxml"
   s.version     = JRubyFX::VERSION
   s.platform    = 'java'
