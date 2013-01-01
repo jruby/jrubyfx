@@ -99,6 +99,8 @@ class SimpleFXController < FXController
     
     unless file == nil
       output_jar = file.path
+      # Note that JavaFX does not add extensions automatically, so lets add it
+      output_jar += ".jar" unless output_jar.end_with? ".jar"
       # import the jarification tasks
       require 'jrubyfxml_tasks'
       # Download jruby (current version running)
