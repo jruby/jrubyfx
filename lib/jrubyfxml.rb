@@ -22,6 +22,7 @@ require 'jruby/core_ext' # for the become_java!
 # JRubyFXML includes
 require_relative 'jfx_imports'
 require_relative 'fxml_module'
+require_relative 'jrubyfx/dsl'
 require_relative 'fxml_application'
 require_relative 'fxml_controller'
 require_relative 'java_fx_impl'

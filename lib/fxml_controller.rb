@@ -21,6 +21,7 @@ require 'jrubyfxml'
 # inherit from this class for FXML controllers
 class FXController
   include JRubyFX
+  include JRubyFX::DSL
   java_import 'java.net.URL'
   java_import 'javafx.fxml.FXMLLoader'
   

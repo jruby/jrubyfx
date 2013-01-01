@@ -20,6 +20,7 @@ require 'jrubyfxml'
 
 class FXApplication < Java.javafx.application.Application
   include JRubyFX
+  include JRubyFX::DSL
 
   # Are we packaged in a jar? This does some comparison, and may get false positives
   # and, if jruby changes, false negatives. If you are using this, it might be a
