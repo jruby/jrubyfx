@@ -53,7 +53,7 @@ module JRubyFX
           # we are not at a leaf node anymore, merge in previous work
           res.merge!(values)
         end
-      end)
+      end) unless const_defined?(:NAME_TO_CLASSES)
 
     def method_missing(name, *args, &block)
       clazz = NAME_TO_CLASSES[name.to_s]
@@ -64,4 +64,9 @@ module JRubyFX
 
     alias :node_method_missing :method_missing
   end
+end
+
+# we must load it AFTER we finish declaring the DSL class
+JRubyFX::DSL::NAME_TO_CLASSES.each do |name, cls|
+  require_relative "core_ext/#{name}" if File.exists? "#{File.dirname(__FILE__)}/core_ext/#{name}.rb"
 end
