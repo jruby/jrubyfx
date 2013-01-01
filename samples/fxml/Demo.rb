@@ -84,9 +84,15 @@ class SimpleFXController < FXController
     # the build function lets you set properties and call functions on an object
     # however, you can't reference stage, scene, or any local methods
     # note the title: "bla" is ruby 1.9 syntax, and equivalent to :title => "bla"
-    dialog = build(FileChooser, :title => "Export Demo.rb as jar...") do
-      # if we did not use the magic build method, this is the same as FileChooserInstance.extension_filters.add(...)
-      extension_filters.add(FileChooser::ExtensionFilter.new("Java Archive (*.jar)", "*.jar"))
+    # A handy shortcut to build(CamelCaseClass, bla) is snake_case_class(bla)
+    dialog = file_chooser(:title => "Export Demo.rb as jar...") do
+      # if we did not use the magic build method, this is the same as 
+      # FileChooserInstance.add_extension_filter(...)
+      # *.jar is autodetected from the description. If you don't want 
+      # autodetection, there is an optional 2nd argument.
+      # For multiple filters, use add_extension_filters with a list or
+      # a hash of description => [extensions]
+      add_extension_filter("Java Archive (*.jar)")
     end
     # Show the dialog!
     file = dialog.showSaveDialog(stage)
