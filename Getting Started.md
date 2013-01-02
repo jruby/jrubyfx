@@ -89,7 +89,7 @@ The DSL is very similar to the `build` way:
 	label_variable = label(text: "Hello World!")
 
 ### Putting the Label on the Stage
-Now we can't just put the Label on the Stage, we must put it in a Scene so JavaFX knows how to layout the window. What is a Scene you ask? The Stage does not directly handle controls, it passes them onto the Scene object, which is the root of the UI tree. Scene normally contains at least one layout manager (like HBox, GridPanel, etc), and often more, however for the purposes of this demo, we will use the basic default layout manager Scene provides. The generated FXML later in this guide will use a proper layout manager. If you've used Java Swing before, JFrame is basically the Stage and the Scene combined.
+Now we can't just put the Label on the Stage, we must put it in a Scene so JavaFX knows how to layout the window. What is a Scene you ask? The Stage does not directly handle controls, it passes them onto the Scene object, which is the root of the UI tree. Scene normally contains at least one layout manager (like HBox, GridPanel, etc), and often more, however for the purposes of this demo, we will use the basic default layout manager Scene provides. The generated FXML later in this guide will use a proper layout manager. If you've used Java Swing before, JFrame is basically the Stage and the Scene combined. Search around the internet for more information on Stage, Scene and JavaFX, almost all information is applicable to JRubyFX.
 
 #### Creating a Scene the Java way
 Java always creates a scene of itself. Oh sorry, right:

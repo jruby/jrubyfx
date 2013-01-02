@@ -19,7 +19,7 @@ rake install
 Once the gem is installed, just run a ruby file that uses it normally.
 
 **NOTE:** If you don't have JRuby installed as the `ruby` command, use `jruby -S rake` instead of `rake`. If
-you are using RVM, this does not apply to you.
+you are using RVM, this does not apply to you (though make sure you `rvm use jruby`).
 
 Creating a Jar
 --------------
@@ -71,7 +71,7 @@ Issues
 License
 -------
 Main code is LGPLv3+. See LICENSE.
-Some samples may have other licenses.
+Some samples in contrib may have other licenses.
 
 Authors
 -------
