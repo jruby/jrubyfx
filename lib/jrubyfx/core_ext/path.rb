@@ -1,3 +1,4 @@
+# JRubyFX DSL extensions for JavaFX Paths
 class Java::javafx::scene::shape::Path
   java_import Java::javafx.scene.shape.PathElement
   java_import Java::javafx.scene.transform.Transform

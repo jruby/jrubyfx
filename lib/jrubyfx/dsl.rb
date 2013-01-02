@@ -19,6 +19,8 @@ require 'java'
 require 'jrubyfxml'
 
 module JRubyFX
+  # Defines a nice DSL for building JavaFX applications. Include it in a class for
+  # access to the DSL. FXApplication and FXController include it already.
   module DSL
     include JRubyFX
 
@@ -32,8 +34,13 @@ module JRubyFX
       mod.extend(JRubyFX::DSL::ClassUtils)
     end
 
+    #--
     # FIXME: This should be broken up with nice override for each type of 
     # fx object so we can manually create static overrides.
+    #++
+    # The list of snake_case names mapped to full java classes to use for DSL mapping.
+    # This list is dynamically generated using JFXImports::JFX_CLASS_HIERARCHY and
+    # Hash.flat_tree_inject.
     NAME_TO_CLASSES = {
       # observable structs
       'observable_array_list' => proc { |*args| FXCollections.observable_array_list(*args) },
@@ -55,6 +62,13 @@ module JRubyFX
         end
       end) unless const_defined?(:NAME_TO_CLASSES)
 
+    # This is the heart of the DSL. When a method is missing and the name of the
+    # method is in the NAME_TO_CLASSES mapping, it calls JRubyFX.build with the
+    # Java class. This means that instead of saying
+    #   build(JavaClass, hash) { ... }
+    # you can say
+    #   java_class(hash) { ... }
+    #
     def method_missing(name, *args, &block)
       clazz = NAME_TO_CLASSES[name.to_s]
       super unless clazz

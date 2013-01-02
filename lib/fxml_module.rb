@@ -19,12 +19,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 require 'jrubyfxml'
 require 'jrubyfx/utils/common_utils'
 
-# This module contains useful methods for defining JavaFX code.
+# This module contains useful methods for defining JavaFX code. Include it in your
+# class fo use it, and the JFXImports. FXApplication and FXController already include it.
 module JRubyFX
   include JFXImports
   include JRubyFX::Utils::CommonUtils
 
   ##
+  # call-seq:
+  #   with(obj, hash) => obj
+  #   with(obj) { block } => obj
+  #   with(obj, hash) { block }=> obj
+  #   
   # Set properties (e.g. setters) on the passed in object plus also invoke
   # any block passed against this object.
   # === Examples
@@ -48,6 +54,9 @@ module JRubyFX
   end
 
   ##
+  # call-seq:
+  #   run_later { block }
+  # 
   # Convenience method so anything can safely schedule to run on JavaFX
   # main thread.
   def run_later(&block)
@@ -55,6 +64,12 @@ module JRubyFX
   end
 
   ##
+  # call-seq:
+  #   build(class) => obj
+  #   build(class, hash) => obj
+  #   build(class) { block } => obj
+  #   build(class, hash) { block } => obj
+  #   
   # Create "build" a new JavaFX instance with the provided class and
   # set properties (e.g. setters) on that new instance plus also invoke
   # any block passed against this new instance.  This also can build a proc
@@ -81,12 +96,14 @@ module JRubyFX
     with(obj, properties, &block)
   end
 
+  # Attach a listener to a module with some voodoo.
+  # TODO: Document this
   def listener(mod, name, &block)
     obj = Class.new { include mod }.new
     obj.instance_eval do
       @name = name
       @block = block
-      def method_missing(msg, *a, &b)
+      def method_missing(msg, *a, &b) #:nodoc:
         @block.call(*a, &b) if msg == @name
       end
     end

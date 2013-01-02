@@ -21,11 +21,16 @@ require 'open-uri'
 require 'rake'
 require 'tmpdir'
 
+# This module contains utilities to jarify an app, and can be used in a rakefile or a running app.
 module JRubyFXTasks 
   extend Rake::DSL
+  # Base URL of JRuby-complete.jar download location
   BASE_URL='http://repository.codehaus.org/org/jruby/jruby-complete'
   
-
+  ##
+  # Downloads the jruby-complete jar file for `jruby_version` and save in 
+  # ~/.jruby-jar/jruby-complete.jar unless it already exits. If the jar is 
+  # corrupt or an older version, set force to true to delete and re-download
   def download_jruby(jruby_version, force=false)
     dist = "#{ENV['HOME']}/.jruby-jar"
     unless force || (File.exists?("#{dist}/jruby-complete.jar") && File.size("#{dist}/jruby-complete.jar") > 0)
@@ -38,6 +43,13 @@ module JRubyFXTasks
     end
   end
 
+  ## 
+  # Creates a full jar from the given source pattern (must be a pattern to match
+  # files), with the given main script as the script to launch when the jarfile
+  # is run. The output jar is saved in the `target` dir, which also doubles as a
+  # temporary work dir. `jar` is the executable that makes jars. If `target` is
+  # nill then a random temporary directory is created, and output_jar is the
+  # full path to the jar file to save 
   def jarify_jrubyfxml(src="src/*" ,main_script=nil, target="target", output_jar="jrubyfx-app.jar", jar="jar")
     if target_was_nil = target == nil
       target = Dir.mktmpdir("jrubyfxml")
@@ -82,7 +94,8 @@ module JRubyFXTasks
     end
   end
 
-  def download(version_string)
+  private
+  def download(version_string) #:nodoc:
     File.open("jruby-complete.jar","wb") do |f|
       f.write(open("#{BASE_URL}/#{version_string}/jruby-complete-#{version_string}.jar").read)
     end

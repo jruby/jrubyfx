@@ -1,3 +1,4 @@
+# JRubyFX DSL extensions for JavaFX Shapes
 class Java::javafx::scene::shape::Shape
   extend JRubyFX::Utils::CommonConverters
 

@@ -36,6 +36,15 @@ module JFXImports
   
   # If something is missing, just java_import it in your code.
   # And then ask us to put it in this list
+  
+  ## 
+  # This is the list of all classes in JavaFX that most apps should care about.
+  # It is a hashmaps with the leafs as arrays. Where a leaf also contains more 
+  # packages, the hashmap key is "" (empty string). You can utilize this constant
+  # to save yourself some typing when adding code for most/all of the JavaFX
+  # classes by using either `Hash.flat_tree_inject` from jrubyfx/utils.rb or
+  # writing your own traversal function
+  #
   JFX_CLASS_HIERARCHY = { :javafx => {
       :animation => %w[Animation AnimationTimer FadeTransition FillTransition Interpolator KeyFrame KeyValue ParallelTransition PathTransition 
         PauseTransition RotateTransition ScaleTransition SequentialTransition StrokeTransition Timeline Transition TranslateTransition],
@@ -50,7 +59,7 @@ module JFXImports
       :fxml => ['Initializable', 'LoadException'],
       :geometry => %w[HorizontalDirection HPos Insets Orientation Pos Side VerticalDirection VPos], 
       :scene => {
-        :'' => %w[Group Node Parent Scene],
+        '' => %w[Group Node Parent Scene],
         :canvas => ['Canvas'],
         :chart => %w[Axis CategoryAxis Chart LineChart NumberAxis XYChart],
         # TODO: import more of these
@@ -78,6 +87,7 @@ module JFXImports
     }
   }
   
+  # Imports all the listed JavaFX classes
   java_import *(JFX_CLASS_HIERARCHY.flat_tree_inject do |res, name, values|
       name = "#{name.to_s}."
       name = "" if name == "."

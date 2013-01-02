@@ -1,6 +1,6 @@
 =begin
 JRubyFXML - Write JavaFX and FXML in Ruby
-Copyright (C) 2012 Patrick Plenefisch
+Copyright (C) 2013 Patrick Plenefisch
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as 
@@ -15,14 +15,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
-
+#:nodoc: all
 require 'jrubyfxml'
 
 # Due to certain bugs in JRuby 1.7 (namely some newInstance mapping bugs), we
 # are forced to re-create the Launcher if we want a pure ruby wrapper
 # I can't wait to delete this. The _ONLY_ code that should use this is
 # FXApplication.launch. Do _NOT_ use this code anywhere else.
-module JavaFXImpl
+module JavaFXImpl #:nodoc: all
   java_import 'com.sun.javafx.application.PlatformImpl'
   java_import 'javafx.stage.Stage'
   

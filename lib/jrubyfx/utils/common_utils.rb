@@ -21,14 +21,14 @@ module JRubyFX
         return args, properties
       end
 
-      def populate_properties(obj, properties)
+      def populate_properties(obj, properties) #:nodoc:
         properties.each_pair do |name, value|
           obj.send(name.to_s + '=', *attempt_conversion(obj, name, value))
         end
         obj
       end
 
-      def attempt_conversion(obj, name, *values)
+      def attempt_conversion(obj, name, *values) #:nodoc:
         converter_method = name.to_s + 
           JRubyFX::Utils::CommonConverters::ARG_CONVERTER_SUFFIX
 

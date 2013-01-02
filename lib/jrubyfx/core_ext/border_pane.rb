@@ -1,3 +1,4 @@
+# JRubyFX DSL extensions for BorderPanes
 class Java::javafx::scene::layout::BorderPane
   include JRubyFX::DSL
 

@@ -16,9 +16,18 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-
 # This feels kinda like a hack. If anyone has a better idea, please let me know
+
+# Standard ruby Hash class extensions
 class Hash
+
+  # call-seq:
+  #   flat_tree_inject() {|results, key, value| block} => array
+  #   flat_tree_inject(Hash) {|results, key, value| block} => hash
+  #   
+  # Execute given block against all nodes in the hash tree, returning `results`.
+  # Similar to Hash#each except goes into all sub-Hashes
+  #
   def flat_tree_inject(klass=Array,&block)
     self.inject(klass.new) do |lres, pair|
       if pair[1].is_a? Hash
@@ -29,7 +38,15 @@ class Hash
   end
 end
 
+# Standard ruby String class extensions
 class String
+  # call-seq:
+  #   snake_case() => string
+  #   
+  # Converts a CamelCaseString to a snake_case_string
+  # 
+  #   "JavaFX".snake_case #=> "java_fx"
+  #
   def snake_case
     self.gsub(/::/, '/').
     gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').

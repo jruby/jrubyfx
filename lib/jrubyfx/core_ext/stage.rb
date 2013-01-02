@@ -1,5 +1,6 @@
 require 'jrubyfx/dsl'
 
+# JRubyFX DSL extensions for the JavaFX Stage
 class Java::javafx::stage::Stage
   include JRubyFX::DSL
 

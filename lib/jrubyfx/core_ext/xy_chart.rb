@@ -1,5 +1,6 @@
 require 'jrubyfx/dsl'
 
+# JRubyFX DSL extensions for JavaFX XYCharts
 class Java::javafx::scene::chart::XYChart
   include JRubyFX::DSL
 
@@ -14,6 +15,7 @@ class Java::javafx::scene::chart::XYChart
   end
 end
 
+# JRubyFX DSL extensions for JavaFX XYChart Series
 class Java::javafx::scene::chart::XYChart::Series
   include JRubyFX::DSL
 
@@ -29,6 +31,7 @@ class Java::javafx::scene::chart::XYChart::Series
 
 end
 
+# JRubyFX DSL extensions for JavaFX XYChart Data
 class Java::javafx::scene::chart::XYChart::Data
   include JRubyFX::DSL
 end

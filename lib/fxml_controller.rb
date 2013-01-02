@@ -18,16 +18,71 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'jrubyfxml'
 
-# inherit from this class for FXML controllers
+# Inherit from this class for FXML controllers
 class FXController
   include JRubyFX
   include JRubyFX::DSL
   java_import 'java.net.URL'
   java_import 'javafx.fxml.FXMLLoader'
   
+  # Controllers usually need access to the stage.
   attr_accessor :stage
   
-  # block construct to define methods and automatically add action events
+  ##
+  # call-seq:
+  #   fx_handler(callback) { |event_info| block } => Method
+  #   fx_handler(callback, EventType) { |event_info| block } => Method
+  #   fx_type_handler(callback) { |event_info| block } => Method
+  # 
+  # Registers a function of name `name` for a FXML defined event with the body in the block
+  # Note: there are overrides for most of the default types, so you should never
+  # need to manually specify the `type` argument unless you have custom events.
+  # The overrides are in the format fx_*_handler where * is the event type (ex:
+  # fx_key_handler for KeyEvent).
+  # === Overloads
+  # * fx_key_handler is for KeyEvent
+  # * fx_mouse_handler is for MouseEvent
+  # * fx_touch_handler is for TouchEvent
+  # * fx_gesture_handler is for GestureEvent
+  # * fx_context_handler is for ContextMenuEvent
+  # * fx_context_menu_handler is for ContextMenuEvent
+  # * fx_drag_handler is for DragEvent
+  # * fx_ime_handler is for InputMethodEvent
+  # * fx_input_method_handler is for InputMethodEvent
+  # * fx_window_handler is for WindowEvent
+  # * fx_action_handler is for ActionEvent
+  # * fx_generic_handler is for Event
+  # 
+  # === Examples
+  #   fx_handler :click do
+  #     puts "button clicked"
+  #   end
+  #   
+  #   fx_mouse_handler :moved do |event|
+  #     puts "Mouse Moved"
+  #     p event
+  #   end
+  #   
+  #   fx_key_handler :keypress do
+  #     puts "Key Pressed"
+  #   end
+  # 
+  # === Equivalent Java
+  #   @FXML
+  #   private void click(ActionEvent event) {
+  #     System.out.println("button clicked");
+  #   }
+  #   
+  #   @FXML
+  #   private void moved(MouseEvent event) {
+  #     System.out.println("Mouse Moved");
+  #   }
+  #   
+  #   @FXML
+  #   private void keypress(KeyEvent event) {
+  #     System.out.println("Key Pressed");
+  #   }
+  #
   def self.fx_handler(names, type=ActionEvent, &block)
     [names].flatten.each do |name|
       class_eval do
@@ -39,7 +94,7 @@ class FXController
     end
   end
   
-  # get the singleton class, and add special overloads as fx_EVENT_handler
+  # Get the singleton class, and add special overloads as fx_EVENT_handler
   # This funky syntax allows us to define methods on self (like define_method("self.method"),
   # except that does not work)
   class << self
@@ -69,16 +124,43 @@ class FXController
   # FXML linked variable names by subclass
   @@fxml_linked_args = {}
   
+  ##
+  # call-seq:
+  #   fx_id :name, ...
+  #   
+  # Register one or more variable names to bind to a fx:id in the FXML file.
+  # === Example
+  #   fx_id :myVar
+  # 
+  # === Equivalent Java
+  #   @FXML
+  #   private ClassName myVar;
+  # 
   def self.fx_id(*name)
     # we must distinguish between subclasses, hence self.
     (@@fxml_linked_args[self] ||= []).concat(name)
   end
   
+  ##
+  # call-seq:
+  #   fx_id_optional :name, ...
+  #   
+  # Register one or more variable name to bind to a fx:id in the FXML file if it exists.
+  # If the name cannot be found, don't complain.
+  # === Example
+  #   fx_id_optional :myVar
+  # 
+  # === Equivalent Java
+  #   @FXML
+  #   private ClassName myVar;
+  # 
   def self.fx_id_optional(*names)
     fx_id names.map {|i| {i => :quiet} }
   end
   
-  # set scene object (setter), and update fxml-injected values
+  ##
+  # Set scene object (setter), and update fxml-injected values. If you are manually
+  # loading FXML, you MUST call this to link `fx_id` specified names.
   def scene=(s)
     @scene = s
     (@@fxml_linked_args[self.class] ||= []).each do |name|
@@ -97,18 +179,39 @@ class FXController
     end
   end
   
-  # return the scene object (getter)
+  ##
+  # Return the scene object (getter)
   def scene()
     @scene
   end
   
-  #magic self-java-ifying new call
+  ##
+  # Magic self-java-ifying new call. (Creates a Java instance)
   def self.new_java(*args)
     self.become_java!
     self.new(*args)
   end
   
-  # Load given fxml file onto the given stage.
+  ##
+  # Load given fxml file onto the given stage. `settings` is an optional hash of:
+  # * :initialize => [array of arguments to pass to the initialize function]
+  # * :width => Default width of the Scene
+  # * :height => Default height of the Scene
+  # * :fill => Fill color of the Scene's background
+  # * :depth_buffer => JavaFX Scene DepthBuffer argument (look it up)
+  # * :relative_to => number of calls back, or filename. `filename` is evaluated
+  #   as being relative to this. Default is relative to caller (1)
+  # Returns a scene, either a new one, or the FXML root if its a Scene.
+  # === Examples
+  #
+  #   controller = MyFXController.load_fxml("Demo.fxml", stage)
+  #   
+  # === Equivalent Java
+  #   Parent root = FXMLLoader.load(getClass().getResource("Demo.fxml"));
+  #   Scene scene = new Scene(root);
+  #   stage.setScene(scene);
+  #   controller = root.getController();
+  #
   def self.load_fxml(filename, stage, settings={})
     # Create our class as a java class with any arguments it wants
     ctrl = self.new_java *(settings[:initialize] || [])
@@ -128,10 +231,24 @@ class FXController
     return ctrl
   end
   
+  ##
+  # call-seq:
+  #   load_fxml_resource(filename) => Parent
+  #   load_fxml_resource(filename, controller_instance) => Parent
+  #   load_fxml_resource(filename, controller_instance, relative_to) => Parent
+  #   
   # Load a FXML file given a filename and a controller and return the root element
   # relative_to can be a file that this should be relative to, or an index
   # of the caller number. If you are calling this from a function, pass 0 
-  # as you are the immediate caller of this function
+  # as you are the immediate caller of this function.
+  # === Examples
+  #   root = FXController.load_fxml_resource("Demo.fxml")
+  # 
+  #   root = FXController.load_fxml_resource("Demo.fxml", my_controller)
+  # 
+  # === Equivalent Java
+  #   Parent root = FXMLLoader.load(getClass().getResource("Demo.fxml"));
+  #
   def self.load_fxml_resource(filename, ctrlr=nil, relative_to=0)
     fx = FXMLLoader.new()
     fx.location = if FXApplication.in_jar?

@@ -1,5 +1,6 @@
 require 'jrubyfxml'
 
+# JRubyFX DSL extensions for JavaFX ObservableValues
 module Java::javafx::beans::value::ObservableValue
   include JRubyFX # FIXME: Listener support should be own module
 

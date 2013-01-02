@@ -1,5 +1,5 @@
 module JRubyFX
-  module PathElements
+  module PathElements #:nodoc: all
     def arc_to
     end
 
