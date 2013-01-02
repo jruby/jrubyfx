@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 require 'rubygems'
 require 'rubygems/installer'
 require 'rubygems/package_task'
+require 'rdoc/task'
 require_relative 'lib/jrubyfxml_tasks'
 task :default => [:build, :run]
 
@@ -71,4 +72,12 @@ end
 desc "Create a full jar and run it"
 task :run_jar => :jar do
   sh "java -jar #{target}/#{output_jar}"
+end
+
+RDoc::Task.new do |rdoc|
+  files = ['lib'] # FIXME: readme and markdown
+  rdoc.rdoc_files.add(files)
+  rdoc.main = "README.md"
+  rdoc.title = "JRubyFXML Docs"
+  rdoc.rdoc_dir = 'doc/'
 end
