@@ -17,11 +17,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-# Require JRubyFX library so we can get FXApplication and FXController
+# Require JRubyFX library so we can get JRubyFX::Application and JRubyFX::Controller
 require 'jrubyfx'
 
-# Inherit from FXApplication to create our Application
-class SimpleFXApplication < FXApplication
+# Inherit from JRubyFX::Application to create our Application
+class SimpleFXApplication < JRubyFX::Application
   # we must override start to get a stage on application initialization
   def start(stage)
     # assign the title
@@ -38,9 +38,9 @@ class SimpleFXApplication < FXApplication
   end
 end
 
-# Inherit from FXController to create our controller for this FXML file.
+# Inherit from JRubyFX::Controller to create our controller for this FXML file.
 # You will need one Controller per FXML file under normal conditions.
-class SimpleFXController < FXController
+class SimpleFXController < JRubyFX::Controller
   
   # Here we declare that AnchorPane is a fx:id in the file
   # if you have multiple you can comma separate them, or add another

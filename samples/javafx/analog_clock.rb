@@ -1,7 +1,7 @@
 #!/usr/bin/env jruby
 require 'jrubyfx'
 
-class AnalogClock < FXApplication
+class AnalogClock < JRubyFX::Application
 
   def start(stage)
     @stage = stage

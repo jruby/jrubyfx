@@ -3,7 +3,7 @@
 
 require 'jrubyfx'
 
-class HelloDevoxx < FXApplication
+class HelloDevoxx < JRubyFX::Application
 
   def start(stage)
     with(stage, title: "Hello Devoxx", x: 105, y: 140) do

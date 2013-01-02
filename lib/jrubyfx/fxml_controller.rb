@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 require 'jrubyfx'
 
 # Inherit from this class for FXML controllers
-class FXController
+class JRubyFX::Controller
   include JRubyFX
   include JRubyFX::DSL
   java_import 'java.net.URL'
@@ -98,7 +98,7 @@ class FXController
   # This funky syntax allows us to define methods on self (like define_method("self.method"),
   # except that does not work)
   class << self
-    include JFXImports
+    include JRubyFX::FXImports
     {:key => KeyEvent,
       :mouse => MouseEvent,
       :touch => TouchEvent,
@@ -242,16 +242,16 @@ class FXController
   # of the caller number. If you are calling this from a function, pass 0 
   # as you are the immediate caller of this function.
   # === Examples
-  #   root = FXController.load_fxml_resource("Demo.fxml")
+  #   root = JRubyFX::Controller.load_fxml_resource("Demo.fxml")
   # 
-  #   root = FXController.load_fxml_resource("Demo.fxml", my_controller)
+  #   root = JRubyFX::Controller.load_fxml_resource("Demo.fxml", my_controller)
   # 
   # === Equivalent Java
   #   Parent root = FXMLLoader.load(getClass().getResource("Demo.fxml"));
   #
   def self.load_fxml_resource(filename, ctrlr=nil, relative_to=0)
     fx = FXMLLoader.new()
-    fx.location = if FXApplication.in_jar?
+    fx.location = if JRubyFX::Application.in_jar?
       # If we are in a jar file, use the class loader to get the file from the jar (like java)
       JRuby.runtime.jruby_class_loader.get_resource(filename)
     else

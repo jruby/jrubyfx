@@ -21,14 +21,14 @@ Success! JRubyFX should be installed now!
 Creating your first JRubyFX application
 -----------------------------------------
 Lets creating a JavaFX app that has the text "Hello World".
-Create a new ruby file (this tutorial will call it `hello.rb`). To use JRubyFX, we must require it in ruby, so add `require 'jrubyfx'` at the top of the file. Now since JavaFX was originally for Java, we must create a class that inherits from `javafx.application.Application`, however using it raw is no fun, so inherit from the ruby class `FXApplication` to gain ruby's super power.
+Create a new ruby file (this tutorial will call it `hello.rb`). To use JRubyFX, we must require it in ruby, so add `require 'jrubyfx'` at the top of the file. Now since JavaFX was originally for Java, we must create a class that inherits from `javafx.application.Application`, however using it raw is no fun, so inherit from the ruby class `JRubyFX::Application` to gain ruby's super power.
 
-	class HelloWorldApp < FXApplication
+	class HelloWorldApp < JRubyFX::Application
 	end
 
 When we launch this application, JavaFX will call the `start` method, and will pass in a stage that we can put our content on, so lets add that:
 
-	class HelloWorldApp < FXApplication
+	class HelloWorldApp < JRubyFX::Application
 		def start(stage)
 		end
 	end
@@ -52,7 +52,7 @@ Code listing so far:
 
 	require 'jrubyfx'
 	
-	class HelloWorldApp < FXApplication
+	class HelloWorldApp < JRubyFX::Application
 		def start(stage)
 			stage.title = "Hello World!"
 			stage.width = 800
@@ -153,11 +153,11 @@ Done? Good, copy and paste this code into a new file called `Hello.fxml`:
 You can open this file with the Scene Builder and easily edit it. This is similar to the code we had before, with two exceptions: I set the font to a larger size and the label is in a `HBox` that is centered. Most real UI's have some sort of root container to layout the controls such as an `HBox` or a `GridPanel`.
 
 ### Using FXML in code
-Once you've saved the `Hello.fxml` file in the same directory as `Hello.rb`, lets use the FXML file instead of ruby code to draw the UI. FXML files have controllers to handle events and such. Since this is a simple example, we don't need any events to be handled, so we will use the default `FXController` class. Modify the start method to look like this:
+Once you've saved the `Hello.fxml` file in the same directory as `Hello.rb`, lets use the FXML file instead of ruby code to draw the UI. FXML files have controllers to handle events and such. Since this is a simple example, we don't need any events to be handled, so we will use the default `JRubyFX::Controller` class. Modify the start method to look like this:
 
 	def start(stage)
 		with(stage, title: "Hello World!", width: 800, height: 600)
-		FXController.load_fxml("Hello.fxml", stage)
+		JRubyFX::Controller.load_fxml("Hello.fxml", stage)
 		stage.show()
 	end
 
@@ -178,20 +178,20 @@ Now, to change the text of the label, we must somehow get access to the label in
 **WARNING:** JavaFX has an fx:id property and a normal id property. For JRubyFX to work, id must not be set (defaults to fx:id), or it must be the same as fx:id.
 
 ### Creating our controller
-In the code, we need to create a new class that inherits from FXController
+In the code, we need to create a new class that inherits from JRubyFX::Controller
 
-	class HelloWorldController < FXController
+	class HelloWorldController < JRubyFX::Controller
 	end
 
 We need to mark what id's to get, which we can do with `fx_id :name`:
 
-	class HelloWorldController < FXController
+	class HelloWorldController < JRubyFX::Controller
 		fx_id :helloLabel
 	end
 
 This basically says that there is a control in the FXML file with the fx:id property set to the value  "helloLabel" and that we want to be able to reference this object by the instance variable `@helloLabel`. Now we need to add our event handlers:
 
-	class HelloWorldController < FXController
+	class HelloWorldController < JRubyFX::Controller
 		fx_id :helloLabel
 	
 		fx_handler :sayClick do
@@ -215,7 +215,7 @@ onAction uses the default event type, so you can get away with `fx_handler`. If 
 	end
 
 #### Using our controller
-The only thing needed to use our custom controller is to modify the call to `load_fxml` and use `HelloWorldController` instead of `FXController`
+The only thing needed to use our custom controller is to modify the call to `load_fxml` and use `HelloWorldController` instead of `JRubyFX::Controller`
 
 	HelloWorldController.load_fxml("Hello.fxml", stage)
 
@@ -251,7 +251,7 @@ Code listing for Hello.rb:
 
 	require 'jrubyfx'
 	
-	class HelloWorldApp < FXApplication
+	class HelloWorldApp < JRubyFX::Application
 		def start(stage)
 			with(stage, title: "Hello World!", width: 800, height: 600)
 			HelloWorldController.load_fxml("Hello.fxml", stage)
@@ -259,7 +259,7 @@ Code listing for Hello.rb:
 		end
 	end
 	
-	class HelloWorldController < FXController
+	class HelloWorldController < JRubyFX::Controller
 		fx_id :helloLabel
 	
 		fx_handler :click do

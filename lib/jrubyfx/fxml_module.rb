@@ -20,9 +20,9 @@ require 'jrubyfx'
 require 'jrubyfx/utils/common_utils'
 
 # This module contains useful methods for defining JavaFX code. Include it in your
-# class fo use it, and the JFXImports. FXApplication and FXController already include it.
+# class to use it, and the JRubyFX::FXImports. JRubyFX::Application and JRubyFX::Controller already include it.
 module JRubyFX
-  include JFXImports
+  include JRubyFX::FXImports
   include JRubyFX::Utils::CommonUtils
 
   ##

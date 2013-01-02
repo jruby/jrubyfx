@@ -4,7 +4,7 @@
 
 require 'jrubyfx'
 
-class HelloJRubyFX < FXApplication
+class HelloJRubyFX < JRubyFX::Application
 
   def start(stage)
     with(stage, width: 300, height: 300, title: 'Hello JRubyFX') do

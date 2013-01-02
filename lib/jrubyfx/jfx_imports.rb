@@ -30,9 +30,13 @@ rescue
   fail "JavaFX runtime not found.  Please install Java 7u4 or newer or set environment variable JAVAFX_DIR to the folder that contains jfxrt.jar"
 end
 
+module JRubyFX
+  
+end
+
 # If you need JavaFX, just include this module. Its sole purpose in life is to
 # import all JavaFX stuff, plus a few useful Java classes (like Void)
-module JFXImports
+module JRubyFX::FXImports
   
   # If something is missing, just java_import it in your code.
   # And then ask us to put it in this list

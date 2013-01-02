@@ -21,7 +21,7 @@ require 'jrubyfx'
 ##
 # Inherit from this class for FXML Applications. You must use this class for both
 # raw JavaFX and FXML as it contains the launch method.
-class FXApplication < Java.javafx.application.Application
+class JRubyFX::Application < Java.javafx.application.Application
   include JRubyFX
   include JRubyFX::DSL
 

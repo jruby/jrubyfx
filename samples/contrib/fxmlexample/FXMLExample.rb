@@ -37,7 +37,7 @@ Original Java source from: http://docs.oracle.com/javafx/2/get_started/jfxpub-ge
 require 'jrubyfx'
 require_relative 'FXMLExampleController'
 
-class FXMLExample < FXApplication
+class FXMLExample < JRubyFX::Application
     
     def start(stage)
         FXMLExampleController.load_fxml("fxml_example.fxml", stage)

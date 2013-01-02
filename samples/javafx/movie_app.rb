@@ -4,7 +4,7 @@
 
 require 'jrubyfx'
 
-class MovieApp < FXApplication
+class MovieApp < JRubyFX::Application
   include JRubyFX::DSL
 
   def start(stage)

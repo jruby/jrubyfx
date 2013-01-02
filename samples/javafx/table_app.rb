@@ -2,7 +2,7 @@
 # Original version is here: http://drdobbs.com/blogs/java/231903245 (BindingEx1)
 require 'jrubyfx'
 
-class TableApp < FXApplication
+class TableApp < JRubyFX::Application
 
   def start(stage)
     with(stage, title: 'MyTable') do

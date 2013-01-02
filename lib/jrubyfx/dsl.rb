@@ -20,7 +20,7 @@ require 'jrubyfx'
 
 module JRubyFX
   # Defines a nice DSL for building JavaFX applications. Include it in a class for
-  # access to the DSL. FXApplication and FXController include it already.
+  # access to the DSL. JRubyFX::Application and JRubyFX::Controller include it already.
   module DSL
     include JRubyFX
 
@@ -39,7 +39,7 @@ module JRubyFX
     # fx object so we can manually create static overrides.
     #++
     # The list of snake_case names mapped to full java classes to use for DSL mapping.
-    # This list is dynamically generated using JFXImports::JFX_CLASS_HIERARCHY and
+    # This list is dynamically generated using JRubyFX::FXImports::JFX_CLASS_HIERARCHY and
     # Hash.flat_tree_inject.
     NAME_TO_CLASSES = {
       # observable structs

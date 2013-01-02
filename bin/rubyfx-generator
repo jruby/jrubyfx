@@ -41,7 +41,7 @@ File.open(rb, "w") do |output|
 
 require 'jrubyfx'
 
-class #{name_guess}Application < FXApplication
+class #{name_guess}Application < JRubyFX::Application
   def start(stage)
     with(stage, title: "#{name_guess}", width: 600, height: 400)
     #{name_guess}Controller.load_fxml("#{File.basename(fxml)}", stage)
@@ -49,7 +49,7 @@ class #{name_guess}Application < FXApplication
   end
 end
 
-class #{name_guess}Controller < FXController
+class #{name_guess}Controller < JRubyFX::Controller
 END
 
   File.open(fxml, "r") do |fx|
