@@ -81,6 +81,9 @@ module JRubyFX
 end
 
 # we must load it AFTER we finish declaring the DSL class
+# This loads all custom DSL overrides that exist
 JRubyFX::DSL::NAME_TO_CLASSES.each do |name, cls|
   require_relative "core_ext/#{name}" if File.exists? "#{File.dirname(__FILE__)}/core_ext/#{name}.rb"
 end
+# observable_value is not in the list, so include it manually
+require_relative 'core_ext/observable_value'

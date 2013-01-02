@@ -1,6 +1,6 @@
 JRubyFX
 =======
-JRubyFX is a pure ruby wrapper for JavaFX 2.x with FXML support (based on JRubyFX)
+JRubyFX is a pure ruby wrapper for JavaFX 2.x with FXML support
 
 Status
 ------
@@ -76,7 +76,7 @@ Some samples in contrib may have other licenses.
 Authors
 -------
 - Patrick Plenefisch
-- Hiroshi Nakamura (JRubyFX)
-- Hiro Asari (JRubyFX)
-- Thomas E Enebo (JRubyFX)
+- Hiroshi Nakamura
+- Hiro Asari
+- Thomas E Enebo
 
