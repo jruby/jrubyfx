@@ -13,7 +13,7 @@ $spec = Gem::Specification.new do |s|
   s.summary     = "JavaFX for JRuby with FXML"
   s.description = "Enables JavaFX with FXML controllers and application in pure ruby"
  
-  s.add_dependency "rake" # should I even bother?
+  s.add_development_dependency "rake" # should I even bother?
   s.rubyforge_project         = "jrubyfxml"
 
   s.files        = Dir.glob("lib/**/*") + %w(LICENSE README.md)
