@@ -51,6 +51,7 @@ task :run do
   ruby "-I lib '#{main_script||'samples/fxml/Demo.rb'}'"
 end
 
+# The gemspec exports the global $spec variable for us
 load 'jrubyfx.gemspec'
 Gem::PackageTask.new($spec) do |pkg|
   pkg.need_zip = false

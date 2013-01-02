@@ -1,8 +1,7 @@
 # -*- encoding: utf-8 -*-
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'jrubyfx/version'
+require_relative 'lib/jrubyfx/version'
 
+# This must be assigned to the global spec variable as its relied upon in the Rakefile.
 $spec = Gem::Specification.new do |s|
   s.name        = "jrubyfx"
   s.version     = JRubyFX::VERSION
