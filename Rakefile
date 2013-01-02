@@ -37,6 +37,7 @@ desc "Clean all build artifacts except jruby-complete.jar"
 task :clean do
   rm_rf target if File.exists? target
   rm_rf "pkg" if File.exists? "pkg"
+  rm_rf "doc" if File.exists? "doc"
 end
 
 desc "Clean all build artifacts INCLUDING jruby-complete.jar"
