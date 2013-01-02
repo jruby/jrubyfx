@@ -61,12 +61,12 @@ task :install => :gem do
 end
 
 task :download_jruby_jar do
-  JRubyFXTasks::download_jruby(jruby_version)
+  JRubyFX::Tasks::download_jruby(jruby_version)
 end
 
 desc "Create a full jar with embedded JRuby and given script (via main_script and src ENV var)"
 task :jar => [:clean, :download_jruby_jar] do
-  JRubyFXTasks::jarify_jrubyfxml(src, main_script, target, output_jar, jar)
+  JRubyFX::Tasks::jarify_jrubyfxml(src, main_script, target, output_jar, jar)
 end
 
 desc "Create a full jar and run it"
