@@ -5,3 +5,4 @@ target/
 /pkg/
 Gemfile.lock
 *.log
+*doc/
