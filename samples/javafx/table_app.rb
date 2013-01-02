@@ -1,6 +1,6 @@
 #!/usr/bin/env jruby
 # Original version is here: http://drdobbs.com/blogs/java/231903245 (BindingEx1)
-require 'jrubyfxml'
+require 'jrubyfx'
 
 class TableApp < FXApplication
 

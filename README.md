@@ -1,11 +1,11 @@
-JRubyFXML
+JRubyFX
 =======
-JRubyFXML is a pure ruby wrapper for JavaFX 2.x with FXML support (based on JRubyFX)
+JRubyFX is a pure ruby wrapper for JavaFX 2.x with FXML support (based on JRubyFX)
 
 Status
 ------
-JRubyFXML should be usable in its current form and able to run FXML apps if used properly (see Issues).
-The syntax of the FXML side of JRubyFXML should be fairly stable, but the JavaFX DSL may change.
+JRubyFX should be usable in its current form and able to run FXML apps if used properly (see Issues).
+The syntax of the FXML side of JRubyFX should be fairly stable, but the JavaFX DSL may change.
 At this point in time, no custom ruby controls are supported from FXML, though you
 can certainly create them in code.
 
@@ -43,7 +43,7 @@ To run sample:
 jruby samples/fxml/Demo.rb
 ```
 
-Or, if you have not installed the gem, or are testing edits to jrubyfxml.rb:
+Or, if you have not installed the gem, or are testing edits to jrubyfx.rb:
 
 ```text
 rake run main_script=samples/fxml/Demo.rb
@@ -52,7 +52,7 @@ rake run main_script=samples/fxml/Demo.rb
 Creating Application and Controller
 -----------------------------------
 
-Import jrubyfxml file, and subclass FXApplication and FXController.
+Import jrubyfx file, and subclass FXApplication and FXController.
 At the bottom of the file, call _yourFXApplicationClass_.launch().
 Override start(stage) in the application, and initialize(url, resources) in 
 the controller. See samples/fxml/Demo.rb for commented example, or see the Getting Started guide

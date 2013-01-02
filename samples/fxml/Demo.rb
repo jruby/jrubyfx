@@ -1,6 +1,6 @@
 #!/usr/bin/env jruby
 =begin
-JRubyFXML - Write JavaFX and FXML in Ruby
+JRubyFX - Write JavaFX and FXML in Ruby
 Copyright (C) 2013 Patrick Plenefisch
 
 This program is free software: you can redistribute it and/or modify
@@ -17,8 +17,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-# Require JRubyFXML library so we can get FXApplication and FXController
-require 'jrubyfxml'
+# Require JRubyFX library so we can get FXApplication and FXController
+require 'jrubyfx'
 
 # Inherit from FXApplication to create our Application
 class SimpleFXApplication < FXApplication
@@ -102,12 +102,12 @@ class SimpleFXController < FXController
       # Note that JavaFX does not add extensions automatically, so lets add it
       output_jar += ".jar" unless output_jar.end_with? ".jar"
       # import the jarification tasks
-      require 'jrubyfxml_tasks'
+      require 'jrubyfx_tasks'
       # Download jruby (current version running)
       JRubyFXTasks::download_jruby(JRUBY_VERSION)
       # Create a jar of all file in this same folder, this file is the root script,
       #  no fixed staging dir, and save it to our file we specified
-      JRubyFXTasks::jarify_jrubyfxml("#{File.dirname(__FILE__)}/*", __FILE__, nil, output_jar)
+      JRubyFXTasks::jarify_jrubyfx("#{File.dirname(__FILE__)}/*", __FILE__, nil, output_jar)
       puts "Success!"
     end
   end

@@ -34,7 +34,7 @@ Original Java source from: http://docs.oracle.com/javafx/2/get_started/jfxpub-ge
  */
 =end
 
-require 'jrubyfxml'
+require 'jrubyfx'
 require_relative 'FXMLExampleController'
 
 class FXMLExample < FXApplication

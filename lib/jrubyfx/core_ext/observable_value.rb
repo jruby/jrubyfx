@@ -1,4 +1,4 @@
-require 'jrubyfxml'
+require 'jrubyfx'
 
 # JRubyFX DSL extensions for JavaFX ObservableValues
 module Java::javafx::beans::value::ObservableValue

@@ -1,5 +1,5 @@
 =begin
-JRubyFXML - Write JavaFX and FXML in Ruby
+JRubyFX - Write JavaFX and FXML in Ruby
 Copyright (C) 2012 Patrick Plenefisch
 
 This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-require 'jrubyfxml'
+require 'jrubyfx'
 require 'jrubyfx/utils/common_utils'
 
 # This module contains useful methods for defining JavaFX code. Include it in your

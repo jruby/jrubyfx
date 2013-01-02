@@ -1,5 +1,5 @@
 =begin
-JRubyFXML - Write JavaFX and FXML in Ruby
+JRubyFX - Write JavaFX and FXML in Ruby
 Copyright (C) 2012 Patrick Plenefisch
 
 This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@ require 'rubygems'
 require 'rubygems/installer'
 require 'rubygems/package_task'
 require 'rdoc/task'
-require_relative 'lib/jrubyfxml_tasks'
+require_relative 'lib/jrubyfx_tasks'
 task :default => [:build, :run]
 
 jar = ENV['jar'] || "jar"
@@ -49,7 +49,7 @@ task :run do
   ruby "-I lib '#{main_script||'samples/fxml/Demo.rb'}'"
 end
 
-load 'jrubyfxml.gemspec'
+load 'jrubyfx.gemspec'
 Gem::PackageTask.new($spec) do |pkg|
   pkg.need_zip = false
   pkg.need_tar = false
@@ -57,7 +57,7 @@ end
 
 desc "Build and install the gem"
 task :install => :gem do
-  Gem::Installer.new("pkg/jrubyfxml-#{JRubyFX::VERSION}-java.gem").install
+  Gem::Installer.new("pkg/jrubyfx-#{JRubyFX::VERSION}-java.gem").install
 end
 
 task :download_jruby_jar do
@@ -66,7 +66,7 @@ end
 
 desc "Create a full jar with embedded JRuby and given script (via main_script and src ENV var)"
 task :jar => [:clean, :download_jruby_jar] do
-  JRubyFX::Tasks::jarify_jrubyfxml(src, main_script, target, output_jar, jar)
+  JRubyFX::Tasks::jarify_jrubyfx(src, main_script, target, output_jar, jar)
 end
 
 desc "Create a full jar and run it"
@@ -78,6 +78,6 @@ RDoc::Task.new do |rdoc|
   files = ['lib'] # FIXME: readme and markdown
   rdoc.rdoc_files.add(files)
   rdoc.main = "README.md"
-  rdoc.title = "JRubyFXML Docs"
+  rdoc.title = "JRubyFX Docs"
   rdoc.rdoc_dir = 'doc/'
 end

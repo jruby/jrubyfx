@@ -33,7 +33,7 @@ Original Java source from: http://docs.oracle.com/javafx/2/get_started/jfxpub-ge
  */
 =end
 
-require 'jrubyfxml'
+require 'jrubyfx'
 
 class FXMLExampleController < FXController
     # you can comma separate them, or provide multiple definitions

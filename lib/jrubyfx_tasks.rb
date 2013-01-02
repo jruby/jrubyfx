@@ -1,5 +1,5 @@
 =begin
-JRubyFXML - Write JavaFX and FXML in Ruby
+JRubyFX - Write JavaFX and FXML in Ruby
 Copyright (C) 2012 Patrick Plenefisch
 
 This program is free software: you can redistribute it and/or modify
@@ -50,9 +50,9 @@ module JRubyFX::Tasks
   # temporary work dir. `jar` is the executable that makes jars. If `target` is
   # nill then a random temporary directory is created, and output_jar is the
   # full path to the jar file to save 
-  def jarify_jrubyfxml(src="src/*" ,main_script=nil, target="target", output_jar="jrubyfx-app.jar", jar="jar")
+  def jarify_jrubyfx(src="src/*" ,main_script=nil, target="target", output_jar="jrubyfx-app.jar", jar="jar")
     if target_was_nil = target == nil
-      target = Dir.mktmpdir("jrubyfxml")
+      target = Dir.mktmpdir("jrubyfx")
       final_jar = output_jar
       output_jar = File.basename output_jar
     end
@@ -101,7 +101,7 @@ module JRubyFX::Tasks
     end
   end
   
-  module_function :jarify_jrubyfxml
+  module_function :jarify_jrubyfx
   module_function :download_jruby
   module_function :download
 end

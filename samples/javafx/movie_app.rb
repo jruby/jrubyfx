@@ -2,7 +2,7 @@
 # Original version is for GroovyFX by @kazuchika
 # https://gist.github.com/1362259G
 
-require 'jrubyfxml'
+require 'jrubyfx'
 
 class MovieApp < FXApplication
   include JRubyFX::DSL

@@ -1,27 +1,27 @@
-Using JRubyFXML
+Using JRubyFX
 ===============
 This guide assumes you have basic knowledge of Ruby, and have JRuby 1.7 or greater and Java 7u6 or greater installed. Java 6 will also work if you are on Windows and download JavaFX runtime separately and put its path in JFX_DIR enviroment variable. At the moment, OpenJDK will unfortunatly not work as it does not have JavaFX.
 
-Installing JRubyFXML
+Installing JRubyFX
 --------------------
-The first thing you need to do is to install the JRubyFXML gem. Currently it is not on any gem sites, so you must do this manually, but don't worry, its easy.
+The first thing you need to do is to install the JRubyFX gem. Currently it is not on any gem sites, so you must do this manually, but don't worry, its easy.
 
 The first thing we need to install is rake and bundler:
 
 	$ gem install rake bundler
 
-Now we can clone the JRubyFXML sources and install them:
+Now we can clone the JRubyFX sources and install them:
 
-	$ git clone https://github.com/byteit101/JRubyFXML
-	$ cd JRubyFXML
+	$ git clone https://github.com/byteit101/JRubyFX
+	$ cd JRubyFX
 	$ rake install
 
-Success! JRubyFXML should be installed now!
+Success! JRubyFX should be installed now!
 
-Creating your first JRubyFXML application
+Creating your first JRubyFX application
 -----------------------------------------
 Lets creating a JavaFX app that has the text "Hello World".
-Create a new ruby file (this tutorial will call it `hello.rb`). To use JRubyFXML, we must require it in ruby, so add `require 'jrubyfxml'` at the top of the file. Now since JavaFX was originally for Java, we must create a class that inherits from `javafx.application.Application`, however using it raw is no fun, so inherit from the ruby class `FXApplication` to gain ruby's super power.
+Create a new ruby file (this tutorial will call it `hello.rb`). To use JRubyFX, we must require it in ruby, so add `require 'jrubyfx'` at the top of the file. Now since JavaFX was originally for Java, we must create a class that inherits from `javafx.application.Application`, however using it raw is no fun, so inherit from the ruby class `FXApplication` to gain ruby's super power.
 
 	class HelloWorldApp < FXApplication
 	end
@@ -50,7 +50,7 @@ Wait, what? Nothing happened! We never actually launched the app, we only define
 
 Code listing so far:
 
-	require 'jrubyfxml'
+	require 'jrubyfx'
 	
 	class HelloWorldApp < FXApplication
 		def start(stage)
@@ -64,14 +64,14 @@ Code listing so far:
 	HelloWorldApp.launch
 
 ### Adding a bit of text
-Cool, we made an empty window, but usually you want something in it. Lets add a label that says "Hello World!". There are three ways to do everything in JRubyFXML: the straight-up Java way, the generic JRubyFXML way, and using a specific DSL (Domain Specific Language). As it sounds like, the Java way is basically copy-paste Java style, and the RubyFXML way is much more elegant, though its good to know both.
+Cool, we made an empty window, but usually you want something in it. Lets add a label that says "Hello World!". There are three ways to do everything in JRubyFX: the straight-up Java way, the generic JRubyFX way, and using a specific DSL (Domain Specific Language). As it sounds like, the Java way is basically copy-paste Java style, and the RubyFXML way is much more elegant, though its good to know both.
 
 #### Creating a Label the Java way
 
 	label = Label.new()
 	label.text = "Hello World!"
 
-#### Creating a Label the JRubyFXML way
+#### Creating a Label the JRubyFX way
 
 	label = build(Label, text: "Hello World!")
 
@@ -83,7 +83,7 @@ Whoa! So what does `build` do? Build takes a name of a class (`Label`), creates 
 
 For this single contrived example, it makes no sense, but for certain things (like animations and file save dialogs), it can save some serious typing.
 
-#### Creating a Label the JRubyFXML DSL way
+#### Creating a Label the JRubyFX DSL way
 The DSL is very similar to the `build` way:
 
 	label_variable = label(text: "Hello World!")
@@ -175,7 +175,7 @@ In the Scene Builder, drag a `Button` onto the surface of the designer, and clic
 
 Now, to change the text of the label, we must somehow get access to the label in code. To do this, we must set the `fx:id` property on it (first at the top of the properties pane). Set the `fx:id` value to "helloLabel" and save the FXML file.
 
-**WARNING:** JavaFX has an fx:id property and a normal id property. For JRubyFXML to work, id must not be set (defaults to fx:id), or it must be the same as fx:id.
+**WARNING:** JavaFX has an fx:id property and a normal id property. For JRubyFX to work, id must not be set (defaults to fx:id), or it must be the same as fx:id.
 
 ### Creating our controller
 In the code, we need to create a new class that inherits from FXController
@@ -249,7 +249,7 @@ Code listing for Hello.fxml:
 
 Code listing for Hello.rb:
 
-	require 'jrubyfxml'
+	require 'jrubyfx'
 	
 	class HelloWorldApp < FXApplication
 		def start(stage)
@@ -271,7 +271,7 @@ Code listing for Hello.rb:
 
 Now what?
 ---------
-Now you know the basics of FXML and JRubyFXML! If you haven't already, I suggest looking over samples/fxml/Demo.rb for a bit more detail. JavaFX help is all around, and most of it is applicable to JRubyFXML.
+Now you know the basics of FXML and JRubyFX! If you haven't already, I suggest looking over samples/fxml/Demo.rb for a bit more detail. JavaFX help is all around, and most of it is applicable to JRubyFX.
 
 ### Using the generator
 Got a large FXML file with dozens of fx:id's and events? Assuming you only have a FXML file:

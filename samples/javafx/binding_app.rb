@@ -1,5 +1,5 @@
 #!/usr/bin/env jruby
-require 'jrubyfxml'
+require 'jrubyfx'
 
 class BindingApp < FXApplication
 

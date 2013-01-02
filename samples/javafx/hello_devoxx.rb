@@ -1,7 +1,7 @@
 #!/usr/bin/env jruby
 # Original version is here: http://www.slideshare.net/steveonjava/java-fx-20-a-developers-guide
 
-require 'jrubyfxml'
+require 'jrubyfx'
 
 class HelloDevoxx < FXApplication
 

@@ -1,5 +1,5 @@
 =begin
-JRubyFXML - Write JavaFX and FXML in Ruby
+JRubyFX - Write JavaFX and FXML in Ruby
 Copyright (C) 2012 Patrick Plenefisch
 
 This program is free software: you can redistribute it and/or modify
