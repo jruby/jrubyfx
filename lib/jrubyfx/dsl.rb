@@ -28,6 +28,41 @@ module JRubyFX
       def register_type(name, type)
         JRubyFX::DSL::NAME_TO_CLASSES[name.to_s] = type
       end
+      
+      ##
+      # Add to child list without need to ask for children
+      def include_add
+        self.instance_eval do
+          define_method :add do |value|
+            self.get_children << value
+          end
+        end
+      end
+      
+      ##
+      # Add rotate to transform (manually added ebcause there is a getRotate
+      # on Node already.  Use get_rotate to get property
+      def include_rotate
+        self.instance_eval do
+          define_method :rotate do |*args|
+            transforms << build(Rotate, *args)
+          end
+        end
+      end
+    
+      ##
+      # This will defer to node to construct proper object, but will
+      # optionally add paths primary child automatically if it is a
+      # PathElement.
+      def include_method_missing(type)
+        self.instance_eval do
+          define_method :method_missing do |name, *args, &block|
+            super.tap do |obj|
+              add(obj) if obj.kind_of? type
+            end
+          end
+        end
+      end
     end
 
     def self.included(mod)
@@ -52,7 +87,7 @@ module JRubyFX
         unless values.is_a? Hash
           values.map do |i|
             # this regexp does snake_casing
-            # Anybody got a better way to get the java class instead of evaling its name?
+            # TODO: Anybody got a better way to get the java class instead of evaling its name?
             res.merge!({i.snake_case.gsub(/(h|v)_(line|box)/, '\1\2') => eval(i)})
           end
           res

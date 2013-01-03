@@ -10,13 +10,5 @@ class Java::javafx::animation::Timeline
     self.key_frames << value
   end
 
-  ##
-  # This will defer to node to construct proper object, but will
-  # optionally add paths primary child automatically if it is a
-  # PathElement.
-  def method_missing(name, *args, &block)
-    super.tap do |obj|
-      add(obj) if obj.kind_of? KeyFrame
-    end
-  end
+  include_method_missing KeyFrame
 end
