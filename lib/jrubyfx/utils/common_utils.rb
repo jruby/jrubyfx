@@ -23,14 +23,23 @@ module JRubyFX
         return args, properties
       end
 
-      def populate_properties(obj, properties) #:nodoc:
+      ##
+      # Sets the hashmap given on the passed in object as a set of properties, 
+      # using converter if necessary.
+      #
+      def populate_properties(obj, properties)
         properties.each_pair do |name, value|
           obj.send(name.to_s + '=', *attempt_conversion(obj, name, value))
         end
         obj
       end
 
-      def attempt_conversion(obj, name, *values) #:nodoc:
+      ##
+      # Attempts to convert given value to JavaFX equvalent, if any, by calling
+      # obj.name_CommonConverters::ARG_CONVERTER_SUFFING.
+      # See CommonConverters for current conversions
+      #
+      def attempt_conversion(obj, name, *values)
         converter_method = name.to_s + 
           JRubyFX::Utils::CommonConverters::ARG_CONVERTER_SUFFIX
 
