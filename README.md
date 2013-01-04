@@ -79,7 +79,7 @@ Issues
 
 License
 -------
-Main code is LGPLv3+. See LICENSE.
+Main code is Apache 2.0. See LICENSE.
 Some samples in contrib may have other licenses.
 
 Authors
