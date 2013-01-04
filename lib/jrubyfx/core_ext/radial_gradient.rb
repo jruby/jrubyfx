@@ -1,5 +1,6 @@
 require 'jrubyfx/utils/common_converters'
 
+# JRubyFX DSL extensions for JavaFX Radial Gradients
 class Java::javafx::scene::paint::RadialGradient
   class << self
     java_import Java::javafx.scene.paint.CycleMethod

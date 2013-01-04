@@ -1,9 +1,13 @@
 module JRubyFX
   module Utils
+     # Contains conversion utilities to ease Ruby => JavaFX coding
     module CommonConverters
       java_import 'javafx.scene.paint.Color'
 
+      # argument converter method name suffix
       ARG_CONVERTER_SUFFIX = '_arg_converter'
+      
+      # map of snake_cased colors to JavaFX Colors
       NAME_TO_COLORS = {
         'black' => Color::BLACK,
         'blue' => Color::BLUE,
@@ -71,6 +75,7 @@ module JRubyFX
         end        
       end
 
+      # Map of different kinds of known converters
       CONVERTERS = {
         :none => lambda { |value|
           value

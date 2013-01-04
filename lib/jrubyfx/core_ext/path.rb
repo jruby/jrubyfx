@@ -1,19 +1,13 @@
+# JRubyFX DSL extensions for JavaFX Paths
 class Java::javafx::scene::shape::Path
   java_import Java::javafx.scene.shape.PathElement
   java_import Java::javafx.scene.transform.Transform
 
-  ##
-  # Add to child list without need to ask for children
-  def add(value)
-    self.elements << value
-  end
+  include JRubyFX::DSL
 
-  ##
-  # Add rotate to transform (manually added ebcause there is a getRotate
-  # on Path already.  Use get_rotate to get property
-  def rotate(*args)
-    transforms << build(Rotate, *args)
-  end
+  include_add :elements
+
+  include_rotate
 
   ##
   # This will defer to node to construct proper object, but will

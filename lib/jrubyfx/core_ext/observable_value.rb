@@ -1,14 +1,16 @@
 require 'jrubyfx'
 
+# JRubyFX DSL extensions for JavaFX ObservableValues
 module Java::javafx::beans::value::ObservableValue
-  include JRubyFX # FIXME: Listener support should be own module
-
   java_import Java::javafx.beans.value.ChangeListener
 
+  ##
+  # call-seq:
+  #   add_change_listener { |observable, old_value, new_value| block }
+  #   
+  # Add a ruby block to call when the property changes changes
   def add_change_listener(&block)
-    add_listener(JRubyFX.listener(ChangeListener, :changed, &block))
-    # Should work but gets access issues
-    #    java_send :addListener, [ChangeListener.java_class], block
+    java_send :addListener, [ChangeListener.java_class], block
   end
 
   # FIXME: Not sure how to remove with this API.  We are passing in a proc

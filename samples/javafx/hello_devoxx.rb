@@ -1,9 +1,9 @@
+#!/usr/bin/env jruby
 # Original version is here: http://www.slideshare.net/steveonjava/java-fx-20-a-developers-guide
 
 require 'jrubyfx'
 
-class HelloDevoxx
-  include JRubyFX
+class HelloDevoxx < JRubyFX::Application
 
   def start(stage)
     with(stage, title: "Hello Devoxx", x: 105, y: 140) do
@@ -17,4 +17,4 @@ class HelloDevoxx
   end
 end
 
-HelloDevoxx.start
+HelloDevoxx.launch

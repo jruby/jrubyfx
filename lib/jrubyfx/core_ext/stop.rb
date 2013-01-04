@@ -1,3 +1,4 @@
+# JRubyFX DSL extensions for JavaFX color stops
 class Java::javafx::scene::paint::Stop
   extend JRubyFX::Utils::CommonConverters
 

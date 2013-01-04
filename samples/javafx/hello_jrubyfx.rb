@@ -1,10 +1,10 @@
+#!/usr/bin/env jruby
 # Original version is here: http://www.oracle.com/technetwork/jp/ondemand/java/20110519-java-a-2-sato-400530-ja.pdf
 # Modified by Hiroshi Nakamura <nahi@ruby-lang.org>
 
 require 'jrubyfx'
 
-class HelloJRubyFX
-  include JRubyFX
+class HelloJRubyFX < JRubyFX::Application
 
   def start(stage)
     with(stage, width: 300, height: 300, title: 'Hello JRubyFX') do
@@ -25,4 +25,4 @@ class HelloJRubyFX
   end
 end
 
-HelloJRubyFX.start
+HelloJRubyFX.launch

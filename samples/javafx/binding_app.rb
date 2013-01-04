@@ -1,7 +1,7 @@
+#!/usr/bin/env jruby
 require 'jrubyfx'
 
-class BindingApp
-  include JRubyFX
+class BindingApp < JRubyFX::Application
 
   def start(stage)
     with(stage, title: 'Binding App', width: 300, height: 250) do
@@ -40,4 +40,4 @@ class BindingApp
   
 end
 
-BindingApp.start
+BindingApp.launch

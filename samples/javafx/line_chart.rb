@@ -1,7 +1,7 @@
+#!/usr/bin/env jruby
 require 'jrubyfx'
 
-class LineChart
-  include JRubyFX
+class LineChart < JRubyFX::Application
 
   def start(stage)
     months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
@@ -25,4 +25,4 @@ class LineChart
   end
 end
 
-LineChart.start
+LineChart.launch

@@ -1,10 +1,10 @@
+#!/usr/bin/env jruby
 # Original version is for GroovyFX by @kazuchika
 # https://gist.github.com/1362259G
 
 require 'jrubyfx'
 
-class MovieApp
-  include JRubyFX
+class MovieApp < JRubyFX::Application
   include JRubyFX::DSL
 
   def start(stage)
@@ -40,4 +40,4 @@ class MovieApp
   end
 end
 
-MovieApp.start
+MovieApp.launch

@@ -1,5 +1,5 @@
 module JRubyFX
-  module ConstructorUtils
+  module ConstructorUtils #:nodoc: all
     def split_args_from_properties(*args)
       if !args.empty? and args.last.respond_to? :each_pair
         properties = args.pop 
