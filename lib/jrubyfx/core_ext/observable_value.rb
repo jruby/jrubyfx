@@ -4,6 +4,11 @@ require 'jrubyfx'
 module Java::javafx::beans::value::ObservableValue
   java_import Java::javafx.beans.value.ChangeListener
 
+  ##
+  # call-seq:
+  #   add_change_listener { |observable, old_value, new_value| block }
+  #   
+  # Add a ruby block to call when the property changes changes
   def add_change_listener(&block)
     java_send :addListener, [ChangeListener.java_class], block
   end

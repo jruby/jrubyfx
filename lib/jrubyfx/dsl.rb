@@ -24,8 +24,11 @@ module JRubyFX
   module DSL
     include JRubyFX
 
+    # Contains methods to be defined inside all classes that include JRubyFX
     module ClassUtils
       include JRubyFX::FXImports
+      
+      # Make sure we are added to the mapping. FIXME: is this ever used?
       def register_type(name, type)
         JRubyFX::DSL::NAME_TO_CLASSES[name.to_s] = type
       end
@@ -33,7 +36,15 @@ module JRubyFX
       # Lots of DSL extensions use these methods, so define them here so multiple classes can use them
       
       ##
-      # Add to child list without need to ask for children
+      # call-seq:
+      #   include_add
+      #   include_add :child_getter
+      # 
+      # Include a function to add to child list (optional argument) without need
+      # to ask for children
+      #   include_add
+      #   include_add :elements
+      #
       def include_add(adder = :get_children)
         self.class_eval do
           define_method :add do |value|
@@ -43,17 +54,20 @@ module JRubyFX
       end
       
       ##
-      # Add rotate to transform (manually added ebcause there is a getRotate
-      # on Node already.  Use get_rotate to get property
+      # Adds a function to the class that Adds rotate to transform (manually 
+      # added ebcause there is a getRotate on Node already.  Use get_rotate
+      # to get property
       def include_rotate
         self.class_eval do
-          def rotate(*args)
+          def rotate(*args) #:nodoc:
             transforms << build(Rotate, *args)
           end
         end
       end
     
       ##
+      # Adds a method_missing that automatically calls add if the DSL builds it
+      # as the given type.
       # This will defer to node to construct proper object, but will
       # optionally add paths primary child automatically if it is a
       # PathElement.
@@ -69,6 +83,7 @@ module JRubyFX
       end
     end
 
+    # When a class includes JRubyFX, extend (add to the metaclass) ClassUtils
     def self.included(mod)
       mod.extend(JRubyFX::DSL::ClassUtils)
     end

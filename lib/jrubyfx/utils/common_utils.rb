@@ -1,7 +1,9 @@
 require 'jrubyfx/utils/common_converters'
 
 module JRubyFX
+  # Several utilities that have no better place to go
   module Utils
+    # Utilities to manage argument properties for build/with
     module CommonUtils
       ##
       # If last argument of the arg list is a hash-like entity (:each_pair)

@@ -21,8 +21,8 @@ require 'open-uri'
 require 'rake'
 require 'tmpdir'
 
-# This module contains utilities to jarify an app, and can be used in a rakefile or a running app.
 module JRubyFX
+  # This module contains utilities to jarify an app, and can be used in a rakefile or a running app.
   module Tasks
     extend Rake::DSL
     # Base URL of JRuby-complete.jar download location
