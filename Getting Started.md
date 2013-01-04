@@ -1,6 +1,6 @@
 Using JRubyFX
 ===============
-This guide assumes you have basic knowledge of Ruby, and have JRuby 1.7 or greater and Java 7u6 or greater installed. Java 6 will also work if you are on Windows and download JavaFX runtime separately and put its path in JFX_DIR enviroment variable. At the moment, OpenJDK will unfortunatly not work as it does not have JavaFX.
+This guide assumes you have basic knowledge of Ruby, and have JRuby 1.7 or greater and Java 7u6 or greater installed. Java 6 will also work if you are on Windows and download JavaFX runtime separately and put its path in JFX_DIR enviroment variable. At the moment (January 2013), OpenJDK will unfortunatly not work as it does not have JavaFX. Supposedly OpenJDK 8 will support JFX.
 
 Installing JRubyFX
 --------------------
@@ -21,7 +21,7 @@ Success! JRubyFX should be installed now!
 Creating your first JRubyFX application
 -----------------------------------------
 Lets creating a JavaFX app that has the text "Hello World".
-Create a new ruby file (this tutorial will call it `hello.rb`). To use JRubyFX, we must require it in ruby, so add `require 'jrubyfx'` at the top of the file. Now since JavaFX was originally for Java, we must create a class that inherits from `javafx.application.Application`, however using it raw is no fun, so inherit from the ruby class `JRubyFX::Application` to gain ruby's super power.
+Create a new ruby file (this tutorial will call it `hello.rb`). To use JRubyFX, we must require it in ruby, so add `require 'jrubyfx'` at the top of the file. Now since JavaFX was originally for Java, we must create a class that inherits from `javafx.application.Application`, however using it raw is no fun, so inherit from the ruby class `JRubyFX::Application` to gain ruby's super power:
 
 	class HelloWorldApp < JRubyFX::Application
 	end
@@ -64,9 +64,10 @@ Code listing so far:
 	HelloWorldApp.launch
 
 ### Adding a bit of text
-Cool, we made an empty window, but usually you want something in it. Lets add a label that says "Hello World!". There are three ways to do everything in JRubyFX: the straight-up Java way, the generic JRubyFX way, and using a specific DSL (Domain Specific Language). As it sounds like, the Java way is basically copy-paste Java style, and the RubyFXML way is much more elegant, though its good to know both.
+Cool, we made an empty window, but usually you want something in it. Lets add a label that says "Hello World!". There are three ways to do everything in JRubyFX: the straight-up Java way, the generic JRubyFX way, and using a specific DSL (Domain Specific Language). As it sounds like, the Java way is basically copy-paste Java style, and the JRubyFX way is much more elegant, though its good to know both.
 
 #### Creating a Label the Java way
+So far we have been doing it the Java way, so lets continue:
 
 	label = Label.new()
 	label.text = "Hello World!"
@@ -75,18 +76,26 @@ Cool, we made an empty window, but usually you want something in it. Lets add a 
 
 	label = build(Label, text: "Hello World!")
 
-Whoa! So what does `build` do? Build takes a name of a class (`Label`), creates a new instance, and sets the properties specified on it. Note that I used Ruby 1.9 hash style, `text: "Hello World!"` is identical to the Ruby 1.8 hash of `:text => "Hello World!"`. build can also accept a ruby block to be executed against the object, so we could write the build like:
+Whoa! So what does `build` do? Build takes a name of a class (`Label`), creates a new instance, and sets the properties specified on it. Note that I used Ruby 1.9 hash style, `text: "Hello World!"` is identical to the Ruby 1.8 hash of `:text => "Hello World!"`. `build` can also accept a ruby block to be executed against the object, so we could write the build like:
 
 	label = build(Label) do
 		text = "Hello World!"
 	end
 
-For this single contrived example, it makes no sense, but for certain things (like animations and file save dialogs), it can save some serious typing.
+For this single contrived example, it makes no sense, but for certain things (like animations and file save dialogs), it can save some serious typing. `build` also supports constructors, and since `Label` has a constructor that takes the text, we can use it:
+
+	label = build(Label, "Hello World")
 
 #### Creating a Label the JRubyFX DSL way
 The DSL is very similar to the `build` way:
 
 	label_variable = label(text: "Hello World!")
+
+or using the constructor variant:
+
+	label_variable = label("Hello World!")
+
+Basically, the DSL way converts `build(MyClass, _ctor_args_, *hash_args*) { *block* }` to `my_class( _ctor_args_, *hash_args*) { *block* }`
 
 ### Putting the Label on the Stage
 Now we can't just put the Label on the Stage, we must put it in a Scene so JavaFX knows how to layout the window. What is a Scene you ask? The Stage does not directly handle controls, it passes them onto the Scene object, which is the root of the UI tree. Scene normally contains at least one layout manager (like HBox, GridPanel, etc), and often more, however for the purposes of this demo, we will use the basic default layout manager Scene provides. The generated FXML later in this guide will use a proper layout manager. If you've used Java Swing before, JFrame is basically the Stage and the Scene combined. Search around the internet for more information on Stage, Scene and JavaFX, almost all information is applicable to JRubyFX.
@@ -115,7 +124,18 @@ Fancy, huh? but now that we've used `with`, we can create our scene inside using
 	def start(stage)
 		with(stage, title: "Hello World!", width: 800, height: 600) do
 			layout_scene() do
-				label(text: "Hello World!")
+				label("Hello World!")
+			end
+		end
+		stage.show()
+	end
+
+`layout_scene` creates a scene with whatever is inside it as the root of the scene. It can also take arguments to the Scene constructor, so we could also write the above as:
+
+	def start(stage)
+		with(stage, title: "Hello World!") do
+			layout_scene(800, 600) do
+				label("Hello World!")
 			end
 		end
 		stage.show()
@@ -127,7 +147,7 @@ Using FXML instead of code
 --------------------------
 So now lets say your hello world program goes viral, and everyone wants it. You decide to hire a real designer for version 2.0 so it looks nice and professional. Unfortunatly, however, all the layout is in the code, mixed in with the business logic (hmm, just pretend it does awesome computations to show  Hello World). The solution to this is to not put the layout and UI in the code. How? FXML. If you have ever played with .NET, you might have come across WPF, or Windows Presentation Foundation. WPF and JavaFX and very similar in that you can describe the layout of the UI completely declaratively in an xml file (XAML for WPF, FXML for JavaFX). The good thing about this is that both WPF and JavaFX have visual designers for the XML files, which means designers don't have to worry about code!
 
-JavaFX's designer is called JavaFX Scene Builder, and is a free download from the main JavaFX site. Go install it now, and play with it for a bit. 
+JavaFX's designer is called JavaFX Scene Builder, and is a free download from the main JavaFX site. Go install it now, and play with it for a bit. (or not. All fxml code needed it copy-pastable from this guide, but then you wouldn't learn anything)
 
 Done? Good, copy and paste this code into a new file called `Hello.fxml`:
 
@@ -189,7 +209,7 @@ We need to mark what id's to get, which we can do with `fx_id :name`:
 		fx_id :helloLabel
 	end
 
-This basically says that there is a control in the FXML file with the fx:id property set to the value  "helloLabel" and that we want to be able to reference this object by the instance variable `@helloLabel`. Now we need to add our event handlers:
+This basically says that there is a control in the FXML file with the fx:id property set to the value  "helloLabel" and that we want to be able to reference this object by the instance variable `@helloLabel`. Note that you can also call `stage['#helloLabel']`, but thats just a mouthful Now we need to add our event handlers:
 
 	class HelloWorldController < JRubyFX::Controller
 		fx_id :helloLabel
@@ -208,7 +228,7 @@ Whoa, what is the fx_handler stuff? Just think of it like a normal function, but
 	end
 
 #### Event types
-onAction uses the default event type, so you can get away with `fx_handler`. If you have a mouse event, keyboard event, etc, then you need to use `fx_mouse_handler` or `fx_key_handler`, respectively. A full list of handlers is in samples/fxml/Demo.rb, or line 46 to 57 of lib/fxml_controller.rb in the sources for JavaFXML (`:mouse => MouseEvent` means fx_mouse_handler handles the native Java `MouseEvent` events). If there is not a custom override, you can use the full version of `fx_handler`:
+onAction uses the default event type, so you can get away with `fx_handler`. If you have a mouse event, keyboard event, etc, then you need to use `fx_mouse_handler` or `fx_key_handler`, respectively. A full list of handlers is in samples/fxml/Demo.rb, or line 102 to 113 of lib/fxml_controller.rb in the sources for JavaFXML (`:mouse => MouseEvent` means fx_mouse_handler handles the native Java `MouseEvent` events). If there is not a custom override, you can use the full version of `fx_handler`:
 
 	fx_handler :click, ActionEvent do
 		@helloLabel.text = "You clicked me!"
@@ -272,6 +292,9 @@ Code listing for Hello.rb:
 Now what?
 ---------
 Now you know the basics of FXML and JRubyFX! If you haven't already, I suggest looking over samples/fxml/Demo.rb for a bit more detail. JavaFX help is all around, and most of it is applicable to JRubyFX.
+
+### A note about RDoc
+Most classes can be used 100% the Java way, but several have fun overrides/new methods to make them more ruby-ish. All the RDoc for Java::** classes shows these extensions (also visible in lib/javafx/core_ext/*.rb).
 
 ### Using the generator
 Got a large FXML file with dozens of fx:id's and events? Assuming you only have a FXML file:
