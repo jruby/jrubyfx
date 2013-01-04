@@ -155,7 +155,7 @@ class JRubyFX::Controller
   #   private ClassName myVar;
   # 
   def self.fx_id_optional(*names)
-    fx_id names.map {|i| {i => :quiet} }
+    fx_id *names.map {|i| {i => :quiet} }
   end
   
   ##
