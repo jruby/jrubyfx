@@ -79,4 +79,23 @@ class Java::javafx::stage::Stage
                  end
     initStyle(java_style)
   end
+  
+  # Easily change the modality. Valid values are:
+  # * :none
+  # * :window
+  # * :app - Shortcut for application
+  # * :application
+  def init_modality=(modality)
+    java_modality = case modality
+                 when :none
+                   Modality::NONE
+                 when :window
+                   Modality::WINDOW_MODAL
+                 when :application, :app
+                   Modality::APPLICATION_MODAL
+                 else
+                   modality # Assume real Java value
+                 end
+    initModality(java_modality)
+  end
 end
