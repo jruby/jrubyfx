@@ -1,10 +1,11 @@
 #!/usr/bin/env jruby
+$fulldir = File.expand_path(File.dirname(__FILE__))
 def run(file)
   if file.end_with? ".rb" and File.executable? file
     puts " #{Dir.pwd}/#{file}"
     puts "="*80
     
-    system("jruby -I #{File.dirname(__FILE__)}/../lib '#{file}'")
+    system("jruby -I #{$fulldir}/../lib '#{file}'")
   
     puts "="*80
   end
