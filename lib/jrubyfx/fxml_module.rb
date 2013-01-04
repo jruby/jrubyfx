@@ -95,20 +95,5 @@ module JRubyFX
 
     with(obj, properties, &block)
   end
-
-  # Attach a listener to a module with some voodoo.
-  # TODO: Document this
-  def listener(mod, name, &block)
-    obj = Class.new { include mod }.new
-    obj.instance_eval do
-      @name = name
-      @block = block
-      def method_missing(msg, *a, &b) #:nodoc:
-        @block.call(*a, &b) if msg == @name
-      end
-    end
-    obj
-  end
-  module_function :listener
 end
 
