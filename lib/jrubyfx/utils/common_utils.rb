@@ -36,7 +36,8 @@ module JRubyFX
 
       ##
       # Attempts to convert given value to JavaFX equvalent, if any, by calling
-      # obj.name_CommonConverters::ARG_CONVERTER_SUFFING.
+      # obj.name_CommonConverters::ARG_CONVERTER_SUFFING, which is created by
+      # calling CommonConverters.converter_for in your class.
       # See CommonConverters for current conversions
       #
       def attempt_conversion(obj, name, *values)
