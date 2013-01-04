@@ -25,16 +25,19 @@ module JRubyFX
     include JRubyFX
 
     module ClassUtils
+      include JRubyFX::FXImports
       def register_type(name, type)
         JRubyFX::DSL::NAME_TO_CLASSES[name.to_s] = type
       end
       
+      # Lots of DSL extensions use these methods, so define them here so multiple classes can use them
+      
       ##
       # Add to child list without need to ask for children
-      def include_add
-        self.instance_eval do
+      def include_add(adder = :get_children)
+        self.class_eval do
           define_method :add do |value|
-            self.get_children << value
+            self.send(adder) << value
           end
         end
       end
@@ -43,8 +46,8 @@ module JRubyFX
       # Add rotate to transform (manually added ebcause there is a getRotate
       # on Node already.  Use get_rotate to get property
       def include_rotate
-        self.instance_eval do
-          define_method :rotate do |*args|
+        self.class_eval do
+          def rotate(*args)
             transforms << build(Rotate, *args)
           end
         end
@@ -55,9 +58,10 @@ module JRubyFX
       # optionally add paths primary child automatically if it is a
       # PathElement.
       def include_method_missing(type)
-        self.instance_eval do
+        self.class_eval do
           define_method :method_missing do |name, *args, &block|
-            super.tap do |obj|
+            # we must manually call super otherwise it will call super(type)
+            super(name, *args, &block).tap do |obj|
               add(obj) if obj.kind_of? type
             end
           end
@@ -107,7 +111,7 @@ module JRubyFX
     def method_missing(name, *args, &block)
       clazz = NAME_TO_CLASSES[name.to_s]
       super unless clazz
-
+      
       build(clazz, *args, &block)
     end
 
