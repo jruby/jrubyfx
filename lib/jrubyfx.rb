@@ -1,6 +1,39 @@
 require 'java'
-require 'jfxrt.jar'
+
+# Load built-in JavaFX support or potentially override or define for Java 6
+# if you specify JAVAFX_JRE_DIR environment variable.
+begin
+  $: << ENV['JAVAFX_JRE_DIR'] if ENV['JAVAFX_JRE_DIR']
+  $: << ENV_JAVA['sun.boot.library.path']
+  require 'jfxrt.jar'
+rescue LoadError
+  fail <<EOS
+Unable to load JavaFX runtime.  Please either use Java 7u4 or higher
+or set environment variable JAVAFX_JRE_DIR to specify the directory
+where jxfrt.jar can be found.
+EOS
+end
+
+# FIXME: core_ext could be loaded on demand through dsl API if we only had
+# dsl API.
 require 'jrubyfx.jar'
+require 'jrubyfx/utils/common_utils'
+require 'jrubyfx/core_ext/node'
+require 'jrubyfx/core_ext/circle'
+require 'jrubyfx/core_ext/labeled'
+require 'jrubyfx/core_ext/observable_value'
+require 'jrubyfx/core_ext/parent'
+require 'jrubyfx/core_ext/parallel_transition'
+require 'jrubyfx/core_ext/path'
+require 'jrubyfx/core_ext/radial_gradient'
+require 'jrubyfx/core_ext/scene'
+require 'jrubyfx/core_ext/shape'
+require 'jrubyfx/core_ext/stage'
+require 'jrubyfx/core_ext/stop'
+require 'jrubyfx/core_ext/table_view'
+require 'jrubyfx/core_ext/timeline'
+require 'jrubyfx/core_ext/xy_chart'
+require 'jrubyfx/core_ext/border_pane'
 
 module JRubyFX
   java_import 'javafx.animation.FadeTransition'
@@ -11,6 +44,7 @@ module JRubyFX
   java_import 'javafx.animation.RotateTransition'
   java_import 'javafx.animation.ScaleTransition'
   java_import 'javafx.animation.Timeline'
+  java_import 'javafx.application.Platform'
   java_import 'javafx.beans.property.SimpleDoubleProperty'
   java_import 'javafx.beans.value.ChangeListener'
   java_import 'javafx.collections.FXCollections'
@@ -19,6 +53,10 @@ module JRubyFX
   java_import 'javafx.geometry.VPos'
   java_import 'javafx.scene.Group'
   java_import 'javafx.scene.Scene'
+  java_import 'javafx.scene.chart.CategoryAxis'
+  java_import 'javafx.scene.chart.LineChart'
+  java_import 'javafx.scene.chart.NumberAxis'
+  java_import 'javafx.scene.chart.XYChart'
   java_import 'javafx.scene.control.Button'
   java_import 'javafx.scene.control.Label'
   java_import 'javafx.scene.control.TableColumn'
@@ -49,6 +87,8 @@ module JRubyFX
   java_import 'javafx.scene.shape.MoveTo'
   java_import 'javafx.scene.shape.Path'
   java_import 'javafx.scene.shape.Rectangle'
+  java_import 'javafx.scene.shape.StrokeType'
+  java_import 'javafx.scene.shape.StrokeLineJoin'
   java_import 'javafx.scene.text.Font'
   java_import 'javafx.scene.text.Text'
   java_import 'javafx.scene.transform.Rotate'
@@ -56,6 +96,8 @@ module JRubyFX
   java_import 'javafx.stage.Stage'
   java_import 'javafx.stage.StageStyle'
   java_import 'javafx.util.Duration'
+
+  include JRubyFX::Utils::CommonUtils
 
   module ClassUtils
     def start(*args)
@@ -82,18 +124,29 @@ module JRubyFX
   #   end
   #
   def with(obj, properties = {}, &block)
+    populate_properties(obj, properties)
+
     if block_given?
       obj.extend(JRubyFX)
       obj.instance_eval(&block)
     end
-    properties.each_pair { |k, v| obj.send(k.to_s + '=', v) }
+    
     obj
+  end
+
+  ##
+  # Convenience method so anything can safely schedule to run on JavaFX
+  # main thread.
+  def run_later(&block)
+    Platform.run_later &block
   end
 
   ##
   # Create "build" a new JavaFX instance with the provided class and
   # set properties (e.g. setters) on that new instance plus also invoke
-  # any block passed against this new instance
+  # any block passed against this new instance.  This also can build a proc
+  # or lambda form in which case the return value of the block will be what 
+  # is used to set the additional properties on.
   # === Examples
   #
   #   grid = build(GridPane, vgap: 2, hgap: 2) do
@@ -101,14 +154,18 @@ module JRubyFX
   #     children << location << go << view
   #   end
   #
+  #  build(proc { Foo.new }, vgap: 2, hgap: 2)
+  #
   def build(klass, *args, &block)
-    if !args.empty? and args.last.respond_to? :each_pair
-      properties = args.pop 
-    else 
-      properties = {}
-    end
+    args, properties = split_args_from_properties(*args)
 
-    with(klass.new(*args), properties, &block)
+    obj = if klass.kind_of? Proc
+            klass.call(*args)
+          else
+            klass.new(*attempt_conversion(klass, :new, *args))
+          end
+
+    with(obj, properties, &block)
   end
 
   def listener(mod, name, &block)
@@ -122,4 +179,5 @@ module JRubyFX
     end
     obj
   end
+  module_function :listener
 end

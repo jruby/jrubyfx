@@ -81,10 +81,11 @@
 
   <target name="run" depends="build">
     <input message="Enter path to jrubyfx script:" addproperty="javafx.prog" 
-           defaultvalue="samples/AnalogClock.rb"/>
+           defaultvalue="samples/analog_clock.rb"/>
     <echo message="-I lib:${javafx.dir} ${javafx.prog}"/>
     <java classname="org.jruby.Main" fork="true" maxmemory="1024M" 
           failonerror="true">
+      <!-- <jvmArg value="-javaagent:ScenicView.jar"/> -->
       <classpath refid="build.classpath"/>
       <sysproperty key="jruby.home" value="${jruby.home}"/>
       <arg line="-I lib:${javafx.dir} ${javafx.prog}"/>

@@ -7,20 +7,21 @@ class HelloJRubyFX
   include JRubyFX
 
   def start(stage)
-    root = build(Group) {
-      children <<
-        build(Rectangle, x: 10, y: 40, width: 50, height: 50, fill: Color::RED) {
-          kf1 = KeyFrame.new(Duration::ZERO, KeyValue.new(translateXProperty, 0))
-          kf2 = KeyFrame.new(Duration.millis(1000), KeyValue.new(translateXProperty, 200))
-          build(Timeline, cycle_count: Timeline::INDEFINITE, auto_reverse: true) {
-            key_frames << kf1 << kf2
-          }.play
-        }
-    }
-    with(stage,
-         width: 300, height: 200,
-         title: 'Hello JRubyFX',
-         scene: build(Scene, root, fill: Color::DARKBLUE)).show
+    with(stage, width: 300, height: 300, title: 'Hello JRubyFX') do
+      layout_scene(:dark_blue) do
+        group do
+          rectangle(x: 10, y: 40, width: 50, height: 50, fill: :red) do
+            translate_x = translateXProperty
+
+            timeline(cycle_count: Timeline::INDEFINITE, auto_reverse: true) do
+              key_frame(Duration::ZERO, key_value(translate_x, 0))
+              key_frame(Duration.millis(1000), key_value(translate_x, 200))  
+            end.play
+          end
+        end
+      end
+      show
+    end
   end
 end
 

@@ -5,38 +5,38 @@ require 'jrubyfx'
 
 class MovieApp
   include JRubyFX
+  include JRubyFX::DSL
 
   def start(stage)
     source_url = 'http://www.mediacollege.com/video-gallery/testclips/20051210-w50s_56K.flv'
+    transition = nil
 
-    view = transition = nil
-
-    root = build(Group) {
-      player = build(MediaPlayer, build(Media, source_url), :auto_play => true)
-      children << view = build(MediaView, player, :fit_width => 640, :fit_height => 380) {
-        transition = build(ParallelTransition, :node => self) {
-          duration = Duration.millis(5000)
-          children << build(RotateTransition, :duration => duration, :from_angle => 0, :to_angle => 360)
-          children << build(FadeTransition,   :duration => duration, :from_value => 0.0, :to_value => 1.0)
-          children << build(ScaleTransition,  :duration => duration, :from_x => 0.0, :from_y => 0.0, :to_x => 1.0, :to_y => 1.0)
-        }
-      }
-    }
-    scene = build(Scene, root, :fill => Color::BLACK) {
-      self.on_key_released = proc { |e|
-        puts "media key: #{e.text}"
-        case e.text
-        when "s"
-          view.effect = view.effect ? nil : build(SepiaTone)
-        when "b"
-          view.effect = view.effect ? nil : build(GaussianBlur, :radius => 30)
-        when "t"
-          transition.play_from_start
+    with(stage, title: 'MediaView Demo', :width => 640, :height => 380) do
+      layout_scene do
+        group do
+          media_view(media_player(media(source_url), auto_play: true), :fit_width => 640, :fit_height => 380, id: 'view') do
+            transition = parallel_transition(:node => self) do
+              duration = Duration.millis(5000)
+              rotate_transition(:duration => duration, :from_angle => 0, :to_angle => 360)
+              fade_transition(:duration => duration, :from_value => 0.0, :to_value => 1.0)
+              scale_transition(:duration => duration, :from_x => 0.0, :from_y => 0.0, :to_x => 1.0, :to_y => 1.0)
+            end
+          end
         end
-      }
-    }
-
-    with(stage, :width => 640, :height => 380, :title => 'MediaView Demo', :scene => scene).show
+      end
+    end.show
+    stage.scene.set_on_key_released do |e|
+      view = stage["#view"]
+      puts "media key: #{e.text}"
+      case e.text
+      when "s"
+        view.effect = view.effect ? nil : sepia_tone
+      when "b"
+        view.effect = view.effect ? nil : gaussian_blur(:radius => 30)
+      when "t"
+        transition.play_from_start
+      end
+    end
   end
 end
 
