@@ -4,7 +4,15 @@
   <property name="src.java" value="src"/>
   <property name="target" value="target"/>
   <property name="target.classes" value="${target}/classes"/>
-  <property name="jruby.jar" value="${jruby.home}/lib/jruby.jar"/>
+  <property environment="env."/>
+  <property name="jruby.dir" value="${env.JRUBY_HOME}"/>
+  <echo>JRUBY_HOME = ${jruby.dir}"</echo>
+  <condition property="jruby.defined">
+    <not><matches pattern="env.JRUBY_HOME" string="${jruby.dir}"/></not>
+  </condition>
+  <fail message="You must define JRUBY_HOME as an environment variable (e.g. 'export JRUBY_HOME=/Volumes/HD/Users/you/.rvm/rubies/jruby-1.7.0')." unless="jruby.defined"/>
+
+  <property name="jruby.jar" value="${jruby.dir}/lib/jruby.jar"/>
 
   <!-- Figure out whether javafx is installed in Java or is a separate
        download.  There are three JavaFX install mechanisms: bundled (not

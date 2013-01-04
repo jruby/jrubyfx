@@ -73,6 +73,7 @@ module JRubyFX
   java_import 'javafx.scene.layout.Priority'
   java_import 'javafx.scene.layout.HBox'
   java_import 'javafx.scene.layout.VBox'
+  java_import 'javafx.scene.layout.StackPane'
   java_import 'javafx.scene.media.Media'
   java_import 'javafx.scene.media.MediaPlayer'
   java_import 'javafx.scene.media.MediaView'
