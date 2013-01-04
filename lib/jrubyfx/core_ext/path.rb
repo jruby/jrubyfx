@@ -5,9 +5,7 @@ class Java::javafx::scene::shape::Path
 
   include JRubyFX::DSL
 
-  def add(value)
-    self.elements << value
-  end
+  include_add :elements
 
   include_rotate
 

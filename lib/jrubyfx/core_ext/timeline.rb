@@ -4,11 +4,6 @@ class Java::javafx::animation::Timeline
 
   include JRubyFX::DSL
 
-  ##
-  # Add to child list without need to ask for children
-  def add(value)
-    self.key_frames << value
-  end
-
+  include_add :key_frames
   include_method_missing KeyFrame
 end

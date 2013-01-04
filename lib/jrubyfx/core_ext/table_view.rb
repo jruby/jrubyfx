@@ -6,11 +6,6 @@ class Java::javafx::scene::control::TableView
 
   include JRubyFX::DSL
 
-  ##
-  # Add to child list without need to ask for children
-  def add(value)
-    self.get_columns << value
-  end
-
+  include_add :get_columns
   include_method_missing TableColumn
 end
