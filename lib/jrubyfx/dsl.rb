@@ -80,6 +80,25 @@ module JRubyFX
           end
         end
       end
+
+      #enum_map :initStyle, StageStyle
+      def enum_map(jfunc, jclass)
+        # Define the conversion function as the snake cased assignment, calling parse_ruby
+        self.class_eval do
+          define_method "#{jfunc.to_s.snake_case}=" do |rbenum|
+            java_send jfunc, [jclass], jclass.parse_ruby(rbenum)
+          end
+        end
+        
+        # define parse_ruby as a static method on the enum
+        class << jclass
+          define_method :parse_ruby do |const|
+            # cache it. It could be expensive
+            @map = JRubyFX::Utils::CommonConverters.map(self) if @map == nil
+            @map[const.to_s] || const
+          end
+        end
+      end
     end
 
     # When a class includes JRubyFX, extend (add to the metaclass) ClassUtils

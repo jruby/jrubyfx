@@ -74,15 +74,13 @@ class Java::javafx::stage::Stage
     root = code.arity == 1 ? code[node] : instance_eval(&code)
     build(Scene, root, *args).tap { |scene| set_scene scene }
   end
-
+  
   # Easily change the StageStyle. Valid values are:
   # * :decorated - For a standard window (default)
   # * :undecorated - For a standard window, minus the titlebar
   # * :transparent - For a completely transparent window
   # * :utility - For a toolbar style window (no title, only close)
-  def init_style=(style)
-    initStyle(StageStyle.parse_ruby(style))
-  end
+  enum_map :initStyle, StageStyle
   
   # Easily change the modality. Valid values are:
   # * :none
@@ -101,12 +99,5 @@ class Java::javafx::stage::Stage
                    modality # Assume real Java value
                  end
     initModality(java_modality)
-  end
-end
-
-class Java::javafx::stage::StageStyle
-  def self.parse_ruby(const)
-    @map = JRubyFX::Utils::CommonConverters.map(self) if @map == nil
-    @map[const.to_s] || const
   end
 end
