@@ -81,19 +81,7 @@ class Java::javafx::stage::Stage
   # * :transparent - For a completely transparent window
   # * :utility - For a toolbar style window (no title, only close)
   def init_style=(style)
-    java_style = case style
-                 when :decorated then
-                   StageStyle::DECORATED
-                 when :undecorated then
-                   StageStyle::UNDECORATED
-                 when :transparent then
-                   StageStyle::TRANSPARENT
-                 when :utility then
-                   StageStyle::UTILITY
-                 else
-                   style # Assume real Java value
-                 end
-    initStyle(java_style)
+    initStyle(StageStyle.parse_ruby(style))
   end
   
   # Easily change the modality. Valid values are:
@@ -113,5 +101,12 @@ class Java::javafx::stage::Stage
                    modality # Assume real Java value
                  end
     initModality(java_modality)
+  end
+end
+
+class Java::javafx::stage::StageStyle
+  def self.parse_ruby(const)
+    @map = JRubyFX::Utils::CommonConverters.map(self) if @map == nil
+    @map[const.to_s] || const
   end
 end

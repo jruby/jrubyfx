@@ -101,6 +101,11 @@ module JRubyFX
           new_value ? new_value : value
         },
       }
+      
+      def map(enum_class)
+        enum_class.java_class.enum_constants.inject({}) {|res, i| res[i.to_s.downcase] = i; res }
+      end
+      module_function :map
     end
   end
 end
