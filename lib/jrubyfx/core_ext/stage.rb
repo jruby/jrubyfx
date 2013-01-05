@@ -74,44 +74,4 @@ class Java::javafx::stage::Stage
     root = code.arity == 1 ? code[node] : instance_eval(&code)
     build(Scene, root, *args).tap { |scene| set_scene scene }
   end
-
-  # Easily change the StageStyle. Valid values are:
-  # * :decorated - For a standard window (default)
-  # * :undecorated - For a standard window, minus the titlebar
-  # * :transparent - For a completely transparent window
-  # * :utility - For a toolbar style window (no title, only close)
-  def init_style=(style)
-    java_style = case style
-                 when :decorated then
-                   StageStyle::DECORATED
-                 when :undecorated then
-                   StageStyle::UNDECORATED
-                 when :transparent then
-                   StageStyle::TRANSPARENT
-                 when :utility then
-                   StageStyle::UTILITY
-                 else
-                   style # Assume real Java value
-                 end
-    initStyle(java_style)
-  end
-  
-  # Easily change the modality. Valid values are:
-  # * :none
-  # * :window
-  # * :app - Shortcut for application
-  # * :application
-  def init_modality=(modality)
-    java_modality = case modality
-                 when :none
-                   Modality::NONE
-                 when :window
-                   Modality::WINDOW_MODAL
-                 when :application, :app
-                   Modality::APPLICATION_MODAL
-                 else
-                   modality # Assume real Java value
-                 end
-    initModality(java_modality)
-  end
 end
