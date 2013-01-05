@@ -82,9 +82,8 @@ module JRubyFX
       end
 
       def enum_map(jfunc, overrides={})
-        # TODO: make this less evil
         jclass = self.java_class.java_instance_methods.find_all {|i| i.name == jfunc.to_s}[0].argument_types[0]
-        jclass = eval("Java." + jclass.name)
+        jclass = JavaUtilities.get_proxy_class(jclass)
         
         # Define the conversion function as the snake cased assignment, calling parse_ruby
         self.class_eval do
