@@ -80,22 +80,6 @@ module JRubyFX
           end
         end
       end
-
-      def enum_map(jfunc, overrides={})
-        jclass = self.java_class.java_instance_methods.find_all {|i| i.name == jfunc.to_s}[0].argument_types[0]
-        jclass = JavaUtilities.get_proxy_class(jclass)
-        
-        # Define the conversion function as the snake cased assignment, calling parse_ruby
-        self.class_eval do
-          define_method "#{jfunc.to_s.snake_case}=" do |rbenum|
-            java_send jfunc, [jclass], jclass.parse_ruby(rbenum)
-          end
-        end
-        
-        # define parse_ruby as a static method on the enum
-        JRubyFX::Utils::CommonConverters.set_overrides_for jclass, overrides
-        JRubyFX::DSL.inject_enum_converter(jclass)
-      end
     end
 
     # When a class includes JRubyFX, extend (add to the metaclass) ClassUtils
@@ -164,14 +148,25 @@ module JRubyFX
       all_enums = []
       enum_methods = []
       JRubyFX::DSL::NAME_TO_CLASSES.each do |n,cls|
-        cls.java_class.java_instance_methods.find_all {|i| i.argument_types.find_all(&:enum?).tap {|o| all_enums << o }.length > 0 } unless cls.is_a? Proc
+        cls.java_class.java_instance_methods.find_all do |method|
+          args = method.argument_types.find_all(&:enum?).tap {|i| all_enums <<  i }
+          if args.length == method.argument_types.length and args.length == 1 # one and only, must be a setter style
+            enum_methods << [method.name, cls]
+          end
+          args.length > 0
+        end if cls.respond_to? :ancestors and cls.ancestors.include? JavaProxy # some are not java classes. ignore those
       end
       
-      # Get the proper class
+      # Get the proper class (only need them once)
       all_enums =  all_enums.flatten.uniq.map {|i| JavaUtilities.get_proxy_class(i) }
       # Inject our converter into each enum
       all_enums.each do |enum|
         inject_enum_converter enum
+      end
+      
+      # finally, "override" each method
+      enum_methods.each do |method|
+        inject_enum_method_converter *method
       end
     end
     
@@ -181,6 +176,18 @@ module JRubyFX
           # cache it. It could be expensive
           @map = JRubyFX::Utils::CommonConverters.map(self) if @map == nil
           @map[const.to_s] || const
+        end
+      end
+    end
+    
+    def self.inject_enum_method_converter(jfunc, in_class)
+      jclass = in_class.java_class.java_instance_methods.find_all {|i| i.name == jfunc.to_s}[0].argument_types[0]
+      jclass = JavaUtilities.get_proxy_class(jclass)
+      
+      # Define the conversion function as the snake cased assignment, calling parse_ruby
+      in_class.class_eval do
+        define_method "#{jfunc.to_s.snake_case}=" do |rbenum|
+          java_send jfunc, [jclass], jclass.parse_ruby(rbenum)
         end
       end
     end

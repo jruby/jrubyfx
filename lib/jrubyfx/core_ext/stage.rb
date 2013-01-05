@@ -74,19 +74,4 @@ class Java::javafx::stage::Stage
     root = code.arity == 1 ? code[node] : instance_eval(&code)
     build(Scene, root, *args).tap { |scene| set_scene scene }
   end
-  
-  # Easily change the StageStyle. Valid values are:
-  # * :decorated - For a standard window (default)
-  # * :undecorated - For a standard window, minus the titlebar
-  # * :transparent - For a completely transparent window
-  # * :utility - For a toolbar style window (no title, only close)
-  enum_map :initStyle
-  
-  # Easily change the modality. Valid values are:
-  # * :none
-  # * :window
-  # * :app - Shortcut for application
-  # * :application
-  enum_map :initModality, {:window_modal => :window, 
-    :application_modal => [:application, :app]}
 end
