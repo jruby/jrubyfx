@@ -293,6 +293,11 @@ Now what?
 ---------
 Now you know the basics of FXML and JRubyFX! If you haven't already, I suggest looking over samples/fxml/Demo.rb for a bit more detail. JavaFX help is all around, and most of it is applicable to JRubyFX.
 
+### Enums
+All JavaFX enums can be written as either Enum::VALUE or :value. The ruby-style symbols should be lowercase snake (my_long_value) and will be automatically translated. In some cases, you can shorten the name even further (such as Modality::APPLICATION_MODAL can be :application_modal, :application, or just :app.
+
+**NOTE:** To take advantage of the automatic transation, you must use _javaclass_._my_property=_ and NOT _javaclass_._setMyProperty_
+
 ### A note about RDoc
 Most classes can be used 100% the Java way, but several have fun overrides/new methods to make them more ruby-ish. All the RDoc for Java::** classes shows these extensions (also visible in lib/javafx/core_ext/*.rb).
 
