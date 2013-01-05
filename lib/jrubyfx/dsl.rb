@@ -94,13 +94,7 @@ module JRubyFX
         
         # define parse_ruby as a static method on the enum
         JRubyFX::Utils::CommonConverters.set_overrides_for jclass, overrides
-        class << jclass
-          define_method :parse_ruby do |const|
-            # cache it. It could be expensive
-            @map = JRubyFX::Utils::CommonConverters.map(self) if @map == nil
-            @map[const.to_s] || const
-          end
-        end
+        JRubyFX::DSL.inject_enum_converter(jclass)
       end
     end
 
@@ -136,6 +130,12 @@ module JRubyFX
           res.merge!(values)
         end
       end) unless const_defined?(:NAME_TO_CLASSES)
+    
+    ENUM_OVERRIDES = {PathTransition::OrientationType => {:orthogonal_to_tangent => :orthogonal},
+      BlendMode => {:src_over => :over, :src_atop => :atop, :color_dodge => :dodge, :color_burn => :burn},
+      ContentDisplay => {:graphic_only => :graphic, :text_only => :text},
+      BlurType => {:one_pass_box => [:one, :one_pass], :two_pass_box => [:two, :two_pass], :three_pass_box => [:three, :three_pass]},
+      Modality => {:window_modal => :window, :application_modal => [:application, :app]}} unless const_defined?(:ENUM_OVERRIDES)
 
     # This is the heart of the DSL. When a method is missing and the name of the
     # method is in the NAME_TO_CLASSES mapping, it calls JRubyFX.build with the
@@ -152,6 +152,38 @@ module JRubyFX
     end
 
     alias :node_method_missing :method_missing
+    
+    def self.load_enum_converter
+      # load overrides
+      ENUM_OVERRIDES.each do |cls, overrides|
+        JRubyFX::Utils::CommonConverters.set_overrides_for cls, overrides
+      end
+      
+      # use reflection to load all enums into all_enums and methods that use them
+      # into enum_methods
+      all_enums = []
+      enum_methods = []
+      JRubyFX::DSL::NAME_TO_CLASSES.each do |n,cls|
+        cls.java_class.java_instance_methods.find_all {|i| i.argument_types.find_all(&:enum?).tap {|o| all_enums << o }.length > 0 } unless cls.is_a? Proc
+      end
+      
+      # Get the proper class
+      all_enums =  all_enums.flatten.uniq.map {|i| JavaUtilities.get_proxy_class(i) }
+      # Inject our converter into each enum
+      all_enums.each do |enum|
+        inject_enum_converter enum
+      end
+    end
+    
+    def self.inject_enum_converter(jclass)
+      class << jclass
+        define_method :parse_ruby do |const|
+          # cache it. It could be expensive
+          @map = JRubyFX::Utils::CommonConverters.map(self) if @map == nil
+          @map[const.to_s] || const
+        end
+      end
+    end
   end
 end
 
@@ -162,3 +194,5 @@ JRubyFX::DSL::NAME_TO_CLASSES.each do |name, cls|
 end
 # observable_value is not in the list, so include it manually
 require_relative 'core_ext/observable_value'
+
+JRubyFX::DSL.load_enum_converter()
