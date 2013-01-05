@@ -81,7 +81,7 @@ module JRubyFX
         end
       end
 
-      def enum_map(jfunc)
+      def enum_map(jfunc, overrides={})
         # TODO: make this less evil
         jclass = self.java_class.java_instance_methods.find_all {|i| i.name == jfunc.to_s}[0].argument_types[0]
         jclass = eval("Java." + jclass.name)
@@ -94,6 +94,7 @@ module JRubyFX
         end
         
         # define parse_ruby as a static method on the enum
+        JRubyFX::Utils::CommonConverters.set_overrides_for jclass, overrides
         class << jclass
           define_method :parse_ruby do |const|
             # cache it. It could be expensive

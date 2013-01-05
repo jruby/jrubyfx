@@ -87,5 +87,6 @@ class Java::javafx::stage::Stage
   # * :window
   # * :app - Shortcut for application
   # * :application
-  enum_map :initModality
+  enum_map :initModality, {:window_modal => :window, 
+    :application_modal => [:application, :app]}
 end

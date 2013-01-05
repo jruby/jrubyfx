@@ -102,10 +102,21 @@ module JRubyFX
         },
       }
       
-      def map(enum_class)
-        enum_class.java_class.enum_constants.inject({}) {|res, i| res[i.to_s.downcase] = i; res }
+      @overrides = {}
+      
+      def self.set_overrides_for(enum_class,ovr)
+        @overrides[enum_class] = ovr
       end
-      module_function :map
+      
+      def self.map(enum_class)
+        res = enum_class.java_class.enum_constants.inject({}) {|res, i| res[i.to_s.downcase] = i; res }
+        (@overrides[enum_class]||[]).each do |oldk, newks|
+          [newks].flatten.each do |newk|
+            res[newk.to_s] = res[oldk.to_s]
+          end
+        end
+        res
+      end
     end
   end
 end
