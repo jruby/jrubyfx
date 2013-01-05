@@ -81,8 +81,11 @@ module JRubyFX
         end
       end
 
-      #enum_map :initStyle, StageStyle
-      def enum_map(jfunc, jclass)
+      def enum_map(jfunc)
+        # TODO: make this less evil
+        jclass = self.java_class.java_instance_methods.find_all {|i| i.name == jfunc.to_s}[0].argument_types[0]
+        jclass = eval("Java." + jclass.name)
+        
         # Define the conversion function as the snake cased assignment, calling parse_ruby
         self.class_eval do
           define_method "#{jfunc.to_s.snake_case}=" do |rbenum|

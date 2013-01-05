@@ -80,24 +80,12 @@ class Java::javafx::stage::Stage
   # * :undecorated - For a standard window, minus the titlebar
   # * :transparent - For a completely transparent window
   # * :utility - For a toolbar style window (no title, only close)
-  enum_map :initStyle, StageStyle
+  enum_map :initStyle
   
   # Easily change the modality. Valid values are:
   # * :none
   # * :window
   # * :app - Shortcut for application
   # * :application
-  def init_modality=(modality)
-    java_modality = case modality
-                 when :none
-                   Modality::NONE
-                 when :window
-                   Modality::WINDOW_MODAL
-                 when :application, :app
-                   Modality::APPLICATION_MODAL
-                 else
-                   modality # Assume real Java value
-                 end
-    initModality(java_modality)
-  end
+  enum_map :initModality
 end
