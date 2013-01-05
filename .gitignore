@@ -1,4 +1,8 @@
-build_lib
-lib/jrubyfx.jar
-target
+target/
 *~
+*.jar
+*.gem
+/pkg/
+Gemfile.lock
+*.log
+*doc/

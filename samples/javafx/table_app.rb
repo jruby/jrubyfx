@@ -1,8 +1,8 @@
+#!/usr/bin/env jruby
 # Original version is here: http://drdobbs.com/blogs/java/231903245 (BindingEx1)
 require 'jrubyfx'
 
-class TableApp
-  include JRubyFX
+class TableApp < JRubyFX::Application
 
   def start(stage)
     with(stage, title: 'MyTable') do
@@ -27,4 +27,4 @@ class TableApp
   end
 end
 
-TableApp.start
+TableApp.launch

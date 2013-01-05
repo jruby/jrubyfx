@@ -1,3 +1,4 @@
 module JRubyFX
-  VERSION='0.2'
+  # Current gem version. Used in rake task.
+  VERSION='0.9'
 end
