@@ -113,13 +113,13 @@ module JRubyFX
           # we are not at a leaf node anymore, merge in previous work
           res.merge!(values)
         end
-      end) unless const_defined?(:NAME_TO_CLASSES)
+      end)
     
     ENUM_OVERRIDES = {PathTransition::OrientationType => {:orthogonal_to_tangent => :orthogonal},
       BlendMode => {:src_over => :over, :src_atop => :atop, :color_dodge => :dodge, :color_burn => :burn},
       ContentDisplay => {:graphic_only => :graphic, :text_only => :text},
       BlurType => {:one_pass_box => [:one, :one_pass], :two_pass_box => [:two, :two_pass], :three_pass_box => [:three, :three_pass]},
-      Modality => {:window_modal => :window, :application_modal => [:application, :app]}} unless const_defined?(:ENUM_OVERRIDES)
+      Modality => {:window_modal => :window, :application_modal => [:application, :app]}}
 
     # This is the heart of the DSL. When a method is missing and the name of the
     # method is in the NAME_TO_CLASSES mapping, it calls JRubyFX.build with the
@@ -191,15 +191,17 @@ module JRubyFX
         end
       end
     end
+    
+    def self.load_dsl
+      # we must load it AFTER we finish declaring the DSL class
+      # This loads all custom DSL overrides that exist
+      JRubyFX::DSL::NAME_TO_CLASSES.each do |name, cls|
+        require_relative "core_ext/#{name}" if File.exists? "#{File.dirname(__FILE__)}/core_ext/#{name}.rb"
+      end
+      # observable_value is not in the list, so include it manually
+      require_relative 'core_ext/observable_value'
+
+      JRubyFX::DSL.load_enum_converter()
+    end
   end
 end
-
-# we must load it AFTER we finish declaring the DSL class
-# This loads all custom DSL overrides that exist
-JRubyFX::DSL::NAME_TO_CLASSES.each do |name, cls|
-  require_relative "core_ext/#{name}" if File.exists? "#{File.dirname(__FILE__)}/core_ext/#{name}.rb"
-end
-# observable_value is not in the list, so include it manually
-require_relative 'core_ext/observable_value'
-
-JRubyFX::DSL.load_enum_converter()
