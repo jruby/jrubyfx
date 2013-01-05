@@ -186,7 +186,7 @@ module JRubyFX
       
       # Define the conversion function as the snake cased assignment, calling parse_ruby
       in_class.class_eval do
-        define_method "#{jfunc.to_s.snake_case}=" do |rbenum|
+        define_method "#{jfunc.to_s.gsub(/^set/i,'').snake_case}=" do |rbenum|
           java_send jfunc, [jclass], jclass.parse_ruby(rbenum)
         end
       end
