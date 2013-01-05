@@ -21,6 +21,7 @@ require 'jruby/core_ext' # for the become_java!
 require_relative 'jrubyfx/jfx_imports'
 require_relative 'jrubyfx/fxml_module'
 require_relative 'jrubyfx/dsl'
+JRubyFX::DSL.load_dsl # load it after we require the dsl package to not loop around
 require_relative 'jrubyfx/fxml_application'
 require_relative 'jrubyfx/fxml_controller'
 require_relative 'jrubyfx/java_fx_impl'
