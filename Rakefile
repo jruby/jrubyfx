@@ -68,7 +68,7 @@ end
 
 desc "Create a full jar with embedded JRuby and given script (via main_script and src ENV var)"
 task :jar => [:clean, :download_jruby_jar] do
-  JRubyFX::Tasks::jarify_jrubyfx(src, main_script, target, output_jar, jar)
+  JRubyFX::Tasks::jarify_jrubyfx(src, main_script, target, output_jar, jar: jar)
 end
 
 desc "Create a full jar and run it"

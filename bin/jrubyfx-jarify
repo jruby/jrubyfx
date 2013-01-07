@@ -1,0 +1,90 @@
+#!/usr/bin/env jruby
+=begin
+JRubyFX - Write JavaFX and FXML in Ruby
+Copyright (C) 2013 The JRubyFX Team
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=end
+
+require 'jrubyfx_tasks'
+
+def usage
+  puts "#{$0} {options} project-folder [output.jar]"
+  puts <<THEOPTIONS
+  project-folder should contain rb files and supporting files  
+
+  -m|--main FILE     ruby script to launch when the jar is executed. 
+                     Defaults to jar-bootstrap.rb or main.rb
+  -j|--include-jars  Include jars in the jar
+THEOPTIONS
+  exit -1
+end
+
+if ARGV.length < 1
+  usage
+end
+
+main = ["jar-bootstrap.rb", "main.rb"]
+include_jars = false
+nargs = []
+default_on_next = on_next = ->(arg){true}
+
+# split the args manually
+ARGV.each do |arg|
+  # some args have multiple parts. this is a cheap way to do that (lambdas)
+  next unless on_next.call(arg)
+  case arg
+  when "-m", "--main"
+    on_next = ->(arg){
+      main = [arg]
+      on_next = default_on_next
+      false
+    }
+    next
+  when "-j", "--include-jars"
+    include_jars = true
+    next
+  when "-h", "--help"
+    usage
+  when /^-/
+    puts "ERROR! Unrecognized option '#{arg}'!"
+    exit -2
+  end
+  # no flag? must be positional arg
+  nargs << arg
+end
+# set jar default if none passed in
+if nargs.length <= 1
+  nargs << File.basename(nargs[0]) + ".jar"
+end
+# set positional args
+project_folder, output_jar = nargs
+
+# Download the current running JRuby version
+JRubyFX::Tasks::download_jruby(JRUBY_VERSION)
+
+# set the main script to the first (must be passed in), or tries to find 
+# a file that does exists. Silently fails if it fails.
+main_script = main[0]
+if main.length > 1
+  main.each do |scrpt|
+    ps = project_folder + "/" + scrpt
+    if File.exists? ps
+      main_script = ps
+      break
+    end
+  end
+end
+
+# Jarify!
+JRubyFX::Tasks::jarify_jrubyfx(project_folder + "/**/*", main_script, nil, output_jar, :file_filter => ->(filename){!filename.end_with?(".jar") or include_jars})
