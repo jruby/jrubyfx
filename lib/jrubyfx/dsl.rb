@@ -115,6 +115,7 @@ module JRubyFX
         end
       end)
     
+    # List of known overrides for enums.
     ENUM_OVERRIDES = {PathTransition::OrientationType => {:orthogonal_to_tangent => :orthogonal},
       BlendMode => {:src_over => :over, :src_atop => :atop, :color_dodge => :dodge, :color_burn => :burn},
       ContentDisplay => {:graphic_only => :graphic, :text_only => :text},
@@ -137,6 +138,8 @@ module JRubyFX
 
     alias :node_method_missing :method_missing
     
+    # Loads the special symbol to enum converter functions into all methods 
+    # and enums
     def self.load_enum_converter
       # load overrides
       ENUM_OVERRIDES.each do |cls, overrides|
@@ -170,6 +173,7 @@ module JRubyFX
       end
     end
     
+    # Adds `parse_ruby` method to given enum/class to enable symbol conversion
     def self.inject_enum_converter(jclass)
       class << jclass
         define_method :parse_ruby do |const|
@@ -180,6 +184,8 @@ module JRubyFX
       end
     end
     
+    # "overrides" given function name in given class to parse ruby symbols into
+    # proper enums. Rewrites method name as `my_method=` from `setMyMethod`
     def self.inject_enum_method_converter(jfunc, in_class)
       jclass = in_class.java_class.java_instance_methods.find_all {|i| i.name == jfunc.to_s}[0].argument_types[0]
       jclass = JavaUtilities.get_proxy_class(jclass)
@@ -192,6 +198,8 @@ module JRubyFX
       end
     end
     
+    # This loads the entire DSL. Call this immediately after requiring 
+    # this file, but not inside this file, or it requires itself twice.
     def self.load_dsl
       # we must load it AFTER we finish declaring the DSL class
       # This loads all custom DSL overrides that exist
