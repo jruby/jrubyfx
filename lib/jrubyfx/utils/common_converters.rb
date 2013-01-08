@@ -102,12 +102,15 @@ module JRubyFX
         },
       }
       
+      # Store enum mapping overrides
       @overrides = {}
       
+      # sets the given overrides for the given class/enum
       def self.set_overrides_for(enum_class,ovr)
         @overrides[enum_class] = ovr
       end
       
+      # Given a class, returns a hash of lowercase strings mapped to Java Enums
       def self.map(enum_class)
         res = enum_class.java_class.enum_constants.inject({}) {|res, i| res[i.to_s.downcase] = i; res }
         (@overrides[enum_class]||[]).each do |oldk, newks|
