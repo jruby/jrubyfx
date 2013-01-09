@@ -41,8 +41,9 @@ end
 # You will need one Controller per FXML file under normal conditions.
 class SimpleFXController < JRubyFX::Controller
   
-  # Here we declare that AnchorPane is a fx:id in the file
-  # if you have multiple you can comma separate them, or add another
+  # Here we declare that AnchorPane is a fx:id in the file so that we have 
+  # access to it as @AnchorPane later.
+  # If you have multiple you can comma separate them, or add another
   # fx_id statement. NOTE! If fx:id and id are different, then this will look
   # at the id value, NOT the fx:id value. Get rid of id or keep it the same
   fx_id :AnchorPane
@@ -68,6 +69,7 @@ class SimpleFXController < JRubyFX::Controller
   # fx_handler [:event1, :event2] do ... end
   fx_action_handler :clickbl do
     puts "Clicked Black"
+    # This is the fx:id linked variable
     p @AnchorPane
   end
   

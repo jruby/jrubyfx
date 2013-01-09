@@ -24,11 +24,10 @@ you are using RVM, this does not apply to you (though make sure you `rvm use jru
 Creating a Jar
 --------------
 If you want to distribute your application, you can create a jar with embedded JRuby.
-Place all your sources in the src folder (you can use any folder, but you must pass in src=pattern where
-pattern will match the files in the folder), and run (replacing Demo.rb with your main file):
+Place all your sources in a folder, and run (replacing paths as appropriate):
 
 ```text
-rake jar main_script=samples/fxml/Demo.rb
+jrubyfx-jarify samples/fxml/ --main samples/fxml/Demo.rb Demo.jar
 ```
 This jar can then run anywhere there is a JVM with JavaFX. Note than the main file is
 renamed to jar-bootstrap.rb inside the jar. If you need to detect if you are in a jar,

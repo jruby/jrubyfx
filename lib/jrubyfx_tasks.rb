@@ -50,12 +50,14 @@ module JRubyFX
     # temporary work dir. `jar` is the executable that makes jars. If `target` is
     # nill then a random temporary directory is created, and output_jar is the
     # full path to the jar file to save 
-    def jarify_jrubyfx(src="src/*" ,main_script=nil, target="target", output_jar="jrubyfx-app.jar", jar="jar")
+    def jarify_jrubyfx(src="src/*" ,main_script=nil, target="target", output_jar="jrubyfx-app.jar", opts = {})
       if target_was_nil = target == nil
         target = Dir.mktmpdir("jrubyfx")
         final_jar = output_jar
         output_jar = File.basename output_jar
       end
+      # set defaults
+      opts = {file_filter: ->(f){true},jar: "jar"}.merge(opts)
 
       mkdir_p target
 
@@ -64,7 +66,7 @@ module JRubyFX
 
       #copy source in
       FileList[src].each do |iv_srv|
-        cp iv_srv, "#{target}/#{File.basename(iv_srv)}" if main_script == nil || main_script != iv_srv
+        cp iv_srv, "#{target}/#{File.basename(iv_srv)}" if (main_script == nil || main_script != iv_srv) && opts[:file_filter].call(iv_srv)
       end
       cp main_script, "#{target}/jar-bootstrap.rb" unless main_script == nil
 
@@ -84,7 +86,7 @@ module JRubyFX
       # edit the jar
       base_dir = Dir.pwd
       cd target
-      sh "#{jar} ufe '#{output_jar}' org.jruby.JarBootstrapMain *"
+      sh "#{opts[:jar]} ufe '#{output_jar}' org.jruby.JarBootstrapMain *"
       chmod 0775, output_jar
       cd base_dir
 
