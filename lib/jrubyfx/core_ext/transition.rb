@@ -14,22 +14,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
-puts "Included!"
-# JRubyFX DSL extensions for JavaFX color stops
-class Java::javafx::animation::RotateTransition
-  extend JRubyFX::Utils::CommonConverters
 
-  animation_converter_for :angle
-end
+{:RotateTransition => :angle, :ScaleTransition => [:x, :y],
+  :FadeTransition => :value}.each do |clas, anim_props|
+  JavaUtilities.get_proxy_class("javafx.animation.#{clas}").class_eval do
+    extend JRubyFX::Utils::CommonConverters
 
-class Java::javafx::animation::ScaleTransition
-  extend JRubyFX::Utils::CommonConverters
-
-  animation_converter_for :x, :y
-end
-
-class Java::javafx::animation::FadeTransition
-  extend JRubyFX::Utils::CommonConverters
-
-  animation_converter_for :value
+    animation_converter_for *anim_props
+  end
 end
