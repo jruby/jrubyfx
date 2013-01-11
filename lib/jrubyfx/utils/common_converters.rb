@@ -64,6 +64,13 @@ module JRubyFX
           (JRubyFX::Utils::CommonConverters.map_enums(enum_class)[value.to_s] || value)
         end
       end
+      
+      def animation_converter_for(prop_name, type=Java.java.lang.Double)
+        self.__send__(:define_method, prop_name.to_s + "=") do |hash|
+          method("from_#{prop_name}=").call hash.keys[0]
+          method("to_#{prop_name}=").call hash[0]
+        end
+      end
 
       ##
       # Allows you to specify you want a converter method created for the

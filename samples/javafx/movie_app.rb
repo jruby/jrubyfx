@@ -16,10 +16,9 @@ class MovieApp < JRubyFX::Application
         group do
           media_view(media_player(media(source_url), auto_play: true), :fit_width => 640, :fit_height => 380, id: 'view') do
             transition = parallel_transition(:node => self) do
-              duration = Duration.millis(5000)
-              rotate_transition(:duration => duration, :from_angle => 0, :to_angle => 360)
-              fade_transition(:duration => duration, :from_value => 0.0, :to_value => 1.0)
-              scale_transition(:duration => duration, :from_x => 0.0, :from_y => 0.0, :to_x => 1.0, :to_y => 1.0)
+              rotate_transition(duration: 5.sec, angle: {0 => 360})
+              fade_transition(:duration => 5.sec, :from_value => 0.0, :to_value => 1.0)
+              scale_transition(:duration => 5.sec, :from_x => 0.0, :from_y => 0.0, :to_x => 1.0, :to_y => 1.0)
             end
           end
         end
