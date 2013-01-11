@@ -14,16 +14,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
-# JRubyFX DSL extensions for JavaFX animation Timelines
-class Java::javafx::animation::Timeline
-  java_import Java::javafx.animation.KeyFrame
-
-  include JRubyFX::DSL
-  extend JRubyFX::Utils::CommonConverters
-
-  include_add :key_frames
-  include_method_missing KeyFrame
-  
-  
-  converter_for :cycle_count, [map_converter(indefinite: Java::javafx::animation::Timeline::INDEFINITE)]
+# JRubyFX DSL extensions for JavaFX Duration
+class Fixnum
+  # defines #ms, #sec, etc to create a JavaFX duration object of respective type
+  {:ms => :millis, :sec => :seconds, :min => :minutes,
+    :hrs => :hours, :hr => :hours}.each do |rname, jname|
+    self.instance_eval do
+      define_method rname do
+        Java.javafx.util.Duration.method(jname).call(self)
+      end
+    end
+  end
 end
