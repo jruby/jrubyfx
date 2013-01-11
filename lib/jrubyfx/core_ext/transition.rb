@@ -15,9 +15,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =end
 
-{:RotateTransition => :angle, :ScaleTransition => [:x, :y],
-  :FadeTransition => :value}.each do |clas, anim_props|
-  JavaUtilities.get_proxy_class("javafx.animation.#{clas}").class_eval do
+{:Rotate => :angle, :Scale => [:x, :y, :z], :Translate => [:x, :y, :z],
+  :Fade => :value, :Fill => :value, :Stroke => :value}.each do |clas, anim_props|
+  JavaUtilities.get_proxy_class("javafx.animation.#{clas}Transition").class_eval do
     extend JRubyFX::Utils::CommonConverters
 
     animation_converter_for *anim_props
