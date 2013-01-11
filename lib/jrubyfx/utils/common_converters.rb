@@ -65,10 +65,12 @@ module JRubyFX
         end
       end
       
-      def animation_converter_for(prop_name, type=Java.java.lang.Double)
-        self.__send__(:define_method, prop_name.to_s + "=") do |hash|
-          method("from_#{prop_name}=").call hash.keys[0]
-          method("to_#{prop_name}=").call hash[0]
+      def animation_converter_for(*prop_names)
+        prop_names.each do |prop_name|
+          self.__send__(:define_method, prop_name.to_s + "=") do |hash|
+            method("from_#{prop_name}=").call hash.keys[0]
+            method("to_#{prop_name}=").call hash.values[0]
+          end
         end
       end
 
