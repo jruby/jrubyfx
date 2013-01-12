@@ -25,29 +25,13 @@ module JRubyFX
       
       # map of snake_cased colors to JavaFX Colors
       NAME_TO_COLORS = {
-        'black' => Color::BLACK,
-        'blue' => Color::BLUE,
-        'cyan' => Color::CYAN,
-        'cadet_blue' => Color::CADETBLUE,
-        'dark_blue' => Color::DARKBLUE,
-        'dark_cyan' => Color::DARKCYAN,
-        'dark_green' => Color::DARKGREEN,
-        'dark_magenta' => Color::DARKMAGENTA,
-        'dark_red' => Color::DARKRED,
-        'dark_yellow' => Color.web('0xc0c000'),
-        'green' => Color::GREEN,
-        'light_blue' => Color::LIGHTBLUE,
-        'light_cyan' => Color::LIGHTCYAN,
-        'light_green' => Color::LIGHTGREEN,
-        'light_magenta' => Color.web('0xffc0ff'),
-        'light_red' => Color.web('0xffc0c0'),
-        'light_yellow' => Color::LIGHTYELLOW,
-        'magenta' => Color::MAGENTA,
-        'red' => Color::RED,
-        'silver' => Color::SILVER,
-        'yellow' => Color::YELLOW,
-        'white' => Color::WHITE,
-      }
+        'darkyellow' => Color.web('0xc0c000'),
+        'lightmagenta' => Color.web('0xffc0ff'),
+        'lightred' => Color.web('0xffc0c0'),
+      }.merge(Color.java_class.fields.inject({}) {|final, field|
+          final[field.name.downcase] = field.value(nil) # TODO: what is nil supposed to be?
+          final
+        })
 
       ##
       # Generate a converter for a map of supplied values.
@@ -114,7 +98,7 @@ module JRubyFX
           value
         },
         :color => lambda { |value|
-          new_value = NAME_TO_COLORS[value.to_s]
+          new_value = NAME_TO_COLORS[value.to_s.gsub(/_/, "")]
           new_value ? new_value : value
         },
       }
