@@ -14,14 +14,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
-require 'jrubyfx/utils/common_converters'
-
-# JRubyFX DSL extensions for JavaFX Radial Gradients
-class Java::javafx::scene::paint::RadialGradient
-  class << self
-    java_import Java::javafx.scene.paint.CycleMethod
-    extend JRubyFX::Utils::CommonConverters
-    
-    converter_for :new, [:none, :none, :none, :none, :none, :none, enum_converter(CycleMethod), :none]
+# JRubyFX DSL extensions for JavaFX Duration
+class Fixnum
+  # defines #ms, #sec, etc to create a JavaFX duration object of respective type
+  {:ms => :millis, :sec => :seconds, :min => :minutes,
+    :hrs => :hours, :hr => :hours}.each do |rname, jname|
+    self.instance_eval do
+      define_method rname do
+        Java.javafx.util.Duration.method(jname).call(self)
+      end
+    end
   end
 end

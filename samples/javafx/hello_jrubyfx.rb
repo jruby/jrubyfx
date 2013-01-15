@@ -13,9 +13,8 @@ class HelloJRubyFX < JRubyFX::Application
           rectangle(x: 10, y: 40, width: 50, height: 50, fill: :red) do
             translate_x = translateXProperty
 
-            timeline(cycle_count: Timeline::INDEFINITE, auto_reverse: true) do
-              key_frame(Duration::ZERO, key_value(translate_x, 0))
-              key_frame(Duration.millis(1000), key_value(translate_x, 200))  
+            timeline(cycle_count: :indefinite, auto_reverse: true) do
+              animate translate_x, 0.sec => 1.sec, 0 => 200
             end.play
           end
         end

@@ -148,37 +148,42 @@ module JRubyFX
       
       # use reflection to load all enums into all_enums and methods that use them
       # into enum_methods
-      all_enums = []
-      enum_methods = []
+      mod_list = {
+        :methods => [],
+        :all => []
+      }
       JRubyFX::DSL::NAME_TO_CLASSES.each do |n,cls|
-        cls.java_class.java_instance_methods.find_all do |method|
-          args = method.argument_types.find_all(&:enum?).tap {|i| all_enums <<  i }
-          if args.length == method.argument_types.length and args.length == 1 # one and only, must be a setter style
-            enum_methods << [method.name, cls]
+        cls.java_class.java_instance_methods.each do |method|
+          args = method.argument_types.find_all(&:enum?).tap {|i| mod_list[:all] <<  i }
+          
+          # one and only, must be a setter style
+          if method.argument_types.length == 1 and (args.length == method.argument_types.length)
+            mod_list[:methods] << [method.name, cls]
           end
-          args.length > 0
         end if cls.respond_to? :ancestors and cls.ancestors.include? JavaProxy # some are not java classes. ignore those
       end
       
       # Get the proper class (only need them once)
-      all_enums =  all_enums.flatten.uniq.map {|i| JavaUtilities.get_proxy_class(i) }
-      # Inject our converter into each enum
-      all_enums.each do |enum|
-        inject_enum_converter enum
+      mod_list[:all] = mod_list[:all].flatten.uniq.map {|i| JavaUtilities.get_proxy_class(i) }
+      
+      # Inject our converter into each enum/class
+      mod_list[:all].each do |enum|
+        inject_symbol_converter enum
       end
       
       # finally, "override" each method
-      enum_methods.each do |method|
+      mod_list[:methods].each do |method|
         inject_enum_method_converter *method
       end
     end
     
-    # Adds `parse_ruby` method to given enum/class to enable symbol conversion
-    def self.inject_enum_converter(jclass)
+    # Adds `parse_ruby_symbols` method to given enum/class to enable symbol conversion
+    def self.inject_symbol_converter(jclass)
+      # inject!
       class << jclass
-        define_method :parse_ruby do |const|
+        define_method :parse_ruby_symbols do |const|
           # cache it. It could be expensive
-          @map = JRubyFX::Utils::CommonConverters.map(self) if @map == nil
+          @map = JRubyFX::Utils::CommonConverters.map_enums(self) if @map == nil
           @map[const.to_s] || const
         end
       end
@@ -193,7 +198,7 @@ module JRubyFX
       # Define the conversion function as the snake cased assignment, calling parse_ruby
       in_class.class_eval do
         define_method "#{jfunc.to_s.gsub(/^set/i,'').snake_case}=" do |rbenum|
-          java_send jfunc, [jclass], jclass.parse_ruby(rbenum)
+          java_send jfunc, [jclass], jclass.parse_ruby_symbols(rbenum)
         end
       end
     end
