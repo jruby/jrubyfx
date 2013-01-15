@@ -56,6 +56,23 @@ module JRubyFX
           map.key?(value) ? map[value] : value
         end
       end
+      
+      ##
+      # Generate a converter for an enum of the given class
+      def enum_converter(enum_class)
+        lambda do |value|
+          (JRubyFX::Utils::CommonConverters.map_enums(enum_class)[value.to_s] || value)
+        end
+      end
+      
+      def animation_converter_for(*prop_names)
+        prop_names.each do |prop_name|
+          self.__send__(:define_method, prop_name.to_s + "=") do |hash|
+            method("from_#{prop_name}=").call hash.keys[0]
+            method("to_#{prop_name}=").call hash.values[0]
+          end
+        end
+      end
 
       ##
       # Allows you to specify you want a converter method created for the
@@ -111,7 +128,7 @@ module JRubyFX
       end
       
       # Given a class, returns a hash of lowercase strings mapped to Java Enums
-      def self.map(enum_class)
+      def self.map_enums(enum_class)
         res = enum_class.java_class.enum_constants.inject({}) {|res, i| res[i.to_s.downcase] = i; res }
         (@overrides[enum_class]||[]).each do |oldk, newks|
           [newks].flatten.each do |newk|

@@ -19,7 +19,29 @@ class Java::javafx::animation::Timeline
   java_import Java::javafx.animation.KeyFrame
 
   include JRubyFX::DSL
+  extend JRubyFX::Utils::CommonConverters
 
   include_add :key_frames
   include_method_missing KeyFrame
+  
+  def animate(prop, args)
+    time = []
+    values = []
+    # detect our time
+    args.each do |key, value|
+      if key.is_a? Duration
+        time << [key, value]
+        time.flatten!
+      else #assume values
+        values << [key, value]
+        values.flatten!
+      end
+    end
+    # add the keyframes
+    [time.length, values.length].min.times do |i|
+      key_frame(time[i], key_value(prop, values[i]))
+    end
+  end
+  
+  converter_for :cycle_count, [map_converter(indefinite: Java::javafx::animation::Timeline::INDEFINITE)]
 end

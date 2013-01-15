@@ -14,14 +14,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
-require 'jrubyfx/utils/common_converters'
 
-# JRubyFX DSL extensions for JavaFX Radial Gradients
-class Java::javafx::scene::paint::RadialGradient
-  class << self
-    java_import Java::javafx.scene.paint.CycleMethod
+{:Rotate => :angle, :Scale => [:x, :y, :z], :Translate => [:x, :y, :z],
+  :Fade => :value, :Fill => :value, :Stroke => :value}.each do |clas, anim_props|
+  JavaUtilities.get_proxy_class("javafx.animation.#{clas}Transition").class_eval do
     extend JRubyFX::Utils::CommonConverters
-    
-    converter_for :new, [:none, :none, :none, :none, :none, :none, enum_converter(CycleMethod), :none]
+
+    animation_converter_for *anim_props
   end
 end
