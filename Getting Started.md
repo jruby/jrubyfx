@@ -12,8 +12,8 @@ The first thing we need to install is rake and bundler:
 
 Now we can clone the JRubyFX sources and install them:
 
-	$ git clone https://github.com/byteit101/JRubyFX
-	$ cd JRubyFX
+	$ git clone https://github.com/nahi/jrubyfx.git
+	$ cd jrubyfx
 	$ rake install
 
 Success! JRubyFX should be installed now!
