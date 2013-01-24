@@ -46,7 +46,7 @@ class AnalogClock < JRubyFX::Application
             rotate
           end
         end
-      end.set_on_key_pressed { |e| java.lang.System.exit(0) }
+      end.set_on_key_pressed { |e| Platform.exit }
       show
     end
     play
