@@ -28,8 +28,8 @@ module JRubyFX
     BASE_URL='http://repository.codehaus.org/org/jruby/jruby-complete'
 
     ##
-    # Downloads the jruby-complete jar file for `jruby_version` and save in 
-    # ~/.jruby-jar/jruby-complete.jar unless it already exits. If the jar is 
+    # Downloads the jruby-complete jar file for `jruby_version` and save in
+    # ~/.jruby-jar/jruby-complete.jar unless it already exits. If the jar is
     # corrupt or an older version, set force to true to delete and re-download
     def download_jruby(jruby_version, force=false)
       dist = "#{ENV['HOME']}/.jruby-jar"
@@ -43,13 +43,13 @@ module JRubyFX
       end
     end
 
-    ## 
+    ##
     # Creates a full jar from the given source pattern (must be a pattern to match
     # files), with the given main script as the script to launch when the jarfile
     # is run. The output jar is saved in the `target` dir, which also doubles as a
     # temporary work dir. `jar` is the executable that makes jars. If `target` is
     # nill then a random temporary directory is created, and output_jar is the
-    # full path to the jar file to save 
+    # full path to the jar file to save
     def jarify_jrubyfx(src="src/*" ,main_script=nil, target="target", output_jar="jrubyfx-app.jar", opts = {})
       if target_was_nil = target == nil
         target = Dir.mktmpdir("jrubyfx")

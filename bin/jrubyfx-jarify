@@ -17,15 +17,20 @@ limitations under the License.
 =end
 
 require 'jrubyfx_tasks'
+require "jrubyfx_package"
 
 def usage
   puts "#{$0} {options} project-folder [output.jar]"
   puts <<THEOPTIONS
-  project-folder should contain rb files and supporting files  
+  project-folder should contain rb files and supporting files
 
-  -m|--main FILE     ruby script to launch when the jar is executed. 
+  -m|--main FILE     ruby script to launch when the jar is executed.
                      Defaults to jar-bootstrap.rb or main.rb
   -j|--include-jars  Include jars in the jar
+  -n|--native_bundle Create native application packages and installers.
+  -v|--verbose       Turns on the native packagers verbose mode. Useful for
+                     customizing icons, licenses, etc.
+  --name STRING      Name for your native package.
 THEOPTIONS
   exit -1
 end
@@ -36,6 +41,9 @@ end
 
 main = ["jar-bootstrap.rb", "main.rb"]
 include_jars = false
+native_bundle = false
+app_name = ""
+verbose = false
 nargs = []
 default_on_next = on_next = ->(arg){true}
 
@@ -54,6 +62,18 @@ ARGV.each do |arg|
   when "-j", "--include-jars"
     include_jars = true
     next
+  when "-n", "--native_bundle"
+    native_bundle = true
+    next
+  when "--name"
+    on_next = ->(arg){
+      app_name = [arg]
+      on_next = default_on_next
+      false
+    }
+    next
+  when "-v", "--verbose"
+    verbose = true
   when "-h", "--help"
     usage
   when /^-/
@@ -73,7 +93,7 @@ project_folder, output_jar = nargs
 # Download the current running JRuby version
 JRubyFX::Tasks::download_jruby(JRUBY_VERSION)
 
-# set the main script to the first (must be passed in), or tries to find 
+# set the main script to the first (must be passed in), or tries to find
 # a file that does exists. Silently fails if it fails.
 main_script = main[0]
 if main.length > 1
@@ -88,3 +108,7 @@ end
 
 # Jarify!
 JRubyFX::Tasks::jarify_jrubyfx(project_folder + "/**/*", main_script, nil, output_jar, :file_filter => ->(filename){!filename.end_with?(".jar") or include_jars})
+
+if native_bundle
+  JRubyFX::Package::native_bundles(Dir.pwd, output_jar, verbose, app_name[0])
+end
