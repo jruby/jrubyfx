@@ -19,6 +19,8 @@ limitations under the License.
 require 'open-uri'
 require 'rake'
 require 'tmpdir'
+require "ant"
+require "pathname"
 
 module JRubyFX
   # This module contains utilities to jarify an app, and can be used in a rakefile or a running app.
@@ -96,6 +98,47 @@ module JRubyFX
       end
     end
 
+    # Uses Java 8 Ant task to create a native bundle (exe, deb, rpm, etc) of the
+    # specified jar-ified ruby script
+    def native_bundles(base_dir=Dir.pwd, output_jar, verbosity, app_name)
+      # Currently only JDK8 will package up JRuby apps. In the near
+      # future the necessary tools will be in maven central and
+      # we can download them as needed, so this can be changed then.
+      # this is in format "1.7.0_11-b21", check for all jdk's less than 8
+      if ENV_JAVA["java.runtime.version"].match(/^1\.[0-7]{1}\..*/)
+        raise "You must install JDK 8 to use the native-bundle packaging tools. You can still create an executable jar, though."
+      end
+      
+      output_jar = Pathname.new(output_jar)
+      dist_dir = output_jar.parent
+      jar_name = File.basename(output_jar)
+      out_name = File.basename(output_jar, '.*')
+
+      # Can't access the "fx" xml namespace directly, so we get it via __send__.
+      ant do
+        taskdef(resource: "com/sun/javafx/tools/ant/antlib.xml",
+          uri: "javafx:com.sun.javafx.tools.ant",
+          classpath: ".:${java.home}/../lib/ant-javafx.jar")
+        __send__("javafx:com.sun.javafx.tools.ant:deploy", nativeBundles: "all",
+          width: "100", height: "100", outdir: "#{base_dir}/build/",
+          outfile: out_name, verbose: verbosity) do
+          application(mainClass: "org.jruby.JarBootstrapMain", name: app_name)
+          resources do
+            fileset(dir: dist_dir) do
+              include name: jar_name
+            end
+          end
+        end
+      end
+
+      # These webstart files don't work, and the packager doesn't have an option to
+      # disable them, so remove them so the user isn't confused.
+      # FIXME: jnlp webstart
+      full_build_dir = "#{base_dir}/build/"
+      rm FileList["#{full_build_dir}*.html","#{full_build_dir}*.jnlp"]
+    end
+
+
     private
     def download(version_string) #:nodoc:
       File.open("jruby-complete.jar","wb") do |f|
@@ -105,6 +148,7 @@ module JRubyFX
 
     module_function :jarify_jrubyfx
     module_function :download_jruby
+    module_function :native_bundles
     module_function :download
   end
 end
