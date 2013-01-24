@@ -62,7 +62,7 @@ ARGV.each do |arg|
   when "-j", "--include-jars"
     include_jars = true
     next
-  when "-n", "--native_bundle"
+  when "--native"
     native_bundle = true
     next
   when "--name"
