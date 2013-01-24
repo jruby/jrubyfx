@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =end
 # JRubyFX DSL extensions for JavaFX color stops
-class Java::javafx::scene::media::MediaPlayer
+class Java::javafx::scene::layout::Region
   extend JRubyFX::Utils::CommonConverters
   
   use_sizes = map_converter(use_pref_size: USE_PREF_SIZE,
