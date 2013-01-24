@@ -14,24 +14,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
-require 'jrubyfx/utils/common_converters'
+# JRubyFX DSL extensions for JavaFX drop shadows
+class Java::javafx::scene::effect::DropShadow
+  extend JRubyFX::Utils::CommonConverters
 
-# JRubyFX DSL extensions for JavaFX Radial Gradients
-class Java::javafx::scene::paint::RadialGradient
-  class << self
-    java_import Java::javafx.scene.paint.CycleMethod
-    extend JRubyFX::Utils::CommonConverters
-    
-    converter_for :new, [:none, :none, :none, :none, :none, :none, enum_converter(CycleMethod), :none]
-  end
-end
+  converter_for :color, [:color]
 
-# JRubyFX DSL extensions for JavaFX Linear Gradients
-class Java::javafx::scene::paint::LinearGradient
   class << self
-    java_import Java::javafx.scene.paint.CycleMethod
     extend JRubyFX::Utils::CommonConverters
-    
-    converter_for :new, [:none, :none, :none, :none, :none, enum_converter(CycleMethod), :none]
+
+    converter_for :new, [], [:none, :color], [:none, :none, :none, :color],
+      [enum_converter(Java::javafx::scene::effect::BlurType), :color, :none, :none, :none, :none]
   end
+
 end

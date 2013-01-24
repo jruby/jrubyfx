@@ -14,22 +14,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
-require 'jrubyfx/dsl'
-
-# JRubyFX DSL extensions for JavaFX TableViews
-class Java::javafx::scene::control::TableView
-  java_import Java::javafx.scene.control.TableColumn
-
-  include JRubyFX::DSL
+# JRubyFX DSL extensions for JavaFX color stops
+class Java::javafx::scene::media::MediaPlayer
   extend JRubyFX::Utils::CommonConverters
 
-  include_add :get_columns
-  include_method_missing TableColumn
-  
-  resize_policy = map_converter(unconstrained_resize_policy: UNCONSTRAINED_RESIZE_POLICY,
-                                constrained_resize_policy: CONSTRAINED_RESIZE_POLICY,
-                                unconstrained: UNCONSTRAINED_RESIZE_POLICY,
-                                constrained: CONSTRAINED_RESIZE_POLICY)
+  converter_for :cycle_count, [map_converter(indefinite: INDEFINITE)]
 
-  converter_for :column_resize_policy, [resize_policy]
 end

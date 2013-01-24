@@ -22,11 +22,20 @@ begin
   if ENV['JFX_DIR']
     $LOAD_PATH << ENV['JFX_DIR']
   else #should we check for 1.7 vs 1.8? oh well, adding extra paths won't hurt anybody (maybe performance loading)
-    $LOAD_PATH << ENV_JAVA["sun.boot.library.path"].gsub(/[\/\\][amdix345678_]+$/, "") # strip i386 or amd64 (including variants). TODO: ARM
+    jfx_path = ENV_JAVA["sun.boot.library.path"]
+    $LOAD_PATH << if jfx_path.include? ":\\" and !jfx_path.include? "/" # can be tricked, but should work fine
+      #windows
+      jfx_path.gsub(/\\bin[\\]*$/i, "\\lib")
+    else
+      # *nix
+      jfx_path.gsub(/[\/\\][amdix345678_]+$/, "") # strip i386 or amd64 (including variants). TODO: ARM
+    end
   end
   require 'jfxrt.jar'
-rescue
-  fail "JavaFX runtime not found.  Please install Java 7u4 or newer or set environment variable JAVAFX_DIR to the folder that contains jfxrt.jar"
+rescue  LoadError
+  puts "JavaFX runtime not found.  Please install Java 7u6 or newer or set environment variable JFX_DIR to the folder that contains jfxrt.jar "
+  puts "If you have Java 7u6 or later, this is a bug. Please report to the issue tracker on github. Include your OS version, 32/64bit, and architecture (x86, ARM, PPC, etc)"
+  exit -1
 end
 
 module JRubyFX
