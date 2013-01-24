@@ -1,9 +1,10 @@
-require "java"
 require "ant"
 require "pathname"
+require "rake"
 
 module JRubyFX
   module Package
+    extend Rake::DSL
 
       # Currently only JDK8 will package up JRuby apps. In the near
       # future the necessary tools will be in maven central and
@@ -18,6 +19,14 @@ module JRubyFX
         else
           nmb
         end
+      end
+
+      # These webstart files don't work, and the packager doesn't have an option to
+      # disable them, so remove them so the user isn't confused.
+
+      def cleanup_webstart(full_build_dir)
+        files_to_rm = FileList["#{full_build_dir}*.html","#{full_build_dir}*.jnlp"]
+        rm files_to_rm
       end
 
       def native_bundles(base_dir=Dir.pwd, output_jar, verbosity, app_name)
@@ -45,9 +54,12 @@ module JRubyFX
             end
           end
         end
+
+        cleanup_webstart("#{base_dir}/build/")
       end
 
       module_function :native_bundles
       module_function :check_jdk
+      module_function :cleanup_webstart
   end
 end
