@@ -25,35 +25,36 @@ module JRubyFX
       
       # map of snake_cased colors to JavaFX Colors
       NAME_TO_COLORS = {
-        'black' => Color::BLACK,
-        'blue' => Color::BLUE,
-        'cyan' => Color::CYAN,
-        'cadet_blue' => Color::CADETBLUE,
-        'dark_blue' => Color::DARKBLUE,
-        'dark_cyan' => Color::DARKCYAN,
-        'dark_green' => Color::DARKGREEN,
-        'dark_magenta' => Color::DARKMAGENTA,
-        'dark_red' => Color::DARKRED,
-        'dark_yellow' => Color.web('0xc0c000'),
-        'green' => Color::GREEN,
-        'light_blue' => Color::LIGHTBLUE,
-        'light_cyan' => Color::LIGHTCYAN,
-        'light_green' => Color::LIGHTGREEN,
-        'light_magenta' => Color.web('0xffc0ff'),
-        'light_red' => Color.web('0xffc0c0'),
-        'light_yellow' => Color::LIGHTYELLOW,
-        'magenta' => Color::MAGENTA,
-        'red' => Color::RED,
-        'silver' => Color::SILVER,
-        'yellow' => Color::YELLOW,
-        'white' => Color::WHITE,
-      }
+        'darkyellow' => Color.web('0xc0c000'),
+        'lightmagenta' => Color.web('0xffc0ff'),
+        'lightred' => Color.web('0xffc0c0'),
+      }.merge(Color.java_class.fields.inject({}) {|final, field|
+          final[field.name.downcase] = field.value(nil) # TODO: what is nil supposed to be?
+          final
+        })
 
       ##
       # Generate a converter for a map of supplied values.
       def map_converter(map)
         lambda do |value|
           map.key?(value) ? map[value] : value
+        end
+      end
+      
+      ##
+      # Generate a converter for an enum of the given class
+      def enum_converter(enum_class)
+        lambda do |value|
+          (JRubyFX::Utils::CommonConverters.map_enums(enum_class)[value.to_s] || value)
+        end
+      end
+      
+      def animation_converter_for(*prop_names)
+        prop_names.each do |prop_name|
+          self.__send__(:define_method, prop_name.to_s + "=") do |hash|
+            method("from_#{prop_name}=").call hash.keys[0]
+            method("to_#{prop_name}=").call hash.values[0]
+          end
         end
       end
 
@@ -72,13 +73,12 @@ module JRubyFX
       # the first argument and a color coercion on the second argument.
       #
       def converter_for(method_name, *converters)
-        self.__send__(:define_method, method_name.to_s + 
-            ARG_CONVERTER_SUFFIX) do |*values|
+        sheep = lambda do |direct, this, *values|
           converter = converters.find { |e| e.length == values.length }
 
           # FIXME: Better error reporting on many things which can fail
           i = 0
-          values.inject([]) do |s, value|
+          values = values.inject([]) do |s, value|
             conv = converter[i]
             if conv.kind_of? Proc
               s << conv.call(value)
@@ -88,7 +88,22 @@ module JRubyFX
             i += 1
             s
           end
-        end        
+          if direct
+            return this.method("set_" + method_name.to_s).call(*values)
+          else
+            return values
+          end
+        end
+        # define a setter for normal usage
+        unless method_name == :new
+          self.__send__(:define_method, method_name.to_s + "=") do |*values|
+            sheep.call(true, self, *values)
+          end
+        end
+        # define a build/with usage
+        self.__send__(:define_method, method_name.to_s + ARG_CONVERTER_SUFFIX) do |*values|
+          sheep.call(false, self, *values)
+        end
       end
 
       # Map of different kinds of known converters
@@ -97,7 +112,7 @@ module JRubyFX
           value
         },
         :color => lambda { |value|
-          new_value = NAME_TO_COLORS[value.to_s]
+          new_value = NAME_TO_COLORS[value.to_s.gsub(/_/, "")]
           new_value ? new_value : value
         },
       }
@@ -111,7 +126,7 @@ module JRubyFX
       end
       
       # Given a class, returns a hash of lowercase strings mapped to Java Enums
-      def self.map(enum_class)
+      def self.map_enums(enum_class)
         res = enum_class.java_class.enum_constants.inject({}) {|res, i| res[i.to_s.downcase] = i; res }
         (@overrides[enum_class]||[]).each do |oldk, newks|
           [newks].flatten.each do |newk|

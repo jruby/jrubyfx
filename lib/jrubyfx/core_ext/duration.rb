@@ -14,14 +14,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
-# JRubyFX DSL extensions for JavaFX Shapes
-class Java::javafx::scene::shape::Shape
-  extend JRubyFX::Utils::CommonConverters
-
-  converter_for :fill, [:color]
-  converter_for :fill=, [:color]
-  converter_for :stroke, [:color]
-  converter_for :stroke=, [:color]
-
-  alias :fill :set_fill
+# JRubyFX DSL extensions for JavaFX Duration
+class Fixnum
+  # defines #ms, #sec, etc to create a JavaFX duration object of respective type
+  {:ms => :millis, :sec => :seconds, :min => :minutes,
+    :hrs => :hours, :hr => :hours}.each do |rname, jname|
+    self.instance_eval do
+      define_method rname do
+        Java.javafx.util.Duration.method(jname).call(self)
+      end
+    end
+  end
 end

@@ -14,24 +14,24 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
-require 'jrubyfx/utils/common_converters'
+# JRubyFX DSL extensions for JavaFX color stops
+class Java::javafx::scene::transform::Rotate
+  extend JRubyFX::Utils::CommonConverters
+  
+  @@axis_conversions = map_converter(x_axis: X_AXIS,
+                                   y_axis: Y_AXIS,
+                                   z_axis: Z_AXIS,
+                                   x: X_AXIS,
+                                   y: Y_AXIS,
+                                   z: Z_AXIS)
 
-# JRubyFX DSL extensions for JavaFX Radial Gradients
-class Java::javafx::scene::paint::RadialGradient
-  class << self
-    java_import Java::javafx.scene.paint.CycleMethod
-    extend JRubyFX::Utils::CommonConverters
-    
-    converter_for :new, [:none, :none, :none, :none, :none, :none, enum_converter(CycleMethod), :none]
-  end
-end
+  converter_for :axis, [@@axis_conversions]
 
-# JRubyFX DSL extensions for JavaFX Linear Gradients
-class Java::javafx::scene::paint::LinearGradient
   class << self
-    java_import Java::javafx.scene.paint.CycleMethod
     extend JRubyFX::Utils::CommonConverters
-    
-    converter_for :new, [:none, :none, :none, :none, :none, enum_converter(CycleMethod), :none]
+
+    converter_for :new, [], [:none], [:none, @axis_conversions], [:none, :none, :none],
+                  [:none, :none, :none, :none], [:none, :none, :none, :none, @axis_conversions]
   end
+
 end
