@@ -9,7 +9,13 @@ The syntax of the FXML side of JRubyFX should be fairly stable, but the JavaFX D
 At this point in time, no custom ruby controls are supported from FXML, though you
 can certainly create them in code.
 
-Build
+Install
+-----
+```text
+gem install jrubyfx
+```
+
+Manual Build and Install
 -----
 Build is done using rake/gem/bundler/rdoc. You obviously need JRuby, Java 1.7 (with JavaFX) also.
 
