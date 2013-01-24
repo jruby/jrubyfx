@@ -14,6 +14,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
+false # Do NOT delete this or it will make RDOC associate the copyright header with JRubyFX module
+
 module JRubyFX
   module Utils
     # Contains conversion utilities to ease Ruby => JavaFX coding
@@ -49,6 +51,19 @@ module JRubyFX
         end
       end
       
+      ##
+      # call-seq:
+      #   animation_converter_for :property_name, ...
+      #   
+      # Generates an animation adapter for the given properties so you can specify
+      # transformations, etc with a hashmap of from, to values
+      # === Examples
+      #   animation_converter_for :value
+      #   
+      #   ...
+      #   
+      #   _my_type_(value: {0 => 360})
+      #
       def animation_converter_for(*prop_names)
         prop_names.each do |prop_name|
           self.__send__(:define_method, prop_name.to_s + "=") do |hash|
