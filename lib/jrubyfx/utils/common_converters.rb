@@ -73,13 +73,12 @@ module JRubyFX
       # the first argument and a color coercion on the second argument.
       #
       def converter_for(method_name, *converters)
-        self.__send__(:define_method, method_name.to_s + 
-            ARG_CONVERTER_SUFFIX) do |*values|
+        sheep = lambda do |direct, this, *values|
           converter = converters.find { |e| e.length == values.length }
 
           # FIXME: Better error reporting on many things which can fail
           i = 0
-          values.inject([]) do |s, value|
+          values = values.inject([]) do |s, value|
             conv = converter[i]
             if conv.kind_of? Proc
               s << conv.call(value)
@@ -89,7 +88,22 @@ module JRubyFX
             i += 1
             s
           end
-        end        
+          if direct
+            return this.method("set_" + method_name.to_s).call(*values)
+          else
+            return values
+          end
+        end
+        # define a setter for normal usage
+        unless method_name == :new
+          self.__send__(:define_method, method_name.to_s + "=") do |*values|
+            sheep.call(true, self, *values)
+          end
+        end
+        # define a build/with usage
+        self.__send__(:define_method, method_name.to_s + ARG_CONVERTER_SUFFIX) do |*values|
+          sheep.call(false, self, *values)
+        end
       end
 
       # Map of different kinds of known converters
