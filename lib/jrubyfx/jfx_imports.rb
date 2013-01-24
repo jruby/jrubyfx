@@ -22,7 +22,14 @@ begin
   if ENV['JFX_DIR']
     $LOAD_PATH << ENV['JFX_DIR']
   else #should we check for 1.7 vs 1.8? oh well, adding extra paths won't hurt anybody (maybe performance loading)
-    $LOAD_PATH << ENV_JAVA["sun.boot.library.path"].gsub(/[\/\\][amdix345678_]+$/, "") # strip i386 or amd64 (including variants). TODO: ARM
+    jfx_path = ENV_JAVA["sun.boot.library.path"]
+    $LOAD_PATH << if jfx_path.include? ":\\" and !jfx_path.include? "/" # can be tricked, but should work fine
+      #windows
+      jfx_path.gsub(/\\bin[\\]*$/i, "\\lib")
+    else
+      # *nix
+      jfx_path.gsub(/[\/\\][amdix345678_]+$/, "") # strip i386 or amd64 (including variants). TODO: ARM
+    end
   end
   require 'jfxrt.jar'
 rescue  LoadError
