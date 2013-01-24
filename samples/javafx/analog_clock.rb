@@ -46,7 +46,7 @@ class AnalogClock < JRubyFX::Application
             rotate
           end
         end
-      end.set_on_key_pressed { |e| java.lang.System.exit(0) }
+      end.set_on_key_pressed { |e| Platform.exit }
       show
     end
     play
@@ -63,8 +63,8 @@ class AnalogClock < JRubyFX::Application
     refresh_time # Initially set hands to proper locs
     handler = EventHandler.impl { |n, e| refresh_time }
     time = Timeline.new
-    time.cycleCount = Timeline::INDEFINITE
-    time.keyFrames << KeyFrame.new(Duration.millis(1000), handler)
+    time.cycle_count = :indefinite
+    time.keyFrames << KeyFrame.new(1000.ms, handler)
     time.play
   end
 end

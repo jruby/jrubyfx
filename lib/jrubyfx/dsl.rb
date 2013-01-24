@@ -206,14 +206,11 @@ module JRubyFX
     # This loads the entire DSL. Call this immediately after requiring 
     # this file, but not inside this file, or it requires itself twice.
     def self.load_dsl
-      # we must load it AFTER we finish declaring the DSL class
-      # This loads all custom DSL overrides that exist
-      JRubyFX::DSL::NAME_TO_CLASSES.each do |name, cls|
-        require_relative "core_ext/#{name}" if File.exists? "#{File.dirname(__FILE__)}/core_ext/#{name}.rb"
+      rt = "#{File.dirname(__FILE__)}/core_ext/"
+      Dir.foreach rt do |file|
+        require_relative "core_ext/#{file}" unless [".", ".."].include? file
       end
-      # observable_value is not in the list, so include it manually
-      require_relative 'core_ext/observable_value'
-
+      
       JRubyFX::DSL.load_enum_converter()
     end
   end

@@ -11,8 +11,7 @@ class HelloJRubyFX < JRubyFX::Application
       layout_scene(:dark_blue) do
         group do
           rectangle(x: 10, y: 40, width: 50, height: 50, fill: :red) do
-            translate_x = translateXProperty
-
+            translate_x = translateXProperty # note we must do this here as its on the rectangle, not the timeline
             timeline(cycle_count: :indefinite, auto_reverse: true) do
               animate translate_x, 0.sec => 1.sec, 0 => 200
             end.play
