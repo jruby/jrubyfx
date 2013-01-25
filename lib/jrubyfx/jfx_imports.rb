@@ -70,8 +70,8 @@ module JRubyFX
         :scene => {
           '' => %w[Group Node Parent Scene],
           :canvas => ['Canvas'],
-          :chart => %w[Axis CategoryAxis Chart LineChart NumberAxis XYChart],
-          # TODO: import more of these
+          :chart => %w[AreaChart Axis BarChart BubbleChart CategoryAxis Chart LineChart NumberAxis
+          PieChart ScatterChart StackedAreaChart StackedBarChart ValueAxis XYChart],
           :control => %w[Accordion Button Cell CheckBox CheckBoxTreeItem CheckMenuItem ChoiceBox ColorPicker ComboBox ContextMenu Hyperlink 
           Label ListCell ListView Menu MenuBar MenuButton MenuItem Pagination PasswordField PopupControl ProgressBar ProgressIndicator RadioButton 
           RadioMenuItem ScrollBar ScrollPane Separator SeparatorMenuItem Slider SplitMenuButton SplitPane Tab TableView TableColumn TabPane TextArea 
