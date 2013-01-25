@@ -39,7 +39,7 @@ module JRubyFX
         mkdir_p dist
         base_dir = Dir.pwd
         cd dist
-        puts "JRuby complete jar not found. Downloading... (May take awhile)"
+        $stderr.puts "JRuby complete jar not found. Downloading... (May take awhile)"
         download(jruby_version)
         cd base_dir
       end
@@ -73,11 +73,11 @@ module JRubyFX
       cp main_script, "#{target}/jar-bootstrap.rb" unless main_script == nil
 
       unless File.exists? "#{target}/jar-bootstrap.rb"
-        puts "@"*79
-        puts "@#{"!!!WARNING!!!".center(79-2)}@"
-        puts "@#{"jar-bootstrap.rb NOT FOUND!".center(79-2)}@"
-        puts "@#{"Did you set main_src= or have jar-bootstrap in src= ?".center(79-2)}@"
-        puts "@"*79
+        $stderr.puts "@"*79
+        $stderr.puts "@#{"!!!WARNING!!!".center(79-2)}@"
+        $stderr.puts "@#{"jar-bootstrap.rb NOT FOUND!".center(79-2)}@"
+        $stderr.puts "@#{"Did you set main_src= or have jar-bootstrap in src= ?".center(79-2)}@"
+        $stderr.puts "@"*79
       end
 
       #copy our libs in

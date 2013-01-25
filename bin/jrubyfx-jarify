@@ -25,8 +25,9 @@ def usage
 
   -m|--main FILE     ruby script to launch when the jar is executed.
                      Defaults to jar-bootstrap.rb or main.rb
-  -j|--include-jars  Include jars in the jar
-  --native           Create native application packages and installers.
+  -j|--include-jars  Include jars in the jar. (off by default to prevent including
+                     the jar you are building)
+  --native           Create native application packages and installers. (Requires JDK8)
   -v|--verbose       Turns on the native packagers verbose mode. Useful for
                      customizing icons, licenses, etc.
   --name STRING      Name for your native package.
@@ -75,6 +76,7 @@ ARGV.each do |arg|
     verbose = true
   when "-h", "--help"
     usage
+    exit 0
   when /^-/
     puts "ERROR! Unrecognized option '#{arg}'!"
     exit -2
