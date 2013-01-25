@@ -39,11 +39,11 @@ This jar can then run anywhere there is a JVM with JavaFX. Note than the main fi
 renamed to jar-bootstrap.rb inside the jar. If you need to detect if you are in a jar,
 use the JRubyFX::Application.in_jar? method.
 
-You can create native application packages and installers. For now, this requires that you have [JDK8 installed](http://jdk8.java.net/download.html), although this may change in the near future. Just pass the `-n` or `--native_bundle` option. The packaging toolkit can only create packages for the OS it is being used on, so for Windows installers you will need to run it on a Windows machine, for OSX installers you will need to run it on a Mac, etc.
+You can create native application packages and installers. For now, this requires that you have [JDK8 installed](http://jdk8.java.net/download.html), although this may change in the near future. Just pass the `--native` option. The packaging toolkit can only create packages for the OS it is being used on, so for Windows installers you will need to run it on a Windows machine, for OSX installers you will need to run it on a Mac, etc.
 
 In order for the installer to be created, you will need some additional tools installed on your system. For Windows you need either Inno Setup 5 or later for an EXE or [Windows Installer XML (WiX) toolset](http://wix.sourceforge.net/) to generate an MSI. Make sure the WiX toolset's `bin` folder is on the `PATH`.  No special tools are need to generate a DMG, just a recent version of OSX. For linux, the packager uses dpkg-deb to create DEB installers and rpmbuild for RPM.
 
-If you don't want your application to be named "JarBootstrapMain", I highly suggest passing the `--name` option with an appropriate string.
+If you don't want your application to be called "JarBootstrapMain", I highly suggest passing the `--name` option with an appropriate string.
 
 To customize the package, for example to change the icons or license pass the `-v` or `--verbose` option. This will cause the JavaFX packaging tools to enter verbose mode, and provide more details about the process, including (the important part for customization) the location of a temporary folder where the config resources for the build are held and a list of the resources and the role of each. Copy the contents of this tmp folder into a folder in your project directory (the dir you run jrubyfx-jarify from) where the packaging tools will know to look for them. For example, on linux this would be `main_project_dir/package/linux`. On OSX, it is `main_project_dir/package/macosx`. So, if I wanted to use a custom icon, I'd replace the default icon with my own, ensuring it has the same name, and place it inside that linux or macosx folder.  Then run the build again. You can find more information on customizing at the [official Oracle documentation](http://docs.oracle.com/javafx/2/deployment/self-contained-packaging.htm#BCGICFDB).  [This blog post](http://ed4becky.net/homepage/javafx-from-the-trenches-part-1-native-packaging/4/) may also be helpful, as he goes through the process of customizing an app for both Windows and OSX.
 
@@ -52,7 +52,7 @@ The JavaFX tools provide far more options than are available from this tool. You
 Example: If my project directory is `Hello`, all my files are in `src`, I have a `dist` folder created for my jar file, my main file is called `HelloWorldApp.rb`, my app's name is "Hello World App", and I want the customization info, the command line would look like this:
 
 ```
-jrubyfx-jarify src --main src/HelloWorldApp.rb dist/HelloWorldApp.jar -n --name "Hello World App" -v
+jrubyfx-jarify src --main src/HelloWorldApp.rb dist/HelloWorldApp.jar --native --name "Hello World App" -v
 ```
 
 Sample

@@ -14,6 +14,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
+require 'jrubyfx/dsl'
+
 # JRubyFX DSL extensions for JavaFX Duration
 class Fixnum
   # defines #ms, #sec, etc to create a JavaFX duration object of respective type
