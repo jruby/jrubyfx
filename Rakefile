@@ -24,7 +24,7 @@ task :default => [:build, :run]
 
 jar = ENV['jar'] || "jar"
 target = ENV['target'] || "target"
-output_jar = ENV['output_jar'] || "rubyfx-app.jar"
+output_jar = ENV['output_jar'] || "jrubyfx-app.jar"
 main_script = ENV['main_script'] || nil
 src = ENV['src'] || 'src/*'
 jruby_version = ENV['jruby_version'] || JRUBY_VERSION || "1.7.1" #if they want speedy raking, use the default so they can use MRI or other rubies
