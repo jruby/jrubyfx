@@ -304,7 +304,7 @@ Most classes can be used 100% the Java way, but several have fun overrides/new m
 ### Using the generator
 Got a large FXML file with dozens of fx:id's and events? Assuming you only have a FXML file:
 
-    $ rubyfx-generator YourComplex.fxml NewAppFile.rb MyComplexAppName
+    $ jrubyfx-generator YourComplex.fxml NewAppFile.rb MyComplexAppName
 
 And just like that, `NewAppFile.rb` contains all the fx_id and fx_*_handler declarations you need! Note that the generator is not well tested on complex documents with obscure handler types, so if it fails, please send the FXML so we can try to fix it.
 
