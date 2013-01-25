@@ -82,8 +82,8 @@ module JRubyFX
           :input => %w[Clipboard ContextMenuEvent DragEvent GestureEvent InputEvent InputMethodEvent KeyEvent 
           Mnemonic MouseDragEvent MouseEvent RotateEvent ScrollEvent SwipeEvent TouchEvent ZoomEvent],
           :layout => %w[AnchorPane BorderPane ColumnConstraints FlowPane GridPane HBox Pane Priority RowConstraints StackPane TilePane VBox],
-          :media => %w[Media MediaPlayer MediaView],
-          # TODO: fill this out
+          :media => %w[AudioClip AudioEqualizer AudioTrack EqualizerBand Media MediaException
+          MediaErrorEvent MediaMarkerEvent MediaPlayer MediaView VideoTrack],
           :paint => %w[Color CycleMethod ImagePattern LinearGradient Paint RadialGradient Stop],
           :shape => %w[Arc ArcTo ArcType Circle ClosePath CubicCurve CubicCurveTo Ellipse FillRule HLineTo Line LineTo MoveTo Path PathElement 
           Polygon Polyline QuadCurve QuadCurveTo Rectangle Shape StrokeLineCap StrokeLineJoin StrokeType SVGPath VLineTo],
