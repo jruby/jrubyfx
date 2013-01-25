@@ -17,7 +17,6 @@ limitations under the License.
 =end
 
 require 'jrubyfx_tasks'
-require "jrubyfx_package"
 
 def usage
   puts "#{$0} {options} project-folder [output.jar]"
@@ -110,5 +109,5 @@ end
 JRubyFX::Tasks::jarify_jrubyfx(project_folder + "/**/*", main_script, nil, output_jar, :file_filter => ->(filename){!filename.end_with?(".jar") or include_jars})
 
 if native_bundle
-  JRubyFX::Package::native_bundles(Dir.pwd, output_jar, verbose, app_name[0])
+  JRubyFX::Tasks::native_bundles(Dir.pwd, output_jar, verbose, app_name[0])
 end
