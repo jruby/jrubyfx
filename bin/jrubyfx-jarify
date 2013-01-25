@@ -26,7 +26,7 @@ def usage
   -m|--main FILE     ruby script to launch when the jar is executed.
                      Defaults to jar-bootstrap.rb or main.rb
   -j|--include-jars  Include jars in the jar
-  -n|--native_bundle Create native application packages and installers.
+  --native           Create native application packages and installers.
   -v|--verbose       Turns on the native packagers verbose mode. Useful for
                      customizing icons, licenses, etc.
   --name STRING      Name for your native package.
