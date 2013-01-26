@@ -206,9 +206,9 @@ module JRubyFX
     # This loads the entire DSL. Call this immediately after requiring 
     # this file, but not inside this file, or it requires itself twice.
     def self.load_dsl
-      rt = "#{File.dirname(__FILE__)}/core_ext/"
-      Dir.foreach rt do |file|
-        require_relative "core_ext/#{file}" unless [".", ".."].include? file
+      rt = "#{File.dirname(__FILE__)}/core_ext"
+      Dir.glob("#{rt}/*.rb") do |file|
+        require file
       end
       
       JRubyFX::DSL.load_enum_converter()

@@ -14,6 +14,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
+require 'jrubyfx/dsl'
+
 # JRubyFX DSL extensions for JavaFX Paths
 class Java::javafx::scene::shape::Path
   java_import Java::javafx.scene.shape.PathElement

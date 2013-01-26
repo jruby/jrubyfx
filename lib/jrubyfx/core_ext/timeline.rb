@@ -14,6 +14,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
+require 'jrubyfx/dsl'
+
 # JRubyFX DSL extensions for JavaFX animation Timelines
 class Java::javafx::animation::Timeline
   java_import Java::javafx.animation.KeyFrame
@@ -24,6 +26,17 @@ class Java::javafx::animation::Timeline
   include_add :key_frames
   include_method_missing KeyFrame
   
+  # call-seq:
+  #   animate myProperty, from_duration => to_duration, start_value => next_value
+  #   animate myProperty, from_duration => [with_duration, ..., to_duration], start_value => [next_value, ...]
+  #   
+  # Animates a given JavaFX property over the given duration, using the given values
+  # as keyFrames
+  # 
+  # === Examples
+  #   animate translateXProperty, 0.sec => [100.ms, 1.sec], 0 => [500, 200]
+  #   animate translateYProperty, 0.sec => 1.sec, 0 => 200
+  #
   def animate(prop, args)
     time = []
     values = []

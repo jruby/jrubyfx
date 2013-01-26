@@ -11,11 +11,17 @@ module Java #:nodoc: all
       end
       module control
       end
+      module effect
+      end
       module layout
+      end
+      module media
       end
       module paint
       end
       module shape
+      end
+      module transform
       end
     end
     module stage
