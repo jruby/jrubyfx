@@ -79,7 +79,7 @@ module JRubyFX
           :effect => %w[Blend BlendMode Bloom BlurType BoxBlur ColorAdjust ColorInput DisplacementMap DropShadow GaussianBlur Glow ImageInput 
           InnerShadow Lighting MotionBlur PerspectiveTransform Reflection SepiaTone Shadow],
           :image => %w[Image ImageView PixelReader PixelWriter],
-          :input => %w[Clipboard ContextMenuEvent DragEvent GestureEvent InputEvent InputMethodEvent KeyEvent 
+          :input => %w[Clipboard ContextMenuEvent DragEvent GestureEvent InputEvent InputMethodEvent KeyCode KeyEvent 
           Mnemonic MouseDragEvent MouseEvent RotateEvent ScrollEvent SwipeEvent TouchEvent ZoomEvent],
           :layout => %w[AnchorPane BorderPane ColumnConstraints FlowPane GridPane HBox Pane Priority RowConstraints StackPane TilePane VBox],
           :media => %w[AudioClip AudioEqualizer AudioTrack EqualizerBand Media MediaException
