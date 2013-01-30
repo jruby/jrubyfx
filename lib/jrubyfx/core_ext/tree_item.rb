@@ -19,15 +19,7 @@ require 'jrubyfx/dsl'
 # JRubyFX DSL extensions for JavaFX TableViews
 class Java::javafx::scene::control::TreeItem
   include JRubyFX::DSL
-  extend JRubyFX::Utils::CommonConverters
 
   include_add
-
-  ##
-  # Make sure we add any nested TreeItem's to this one
-  def method_missing(name, *args, &block)
-    super.tap do |obj|
-      add(obj) if obj.kind_of? TreeItem
-    end
-  end
+  include_method_missing TreeItem
 end
