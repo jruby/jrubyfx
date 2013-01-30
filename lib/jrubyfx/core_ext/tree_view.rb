@@ -35,7 +35,6 @@ class Java::javafx::scene::control::TreeView
   # is only one root and successive tree_items in a tree_view will
   # keep replacing the root.
   def method_missing(name, *args, &block)
-    puts "HERE #{name} #{args}"
     super.tap do |obj|
       set_root(obj) if obj.kind_of? TreeItem
     end
