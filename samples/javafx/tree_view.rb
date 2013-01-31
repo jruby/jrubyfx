@@ -10,6 +10,10 @@ require 'jrubyfx'
 # 2. drag and drop to rearrange items
 # 3. drag and drop into another window...it should paste the contents there
 #
+# This example also allows you to edit your tree and change the text of
+# existing contents.  Just double click the item to edit it and hit escape
+# to cancel or return to save the new name.
+#
 class DraggableTreeCell < Java::javafx::scene::control::TreeCell
   include JRubyFX::DSL
   
@@ -38,9 +42,11 @@ class DraggableTreeCell < Java::javafx::scene::control::TreeCell
 
     set_on_drag_detected do |event|
       drag_item = tree_item
-      content = clipboard_content { put_string drag_item.value }
-      tree_view.start_drag_and_drop(TransferMode::MOVE).set_content content
-      self.class.drag_item = drag_item
+      if drag_item
+        content = clipboard_content { put_string drag_item.value }
+        tree_view.start_drag_and_drop(TransferMode::MOVE).set_content content
+        self.class.drag_item = drag_item
+      end
       event.consume
     end
 
@@ -90,7 +96,20 @@ class DraggableTreeCell < Java::javafx::scene::control::TreeCell
 
   def updateItem(item, empty)
     super(item, empty);
-    self.text = item if item
+
+    if empty
+      set_text nil
+      set_graphic nil
+    else
+      if editing?
+        @text_field.text = get_string if @text_field
+        set_text nil
+        set_graphic @text_field
+      else
+        set_text get_string
+        set_graphic tree_item.graphic
+      end
+    end
   end
 
   def drag_item
@@ -127,6 +146,38 @@ class DraggableTreeCell < Java::javafx::scene::control::TreeCell
       parent.children.add(saved_items[saved_items.size - 1])
     end
   end
+
+  #### These methods are part of the code to make the tree editable
+
+  def startEdit
+    super
+    create_text_field unless @text_field
+
+    set_text nil
+    set_graphic @text_field
+    @text_field.select_all
+  end
+
+  def cancelEdit
+    super
+    set_text get_item
+    set_graphic tree_item.graphic
+  end
+
+  def get_string
+    get_item ? get_item.to_s : ''
+  end
+
+  def create_text_field
+    @text_field = TextField.new(get_string)
+    @text_field.set_on_key_released do |event|
+      if event.code == KeyCode::ENTER
+        commitEdit(@text_field.text)
+      elsif event.code == KeyCode::ESCAPE
+        cancelEdit
+      end
+    end
+  end
 end
 
 class SimpleTreeView < JRubyFX::Application
@@ -134,7 +185,7 @@ class SimpleTreeView < JRubyFX::Application
     with(stage, width: 300, height: 300, title: 'Simple Tree View') do
       layout_scene(:blue) do
         stack_pane(padding: insets(30)) do
-          tree_view(cell_factory: proc { DraggableTreeCell.new}) do
+          tree_view(editable: true, cell_factory: proc { DraggableTreeCell.new}) do
             tree_item("Root") do
               5.times {|i| tree_item "File #{i}" }
             end
