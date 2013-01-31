@@ -14,13 +14,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
-require 'jrubyfx/dsl'
+require 'jrubyfx/utils/common_converters'
 
 # JRubyFX DSL extensions for JavaFX drop shadows
 class Java::javafx::scene::input::DragEvent
   extend JRubyFX::Utils::CommonConverters
+  include JRubyFX::Utils::CommonUtils
 
-  # FIXME: We need varargs support for converters
   tmc = enum_converter(Java::javafx::scene::input::TransferMode)
-  converter_for :accept_transfer_modes, [tmc]
+  converter_for :accept_transfer_modes, &tmc
+  
+  # FIXME: For non-dsl calls like this we want converter logic
+  alias :accept_transfer_modes_orig :accept_transfer_modes
+  def accept_transfer_modes(*values)
+    accept_transfer_modes_orig *attempt_conversion(self, "accept_transfer_modes", *values)
+  end
 end

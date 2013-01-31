@@ -87,9 +87,18 @@ module JRubyFX
       # *new_arg_converter* which will perform no argument coercion on
       # the first argument and a color coercion on the second argument.
       #
-      def converter_for(method_name, *converters)
+      #    e = enum_converter(Java::javafx::scene::input::TransferMode)
+      #    converter_for :accept_transfer_modes &e
+      #
+      # This method will allow a catch-all converter to be used for all
+      # arities not specified.  In this case since no arities are given
+      # all arities will pass through this enum_converter.  This form
+      # is useful for single var_args signatures.
+      #
+      def converter_for(method_name, *converters, &default)
         sheep = lambda do |direct, this, *values|
           converter = converters.find { |e| e.length == values.length }
+          converter = Array.new(values.length, default) unless converter
 
           # FIXME: Better error reporting on many things which can fail
           i = 0

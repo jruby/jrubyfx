@@ -32,7 +32,7 @@ class DraggableTreeCell < Java::javafx::scene::control::TreeCell
           self.class.drop_type = :rearrange
         end
 
-        event.accept_transfer_modes TransferMode::MOVE
+        event.accept_transfer_modes :move
       end
     end
 
