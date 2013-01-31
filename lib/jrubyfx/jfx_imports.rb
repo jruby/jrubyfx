@@ -74,13 +74,13 @@ module JRubyFX
           # TODO: import more of these
           :control => %w[Accordion Button Cell CheckBox CheckBoxTreeItem CheckMenuItem ChoiceBox ColorPicker ComboBox ContextMenu Hyperlink 
           Label ListCell ListView Menu MenuBar MenuButton MenuItem Pagination PasswordField PopupControl ProgressBar ProgressIndicator RadioButton 
-          RadioMenuItem ScrollBar ScrollPane Separator SeparatorMenuItem Slider SplitMenuButton SplitPane Tab TableView TableColumn TabPane TextArea 
-          TextField TitledPane ToggleButton ToggleGroup ToolBar Tooltip TreeItem TreeView ContentDisplay OverrunStyle SelectionMode],
+          RadioMenuItem ScrollBar ScrollPane Separator SeparatorMenuItem Slider SplitMenuButton SplitPane Tab TableView TableColumn TabPane TextArea
+          TextField TitledPane ToggleButton ToggleGroup ToolBar Tooltip TreeCell TreeItem TreeView ContentDisplay OverrunStyle SelectionMode],
           :effect => %w[Blend BlendMode Bloom BlurType BoxBlur ColorAdjust ColorInput DisplacementMap DropShadow GaussianBlur Glow ImageInput 
           InnerShadow Lighting MotionBlur PerspectiveTransform Reflection SepiaTone Shadow],
           :image => %w[Image ImageView PixelReader PixelWriter],
-          :input => %w[Clipboard ContextMenuEvent DragEvent GestureEvent InputEvent InputMethodEvent KeyCode KeyEvent 
-          Mnemonic MouseDragEvent MouseEvent RotateEvent ScrollEvent SwipeEvent TouchEvent ZoomEvent],
+          :input => %w[Clipboard ClipboardContent ContextMenuEvent DragEvent GestureEvent InputEvent InputMethodEvent KeyCode KeyEvent
+          Mnemonic MouseDragEvent MouseEvent RotateEvent ScrollEvent SwipeEvent TouchEvent TransferMode ZoomEvent],
           :layout => %w[AnchorPane BorderPane ColumnConstraints FlowPane GridPane HBox Pane Priority RowConstraints StackPane TilePane VBox],
           :media => %w[Media MediaPlayer MediaView],
           # TODO: fill this out
