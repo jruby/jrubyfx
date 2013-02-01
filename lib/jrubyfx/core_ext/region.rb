@@ -38,4 +38,5 @@ class Java::javafx::scene::layout::Region
   converter_for :max_width, [use_sizes]
   converter_for :max_height, [use_sizes]
 
+  converter_for :padding, [:insets]
 end

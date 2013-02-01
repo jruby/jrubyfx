@@ -21,4 +21,6 @@ class Java::javafx::scene::Node
   include JRubyFX::DSL
 
   include_rotate
+
+  alias :effect :set_effect
 end

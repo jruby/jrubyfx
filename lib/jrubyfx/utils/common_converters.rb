@@ -21,6 +21,7 @@ module JRubyFX
     # Contains conversion utilities to ease Ruby => JavaFX coding
     module CommonConverters
       java_import 'javafx.scene.paint.Color'
+      java_import 'javafx.geometry.Insets'
 
       # argument converter method name suffix
       ARG_CONVERTER_SUFFIX = '_arg_converter'
@@ -50,7 +51,7 @@ module JRubyFX
           (JRubyFX::Utils::CommonConverters.map_enums(enum_class)[value.to_s] || value)
         end
       end
-      
+
       ##
       # call-seq:
       #   animation_converter_for :property_name, ...
@@ -138,6 +139,15 @@ module JRubyFX
         :color => lambda { |value|
           new_value = NAME_TO_COLORS[value.to_s.gsub(/_/, "")]
           new_value ? new_value : value
+        },
+        :insets => lambda { |value|
+          if value == :empty
+            Insets::EMPTY
+          elsif value.is_a? Numeric
+            Insets.new(value)
+          else
+            value
+          end
         },
       }
       
