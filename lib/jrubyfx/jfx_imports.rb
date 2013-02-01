@@ -66,7 +66,7 @@ module JRubyFX
         :collections => ['FXCollections'],
         :event => %w[Event ActionEvent EventHandler],
         :fxml => ['Initializable', 'LoadException'],
-        :geometry => %w[HorizontalDirection HPos Insets Orientation Pos Side VerticalDirection VPos], 
+        :geometry => %w[HorizontalDirection HPos Insets Orientation Pos Rectangle2D Side VerticalDirection VPos], 
         :scene => {
           '' => %w[Group Node Parent Scene],
           :canvas => ['Canvas'],

@@ -22,6 +22,7 @@ module JRubyFX
     module CommonConverters
       java_import 'javafx.scene.paint.Color'
       java_import 'javafx.geometry.Insets'
+      java_import 'javafx.geometry.Rectangle2D'
 
       # argument converter method name suffix
       ARG_CONVERTER_SUFFIX = '_arg_converter'
@@ -139,6 +140,15 @@ module JRubyFX
         :color => lambda { |value|
           new_value = NAME_TO_COLORS[value.to_s.gsub(/_/, "")]
           new_value ? new_value : value
+        },
+        :rectangle2d => lambda { |value|
+          if value == :empty
+            Rectangle2D::EMPTY
+          elsif value.is_a? Array
+            Rectangle2D.new(*value)
+          else
+            value
+          end
         },
         :insets => lambda { |value|
           if value == :empty
