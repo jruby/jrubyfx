@@ -145,6 +145,10 @@ module JRubyFX
             Insets::EMPTY
           elsif value.is_a? Numeric
             Insets.new(value)
+          elsif value.is_a? Array
+            # top/bottom, left/right
+            value = [value[0], value[1], value[0], value[1]] if value.size == 2 
+            Insets.new(*value)
           else
             value
           end
