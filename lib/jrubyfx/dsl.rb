@@ -75,7 +75,7 @@ module JRubyFX
           define_method :method_missing do |name, *args, &block|
             # we must manually call super otherwise it will call super(type)
             super(name, *args, &block).tap do |obj|
-              add(obj) if obj.kind_of? type
+              add(obj) if obj.kind_of?(type) && !name.to_s.end_with?('!')
             end
           end
         end
@@ -129,8 +129,16 @@ module JRubyFX
     # you can say
     #   java_class(hash) { ... }
     #
+    # Another major portion of the DSL is the ability to implicitly add new
+    # created components to their parent on construction.  There are a few
+    # places where this is undesirable.  In order to prevent implicit 
+    # construction you can add a '!' on the end:
+    #   circle!(30)
+    # This will construct a Circle but it will not add it into its parent
+    # container.  This is useful for specifying clipping regions in particular.
+    #
     def method_missing(name, *args, &block)
-      clazz = NAME_TO_CLASSES[name.to_s]
+      clazz = NAME_TO_CLASSES[name.to_s.gsub(/!$/, '')]
       super unless clazz
       
       build(clazz, *args, &block)
