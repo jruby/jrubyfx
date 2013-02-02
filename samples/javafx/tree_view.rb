@@ -6,7 +6,7 @@ require 'jrubyfx'
 # Example showing a tree_view and also how complicated you can tailor
 # behavior of a tree_view.  In this example we allow you to drag and drop
 # tree_items around.  There are three things you can see in d&d here:
-# 1. drag onto other menu item will put it as a child in that menu item
+# 1. drag onto other tree item will put it as a child in that tree item
 # 2. drag and drop to rearrange items
 # 3. drag and drop into another window...it should paste the contents there
 #
