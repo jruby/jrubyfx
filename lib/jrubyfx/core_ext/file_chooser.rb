@@ -18,6 +18,7 @@ require 'jrubyfx/dsl'
 
 # JRubyFX DSL extensions for JavaFX FileChooser
 class Java::javafx::stage::FileChooser
+  include JRubyFX::DSL
 
   # call-seq:
   #   add_extension_filter(description)
