@@ -27,8 +27,21 @@ module JRubyFX
     module ClassUtils
       include JRubyFX::FXImports
       
-      # Make sure we are added to the mapping. FIXME: is this ever used?
-      def register_type(name, type)
+      ##
+      # Register your own type for use in the DSL.
+      #
+      #   class MyFooWidget < Region
+      #     #...
+      #   end
+      #   #... 
+      #   register_type(MyFooWidget)
+      #   register_type(MyFooWidget, "aliased_name")
+      #
+      # Note, this also makes it possible to override existing definitions
+      # of built-in components.
+      #
+      def register_type(type, name=nil)
+        name = type.name.snake_case unless name
         JRubyFX::DSL::NAME_TO_CLASSES[name.to_s] = type
       end
       
