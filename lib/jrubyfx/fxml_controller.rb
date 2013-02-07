@@ -213,7 +213,7 @@ class JRubyFX::Controller
   #
   def self.load_fxml(filename, stage, settings={})
     # Create our class as a java class with any arguments it wants
-    ctrl = self.new_java *(settings[:initialize] || [])
+    ctrl = self.new_java
     # save the stage so we can reference it if needed later
     ctrl.stage = stage
     # load the FXML file
@@ -226,6 +226,8 @@ class JRubyFX::Controller
     else
       Scene.new(parent, settings[:width] || -1, settings[:height] || -1, settings[:depth_buffer] || settings[:depthBuffer] || false)
     end
+
+    ctrl.ready *settings[:initialize].to_a if ctrl.respond_to? :ready
     # return the controller. If they want the new scene, they can call the scene() method on it
     return ctrl
   end
