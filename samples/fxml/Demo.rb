@@ -51,10 +51,11 @@ class SimpleFXController < JRubyFX::Controller
   # if one controller will be used for multiple forms, use fx_id_optional 
   # instead of fx_id to avoid warnings that the id can't be found
   
-  # Initialize is optional
-  def initialize(first, second)
+  # Ready is optional
+  def ready(first, second)
     puts "Ruby new"
     puts "#{first} #{second}"
+    p @AnchorPane
   end
   
   # This is how events are defined in code.
