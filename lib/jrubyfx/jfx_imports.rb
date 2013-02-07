@@ -31,7 +31,8 @@ begin
       jfx_path.gsub(/[\/\\][amdix345678_]+$/, "") # strip i386 or amd64 (including variants). TODO: ARM
     end
   end
-  require 'jfxrt.jar'
+	# Java 8 and above has JavaFX as part of the normal distib, only require it if we are 7 or below
+  require 'jfxrt.jar' if ENV_JAVA["java.runtime.version"].match(/^1\.[0-7]{1}\..*/)
 rescue  LoadError
   puts "JavaFX runtime not found.  Please install Java 7u6 or newer or set environment variable JFX_DIR to the folder that contains jfxrt.jar "
   puts "If you have Java 7u6 or later, this is a bug. Please report to the issue tracker on github. Include your OS version, 32/64bit, and architecture (x86, ARM, PPC, etc)"
