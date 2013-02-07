@@ -1,8 +1,5 @@
 require 'jrubyfx'
 
-java_import 'javafx.scene.input.RotateEvent'
-java_import 'javafx.scene.input.ZoomEvent'
-
 class MultiTouchImageView < Java::javafx::scene::layout::StackPane
   register_type self
 
@@ -21,13 +18,15 @@ class MultiTouchImageView < Java::javafx::scene::layout::StackPane
     end
   end
 end
- 
+
 class ImageViewWithMultiTouchSample < JRubyFX::Application
   def start(stage)
     pane = nil
     with(stage, title: "Image Viewer") do
-      layout_scene(400, 400, Color::OLDLACE) do
+      layout_scene(400, 400, :oldlace) do
         pane = border_pane do
+					# This exclamation mark means "yes, normally you would add this to the parent,
+					# however don't add it, just create a javaFX MenuBar object"
           menu_bar = menu_bar! do
             menu("File") do
               menu_item("Open") do
@@ -47,7 +46,7 @@ class ImageViewWithMultiTouchSample < JRubyFX::Application
         end
       end
       show
-    end 
+    end
   end
 end
 
