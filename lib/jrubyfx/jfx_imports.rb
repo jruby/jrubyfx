@@ -31,7 +31,8 @@ begin
       jfx_path.gsub(/[\/\\][amdix345678_]+$/, "") # strip i386 or amd64 (including variants). TODO: ARM
     end
   end
-  require 'jfxrt.jar'
+	# Java 8 and above has JavaFX as part of the normal distib, only require it if we are 7 or below
+  require 'jfxrt.jar' if ENV_JAVA["java.runtime.version"].match(/^1\.[0-7]{1}\..*/)
 rescue  LoadError
   puts "JavaFX runtime not found.  Please install Java 7u6 or newer or set environment variable JFX_DIR to the folder that contains jfxrt.jar "
   puts "If you have Java 7u6 or later, this is a bug. Please report to the issue tracker on github. Include your OS version, 32/64bit, and architecture (x86, ARM, PPC, etc)"
@@ -42,41 +43,41 @@ module JRubyFX
   # If you need JavaFX, just include this module. Its sole purpose in life is to
   # import all JavaFX stuff, plus a few useful Java classes (like Void)
   module FXImports
-  
+
     # If something is missing, just java_import it in your code.
     # And then ask us to put it in this list
-  
-    ## 
+
+    ##
     # This is the list of all classes in JavaFX that most apps should care about.
-    # It is a hashmaps with the leafs as arrays. Where a leaf also contains more 
+    # It is a hashmaps with the leafs as arrays. Where a leaf also contains more
     # packages, the hashmap key is "" (empty string). You can utilize this constant
     # to save yourself some typing when adding code for most/all of the JavaFX
     # classes by using either `Hash.flat_tree_inject` from jrubyfx/utils.rb or
     # writing your own traversal function
     #
     JFX_CLASS_HIERARCHY = { :javafx => {
-        :animation => %w[Animation AnimationTimer FadeTransition FillTransition Interpolator KeyFrame KeyValue ParallelTransition PathTransition 
+        :animation => %w[Animation AnimationTimer FadeTransition FillTransition Interpolator KeyFrame KeyValue ParallelTransition PathTransition
         PauseTransition RotateTransition ScaleTransition SequentialTransition StrokeTransition Timeline Transition TranslateTransition],
         :application => ['Platform'],
         :beans => {
           :property => ['SimpleDoubleProperty'],
           #TODO: import more
-          :value => ['ChangeListener']  
+          :value => ['ChangeListener']
         },
         :collections => ['FXCollections'],
         :event => %w[Event ActionEvent EventHandler],
         :fxml => ['Initializable', 'LoadException'],
-        :geometry => %w[HorizontalDirection HPos Insets Orientation Pos Rectangle2D Side VerticalDirection VPos], 
+        :geometry => %w[HorizontalDirection HPos Insets Orientation Pos Rectangle2D Side VerticalDirection VPos],
         :scene => {
           '' => %w[Group Node Parent Scene],
           :canvas => ['Canvas'],
           :chart => %w[AreaChart Axis BarChart BubbleChart CategoryAxis Chart LineChart NumberAxis
           PieChart ScatterChart StackedAreaChart StackedBarChart ValueAxis XYChart],
-          :control => %w[Accordion Button Cell CheckBox CheckBoxTreeItem CheckMenuItem ChoiceBox ColorPicker ComboBox ContextMenu Hyperlink 
-          Label ListCell ListView Menu MenuBar MenuButton MenuItem Pagination PasswordField PopupControl ProgressBar ProgressIndicator RadioButton 
+          :control => %w[Accordion Button Cell CheckBox CheckBoxTreeItem CheckMenuItem ChoiceBox ColorPicker ComboBox ContextMenu Hyperlink
+          Label ListCell ListView Menu MenuBar MenuButton MenuItem Pagination PasswordField PopupControl ProgressBar ProgressIndicator RadioButton
           RadioMenuItem ScrollBar ScrollPane Separator SeparatorMenuItem Slider SplitMenuButton SplitPane Tab TableView TableColumn TabPane TextArea
           TextField TitledPane ToggleButton ToggleGroup ToolBar Tooltip TreeCell TreeItem TreeView ContentDisplay OverrunStyle SelectionMode],
-          :effect => %w[Blend BlendMode Bloom BlurType BoxBlur ColorAdjust ColorInput DisplacementMap DropShadow GaussianBlur Glow ImageInput 
+          :effect => %w[Blend BlendMode Bloom BlurType BoxBlur ColorAdjust ColorInput DisplacementMap DropShadow GaussianBlur Glow ImageInput
           InnerShadow Lighting MotionBlur PerspectiveTransform Reflection SepiaTone Shadow],
           :image => %w[Image ImageView PixelReader PixelWriter],
           :input => %w[Clipboard ClipboardContent ContextMenuEvent DragEvent GestureEvent InputEvent InputMethodEvent KeyCode KeyEvent
@@ -85,7 +86,7 @@ module JRubyFX
           :media => %w[AudioClip AudioEqualizer AudioTrack EqualizerBand Media MediaException
           MediaErrorEvent MediaMarkerEvent MediaPlayer MediaView VideoTrack],
           :paint => %w[Color CycleMethod ImagePattern LinearGradient Paint RadialGradient Stop],
-          :shape => %w[Arc ArcTo ArcType Circle ClosePath CubicCurve CubicCurveTo Ellipse FillRule HLineTo Line LineTo MoveTo Path PathElement 
+          :shape => %w[Arc ArcTo ArcType Circle ClosePath CubicCurve CubicCurveTo Ellipse FillRule HLineTo Line LineTo MoveTo Path PathElement
           Polygon Polyline QuadCurve QuadCurveTo Rectangle Shape StrokeLineCap StrokeLineJoin StrokeType SVGPath VLineTo],
           :text => %w[Font FontPosture FontSmoothingType FontWeight Text TextAlignment TextBoundsType],
           :transform => %w[Affine Rotate Scale Shear Translate],
@@ -95,7 +96,7 @@ module JRubyFX
         :util => ['Duration']
       }
     }
-  
+
     # Imports all the listed JavaFX classes
     java_import *(JFX_CLASS_HIERARCHY.flat_tree_inject do |res, name, values|
         name = "#{name.to_s}."
