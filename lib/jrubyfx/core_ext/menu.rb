@@ -16,9 +16,8 @@ limitations under the License.
 =end
 require 'jrubyfx/dsl'
 
-# JRubyFX DSL extensions for JavaFX color stops
+# JRubyFX DSL extensions for JavaFX Menus
 class Java::javafx::scene::control::Menu
-  java_import 'javafx.scene.control.MenuItem'
   include JRubyFX::DSL
 
   include_method_missing MenuItem

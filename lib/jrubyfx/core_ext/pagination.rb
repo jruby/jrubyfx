@@ -16,10 +16,10 @@ limitations under the License.
 =end
 require 'jrubyfx/dsl'
 
-# JRubyFX DSL extensions for JavaFX Progress *
+# JRubyFX DSL extensions for JavaFX Pagination
 class Java::javafx::scene::control::Pagination
   extend JRubyFX::Utils::CommonConverters
-  
+
   indeterm_map = map_converter(indeterminate: INDETERMINATE)
 
   converter_for :page_count, [indeterm_map]

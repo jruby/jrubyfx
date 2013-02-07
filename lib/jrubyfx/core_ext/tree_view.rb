@@ -16,10 +16,8 @@ limitations under the License.
 =end
 require 'jrubyfx/dsl'
 
-# JRubyFX DSL extensions for JavaFX TableViews
+# JRubyFX DSL extensions for JavaFX Tree views
 class Java::javafx::scene::control::TreeView
-  java_import Java::javafx.scene.control.TreeItem
-
   include JRubyFX::DSL
 
   ##

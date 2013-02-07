@@ -16,7 +16,7 @@ limitations under the License.
 =end
 require 'jrubyfx/dsl'
 
-# JRubyFX DSL extensions for JavaFX color stops
+# JRubyFX DSL extensions for JavaFX Image Views
 class Java::javafx::scene::image::ImageView
   extend JRubyFX::Utils::CommonConverters
 
