@@ -23,16 +23,16 @@ class JRubyFX::Controller
   include JRubyFX::DSL
   java_import 'java.net.URL'
   java_import 'javafx.fxml.FXMLLoader'
-  
+
   # Controllers usually need access to the stage.
   attr_accessor :stage
-  
+
   ##
   # call-seq:
   #   fx_handler(callback) { |event_info| block } => Method
   #   fx_handler(callback, EventType) { |event_info| block } => Method
   #   fx_type_handler(callback) { |event_info| block } => Method
-  # 
+  #
   # Registers a function of name `name` for a FXML defined event with the body in the block
   # Note: there are overrides for most of the default types, so you should never
   # need to manually specify the `type` argument unless you have custom events.
@@ -51,32 +51,32 @@ class JRubyFX::Controller
   # * fx_window_handler is for WindowEvent
   # * fx_action_handler is for ActionEvent
   # * fx_generic_handler is for Event
-  # 
+  #
   # === Examples
   #   fx_handler :click do
   #     puts "button clicked"
   #   end
-  #   
+  #
   #   fx_mouse_handler :moved do |event|
   #     puts "Mouse Moved"
   #     p event
   #   end
-  #   
+  #
   #   fx_key_handler :keypress do
   #     puts "Key Pressed"
   #   end
-  # 
+  #
   # === Equivalent Java
   #   @FXML
   #   private void click(ActionEvent event) {
   #     System.out.println("button clicked");
   #   }
-  #   
+  #
   #   @FXML
   #   private void moved(MouseEvent event) {
   #     System.out.println("Mouse Moved");
   #   }
-  #   
+  #
   #   @FXML
   #   private void keypress(KeyEvent event) {
   #     System.out.println("Key Pressed");
@@ -92,7 +92,7 @@ class JRubyFX::Controller
       end
     end
   end
-  
+
   # Get the singleton class, and add special overloads as fx_EVENT_handler
   # This funky syntax allows us to define methods on self (like define_method("self.method"),
   # except that does not work)
@@ -119,44 +119,44 @@ class JRubyFX::Controller
       end
     end
   end
-  
+
   # FXML linked variable names by subclass
   @@fxml_linked_args = {}
-  
+
   ##
   # call-seq:
   #   fx_id :name, ...
-  #   
+  #
   # Register one or more variable names to bind to a fx:id in the FXML file.
   # === Example
   #   fx_id :myVar
-  # 
+  #
   # === Equivalent Java
   #   @FXML
   #   private ClassName myVar;
-  # 
+  #
   def self.fx_id(*name)
     # we must distinguish between subclasses, hence self.
     (@@fxml_linked_args[self] ||= []).concat(name)
   end
-  
+
   ##
   # call-seq:
   #   fx_id_optional :name, ...
-  #   
+  #
   # Register one or more variable name to bind to a fx:id in the FXML file if it exists.
   # If the name cannot be found, don't complain.
   # === Example
   #   fx_id_optional :myVar
-  # 
+  #
   # === Equivalent Java
   #   @FXML
   #   private ClassName myVar;
-  # 
+  #
   def self.fx_id_optional(*names)
     fx_id *names.map {|i| {i => :quiet} }
   end
-  
+
   ##
   # Set scene object (setter), and update fxml-injected values. If you are manually
   # loading FXML, you MUST call this to link `fx_id` specified names.
@@ -177,20 +177,20 @@ class JRubyFX::Controller
       instance_variable_set("@#{name}".to_sym, val)
     end
   end
-  
+
   ##
   # Return the scene object (getter)
   def scene()
     @scene
   end
-  
+
   ##
   # Magic self-java-ifying new call. (Creates a Java instance)
   def self.new_java(*args)
     self.become_java!
     self.new(*args)
   end
-  
+
   ##
   # Load given fxml file onto the given stage. `settings` is an optional hash of:
   # * :initialize => [array of arguments to pass to the initialize function]
@@ -204,7 +204,7 @@ class JRubyFX::Controller
   # === Examples
   #
   #   controller = MyFXController.load_fxml("Demo.fxml", stage)
-  #   
+  #
   # === Equivalent Java
   #   Parent root = FXMLLoader.load(getClass().getResource("Demo.fxml"));
   #   Scene scene = new Scene(root);
@@ -213,7 +213,7 @@ class JRubyFX::Controller
   #
   def self.load_fxml(filename, stage, settings={})
     # Create our class as a java class with any arguments it wants
-    ctrl = self.new_java *(settings[:initialize] || [])
+    ctrl = self.new_java *settings[:initialize].to_a
     # save the stage so we can reference it if needed later
     ctrl.stage = stage
     # load the FXML file
@@ -226,25 +226,27 @@ class JRubyFX::Controller
     else
       Scene.new(parent, settings[:width] || -1, settings[:height] || -1, settings[:depth_buffer] || settings[:depthBuffer] || false)
     end
+    # instead of using the initializable interface, roll our own so we don't have to deal with java
+    ctrl.initialized(*settings[:initialized].to_a) if ctrl.respond_to? :initialized
     # return the controller. If they want the new scene, they can call the scene() method on it
     return ctrl
   end
-  
+
   ##
   # call-seq:
   #   load_fxml_resource(filename) => Parent
   #   load_fxml_resource(filename, controller_instance) => Parent
   #   load_fxml_resource(filename, controller_instance, relative_to) => Parent
-  #   
+  #
   # Load a FXML file given a filename and a controller and return the root element
   # relative_to can be a file that this should be relative to, or an index
-  # of the caller number. If you are calling this from a function, pass 0 
+  # of the caller number. If you are calling this from a function, pass 0
   # as you are the immediate caller of this function.
   # === Examples
   #   root = JRubyFX::Controller.load_fxml_resource("Demo.fxml")
-  # 
+  #
   #   root = JRubyFX::Controller.load_fxml_resource("Demo.fxml", my_controller)
-  # 
+  #
   # === Equivalent Java
   #   Parent root = FXMLLoader.load(getClass().getResource("Demo.fxml"));
   #
