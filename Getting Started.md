@@ -12,7 +12,7 @@ The first thing we need to install is rake and bundler:
 
 Now we can clone the JRubyFX sources and install them:
 
-	$ git clone https://github.com/nahi/jrubyfx.git
+	$ git clone https://github.com/jruby/jrubyfx.git
 	$ cd jrubyfx
 	$ rake install
 
