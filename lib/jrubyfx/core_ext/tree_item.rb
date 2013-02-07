@@ -16,11 +16,10 @@ limitations under the License.
 =end
 require 'jrubyfx/dsl'
 
-# JRubyFX DSL extensions for JavaFX Nodes
-class Java::javafx::scene::Node
+# JRubyFX DSL extensions for JavaFX TableViews
+class Java::javafx::scene::control::TreeItem
   include JRubyFX::DSL
 
-  include_rotate
-
-  alias :effect :set_effect
+  include_add
+  include_method_missing TreeItem
 end

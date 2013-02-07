@@ -66,7 +66,7 @@ module JRubyFX
         :collections => ['FXCollections'],
         :event => %w[Event ActionEvent EventHandler],
         :fxml => ['Initializable', 'LoadException'],
-        :geometry => %w[HorizontalDirection HPos Insets Orientation Pos Side VerticalDirection VPos], 
+        :geometry => %w[HorizontalDirection HPos Insets Orientation Pos Rectangle2D Side VerticalDirection VPos], 
         :scene => {
           '' => %w[Group Node Parent Scene],
           :canvas => ['Canvas'],
@@ -74,13 +74,13 @@ module JRubyFX
           PieChart ScatterChart StackedAreaChart StackedBarChart ValueAxis XYChart],
           :control => %w[Accordion Button Cell CheckBox CheckBoxTreeItem CheckMenuItem ChoiceBox ColorPicker ComboBox ContextMenu Hyperlink 
           Label ListCell ListView Menu MenuBar MenuButton MenuItem Pagination PasswordField PopupControl ProgressBar ProgressIndicator RadioButton 
-          RadioMenuItem ScrollBar ScrollPane Separator SeparatorMenuItem Slider SplitMenuButton SplitPane Tab TableView TableColumn TabPane TextArea 
-          TextField TitledPane ToggleButton ToggleGroup ToolBar Tooltip TreeItem TreeView ContentDisplay OverrunStyle SelectionMode],
+          RadioMenuItem ScrollBar ScrollPane Separator SeparatorMenuItem Slider SplitMenuButton SplitPane Tab TableView TableColumn TabPane TextArea
+          TextField TitledPane ToggleButton ToggleGroup ToolBar Tooltip TreeCell TreeItem TreeView ContentDisplay OverrunStyle SelectionMode],
           :effect => %w[Blend BlendMode Bloom BlurType BoxBlur ColorAdjust ColorInput DisplacementMap DropShadow GaussianBlur Glow ImageInput 
           InnerShadow Lighting MotionBlur PerspectiveTransform Reflection SepiaTone Shadow],
           :image => %w[Image ImageView PixelReader PixelWriter],
-          :input => %w[Clipboard ContextMenuEvent DragEvent GestureEvent InputEvent InputMethodEvent KeyCode KeyEvent 
-          Mnemonic MouseDragEvent MouseEvent RotateEvent ScrollEvent SwipeEvent TouchEvent ZoomEvent],
+          :input => %w[Clipboard ClipboardContent ContextMenuEvent DragEvent GestureEvent InputEvent InputMethodEvent KeyCode KeyEvent
+          Mnemonic MouseDragEvent MouseEvent RotateEvent ScrollEvent SwipeEvent TouchEvent TransferMode ZoomEvent],
           :layout => %w[AnchorPane BorderPane ColumnConstraints FlowPane GridPane HBox Pane Priority RowConstraints StackPane TilePane VBox],
           :media => %w[AudioClip AudioEqualizer AudioTrack EqualizerBand Media MediaException
           MediaErrorEvent MediaMarkerEvent MediaPlayer MediaView VideoTrack],

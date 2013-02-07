@@ -16,11 +16,11 @@ limitations under the License.
 =end
 require 'jrubyfx/dsl'
 
-# JRubyFX DSL extensions for JavaFX Nodes
-class Java::javafx::scene::Node
+# JRubyFX DSL extensions for JavaFX color stops
+class Java::javafx::scene::control::MenuBar
+  java_import 'javafx.scene.control.Menu'
   include JRubyFX::DSL
 
-  include_rotate
-
-  alias :effect :set_effect
+  include_method_missing Menu
+  include_add :getMenus
 end

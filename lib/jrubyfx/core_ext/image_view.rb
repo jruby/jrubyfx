@@ -16,11 +16,9 @@ limitations under the License.
 =end
 require 'jrubyfx/dsl'
 
-# JRubyFX DSL extensions for JavaFX Nodes
-class Java::javafx::scene::Node
-  include JRubyFX::DSL
+# JRubyFX DSL extensions for JavaFX color stops
+class Java::javafx::scene::image::ImageView
+  extend JRubyFX::Utils::CommonConverters
 
-  include_rotate
-
-  alias :effect :set_effect
+  converter_for :viewport, [:rectangle2d]
 end

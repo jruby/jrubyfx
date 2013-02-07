@@ -21,6 +21,8 @@ module JRubyFX
     # Contains conversion utilities to ease Ruby => JavaFX coding
     module CommonConverters
       java_import 'javafx.scene.paint.Color'
+      java_import 'javafx.geometry.Insets'
+      java_import 'javafx.geometry.Rectangle2D'
 
       # argument converter method name suffix
       ARG_CONVERTER_SUFFIX = '_arg_converter'
@@ -50,7 +52,7 @@ module JRubyFX
           (JRubyFX::Utils::CommonConverters.map_enums(enum_class)[value.to_s] || value)
         end
       end
-      
+
       ##
       # call-seq:
       #   animation_converter_for :property_name, ...
@@ -87,9 +89,18 @@ module JRubyFX
       # *new_arg_converter* which will perform no argument coercion on
       # the first argument and a color coercion on the second argument.
       #
-      def converter_for(method_name, *converters)
+      #    e = enum_converter(Java::javafx::scene::input::TransferMode)
+      #    converter_for :accept_transfer_modes &e
+      #
+      # This method will allow a catch-all converter to be used for all
+      # arities not specified.  In this case since no arities are given
+      # all arities will pass through this enum_converter.  This form
+      # is useful for single var_args signatures.
+      #
+      def converter_for(method_name, *converters, &default)
         sheep = lambda do |direct, this, *values|
           converter = converters.find { |e| e.length == values.length }
+          converter = Array.new(values.length, default) unless converter
 
           # FIXME: Better error reporting on many things which can fail
           i = 0
@@ -129,6 +140,28 @@ module JRubyFX
         :color => lambda { |value|
           new_value = NAME_TO_COLORS[value.to_s.gsub(/_/, "")]
           new_value ? new_value : value
+        },
+        :rectangle2d => lambda { |value|
+          if value == :empty
+            Rectangle2D::EMPTY
+          elsif value.is_a? Array
+            Rectangle2D.new(*value)
+          else
+            value
+          end
+        },
+        :insets => lambda { |value|
+          if value == :empty
+            Insets::EMPTY
+          elsif value.is_a? Numeric
+            Insets.new(value)
+          elsif value.is_a? Array
+            # top/bottom, left/right
+            value = [value[0], value[1], value[0], value[1]] if value.size == 2 
+            Insets.new(*value)
+          else
+            value
+          end
         },
       }
       
