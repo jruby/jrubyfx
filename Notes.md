@@ -2,7 +2,7 @@
 This document explains the extra syntactic sugar JRubyFX applies to JavaFX. All Java-style versions always work, this is just special ruby versions of the syntax.
 
 # Enums and constants (including Color)
-All JavaFX enums and some constants can be specified as a ruby symbol in setters and constructors. This includes most usages of `Color`. 
+All JavaFX enums and some constants can be specified as a ruby symbol in setters and constructors. This includes most usages of `Color`.
 If you have a constant or enum that is not being converted to a Java enum properly (easy to spot because of `Exception running Application: #<TypeError: cannot convert instance of class org.jruby.RubySymbol to _CLASS_TYPE_>`), it is proabbly a bug and please report it. Note that you must use either the `build` family of functions (`build`, `with`, and DSL _class_type_()), or the snake_cased= version of the setter. setProperty is not overridden in case you want to avoid conversions.
 
 ### Example
@@ -32,7 +32,7 @@ There are three types of animation syntaxes: Java style, multiple style, and sin
 Animate is a method on the timeline:
 
 	rectangle(x: 10, y: 40, width: 50, height: 50, fill: :red) do
-		# note we must save this here as the property is 
+		# note we must save this here as the property is
 		# on the rectangle, not the timeline
 		translate_x = translateXProperty
 		timeline(cycle_count: :indefinite, auto_reverse: true) do
@@ -56,3 +56,21 @@ Some classes are probbably missing this, please report this.
 # Builder methods
 Many classes have automatic adding of children, like Panels and Timelines. To utilize, create the object inside one of the builders (build, with, or the DSL _class_name_). See the analog_clock example for details.
 
+# Automatic adding
+When you create an object inside another dsl-based method, it will automatically add the object as a child of the first. Ex:
+
+	sp = stack_pane do
+		label("hello!")
+	end
+
+which is the same as:
+
+	sp = stack_pane()
+	sp.children.add(label("hello!"))
+
+However, if you DON'T want this behavior, append a ! to the end of the type. ex:
+
+	border_pane do
+		left label!("Hello Left!")
+		right label!("Hello Right!")
+	end
