@@ -125,7 +125,7 @@ class JRubyFX::Controller
   # Override new to avoid calling initialize
   def self.new(*args, &block)
     obj = self.allocate
-    obj.send(:initialize_ruby, *args, &block) if defined? :initialize_ruby
+    obj.send(:initialize_ruby, *args, &block) if defined? obj.initialize_ruby
     obj
   end
 
@@ -134,7 +134,7 @@ class JRubyFX::Controller
   end
   # this is the default initialized method so we can always call it
   def initialize_fxml(*args)
-      self.send(:initialize_fxml_warn, *args) if defined? :initialize_fxml_warn
+    self.send(:initialize_fxml_warn, *args) if defined? initialize_fxml_warn
   end
   alias_method :initialize_orig, :initialize
 
