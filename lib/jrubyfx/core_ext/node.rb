@@ -22,5 +22,11 @@ class Java::javafx::scene::Node
 
   include_rotate
 
-  alias :effect :set_effect
+  def effect(*args)
+    if args.length > 0
+      set_effect(*args)
+    else
+      get_effect
+    end
+  end
 end

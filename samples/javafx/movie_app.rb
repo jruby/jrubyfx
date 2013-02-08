@@ -29,9 +29,9 @@ class MovieApp < JRubyFX::Application
       puts "media key: #{e.text}"
       case e.text
       when "s"
-        view.effect = view.get_effect ? nil : sepia_tone
+        view.effect = view.effect ? nil : sepia_tone
       when "b"
-        view.effect = view.get_effect ? nil : gaussian_blur(:radius => 30)
+        view.effect = view.effect ? nil : gaussian_blur(:radius => 30)
       when "t"
         transition.play_from_start
       end
