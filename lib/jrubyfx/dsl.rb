@@ -44,6 +44,24 @@ module JRubyFX
         name = type.name.snake_case unless name
         JRubyFX::DSL::NAME_TO_CLASSES[name.to_s] = type
       end
+
+      ##
+      # Define a dual-mode method which acts as both a getter and
+      # setter depending on whether it has been supplied an argument
+      # or not.
+      #
+      def getter_setter(name)
+        self.class_eval do
+          # FIXME: Is arity of splat the best way to do this?
+          define_method(name) do |*r|
+            if r.length > 0
+              set_effect *r
+            else
+              get_effect
+            end
+          end
+        end
+      end
       
       # Lots of DSL extensions use these methods, so define them here so multiple classes can use them
       
