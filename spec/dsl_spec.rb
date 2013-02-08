@@ -1,4 +1,4 @@
-require 'jrubyfx/dsl'
+require 'jrubyfx'
 
 class FooControl
   include JRubyFX::DSL
@@ -10,7 +10,7 @@ class FooControl
   attr_reader :age
   attr_accessor :name
   attr_accessor :size
-  
+
   register_type self
 end
 
