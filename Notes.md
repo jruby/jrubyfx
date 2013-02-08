@@ -74,3 +74,8 @@ However, if you DON'T want this behavior, append a ! to the end of the type. ex:
 		left label!("Hello Left!")
 		right label!("Hello Right!")
 	end
+
+# FXML Controllers
+Due to limitations in JRuby, you cannot place fx:controller attributes in fxml files. Similarly, you can't place ruby-only controls in FXML files, though you can add them later once FXML has loaded.
+
+When creating controllers, `Controller.new` does NOT call `initialize`, as `initialize` is magically called by `FXMLLoader`. Instead, `initialize` has been split up into `initialize_ruby`, which is called by `new`, and `initialize_fxml`, which is called when the fxml has been loaded, and all fx_id's have been bound
