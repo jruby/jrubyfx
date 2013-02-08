@@ -44,6 +44,7 @@ module JRubyFX
         name = type.name.snake_case unless name
         JRubyFX::DSL::NAME_TO_CLASSES[name.to_s] = type
       end
+      module_function :register_type
 
       ##
       # Define a dual-mode method which acts as both a getter and
