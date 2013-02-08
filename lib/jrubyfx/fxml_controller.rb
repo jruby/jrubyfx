@@ -120,6 +120,59 @@ class JRubyFX::Controller
     end
   end
 
+  # When FXMLLoader detects a method called initialze taking 0 args, then it calls it
+  # We don't want this, as ruby new calls initialize
+  # Override new to avoid calling initialize
+  def self.new(*args, &block)
+    obj = self.allocate
+    obj.send(:initialize_ruby, *args, &block) if defined? :initialize_ruby
+    obj
+  end
+
+  # this is the default initialize that the FXML loader will call
+  def initialize()
+  end
+  # this is the default initialized method so we can always call it
+  def initialize_fxml(*args)
+      self.send(:initialize_fxml_warn, *args) if defined? :initialize_fxml_warn
+  end
+  alias_method :initialize_orig, :initialize
+
+  # When initialize is defined, rename it to initialized, and restore
+  # initialize to default so java does not double call us
+  def self.method_added(name)
+    if name == :initialize && !@in_alias
+      puts <<WARNIT
+*****************************************************************************
+*****************************************************************************
+**                   WARNING! WARNING! WARNING! WARNING!                   **
+** WARNING! WARNING! WARNING! WARNING! WARNING! WARNING! WARNING! WARNING! **
+**                   WARNING! WARNING! WARNING! WARNING!                   **
+*****************************************************************************
+**                                                                         **
+** You probably meant to define `initialize_fxml` instead of `initialize`  **
+** `initialize` is ambiguous in JavaFX controllers as FXMLLoader will call **
+**  it if it has 0 arguments in addition to it being ruby's constructor.   **
+**  If you need access to FXML elements (defined with `fx_id :myEltId`),   **
+**   then use `initialize_fxml`. If you need the ruby constructor, which   **
+**     does not have access to FXML yet, use `initialize_ruby` instead     **
+**                                                                         **
+**            Assuming you wanted `initialize_fxml` for this run           **
+**                                                                         **
+*****************************************************************************
+**                   WARNING! WARNING! WARNING! WARNING!                   **
+** WARNING! WARNING! WARNING! WARNING! WARNING! WARNING! WARNING! WARNING! **
+**                   WARNING! WARNING! WARNING! WARNING!                   **
+*****************************************************************************
+*****************************************************************************
+WARNIT
+      @in_alias = true
+      alias_method :initialize_fxml_warn, :initialize
+      alias_method :initialize, :initialize_orig
+      @in_alias = false
+    end
+  end
+
   # FXML linked variable names by subclass
   @@fxml_linked_args = {}
 
@@ -213,7 +266,7 @@ class JRubyFX::Controller
   #
   def self.load_fxml(filename, stage, settings={})
     # Create our class as a java class with any arguments it wants
-    ctrl = self.new_java *settings[:initialize].to_a
+    ctrl = self.new_java *settings[:initialize_ruby].to_a
     # save the stage so we can reference it if needed later
     ctrl.stage = stage
     # load the FXML file
@@ -226,8 +279,8 @@ class JRubyFX::Controller
     else
       Scene.new(parent, settings[:width] || -1, settings[:height] || -1, settings[:depth_buffer] || settings[:depthBuffer] || false)
     end
-    # instead of using the initializable interface, roll our own so we don't have to deal with java
-    ctrl.initialized(*settings[:initialized].to_a) if ctrl.respond_to? :initialized
+    # instead of using the initializable interface, roll our own so we don't have to deal with java.
+    ctrl.initialize_fxml(*settings[:initialize_fxml].to_a)
     # return the controller. If they want the new scene, they can call the scene() method on it
     return ctrl
   end

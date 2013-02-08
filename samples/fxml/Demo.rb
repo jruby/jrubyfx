@@ -28,11 +28,11 @@ class SimpleFXApplication < JRubyFX::Application
 
     # Load our FXML using our controller. width and height are optional, as is
     # either :fill => Color:: OR (not both) :depth_buffer => boolean. If you
-    # have a custom initialize function, pass in arguments as :intialize => [args]
-    # note the difference between the constructor (initialize) and fxml loaded (initialized)
+    # have a custom initialize_fxml function, pass in arguments as :intialize_fxml => [args]
+    # note the difference between the constructor (initialize_ruby) and fxml loaded (initialize_fxml)
     @ctrlr = SimpleFXController.load_fxml("Demo.fxml", stage, :width => 620,
-      :height => 480, :initialize => ["Arguments", "are supported"],
-      :initialized => ["Send Stuff", "To initialized"])
+      :height => 480, :initialize_ruby => ["Arguments", "are supported"],
+      :initialize_fxml => ["Send Stuff", "To initialized"])
 
     # finally, show our app
     stage.show
@@ -53,17 +53,17 @@ class SimpleFXController < JRubyFX::Controller
   # if one controller will be used for multiple forms, use fx_id_optional
   # instead of fx_id to avoid warnings that the id can't be found
 
-  # Initialize is optional, and it is the constructor
-  def initialize(first, second)
+  # initialize_ruby is optional, and it is the actual ruby constructor
+  def initialize_ruby(first, second)
     puts "Ruby new"
     puts "#{first} #{second}"
     # note that fx_id's are NOT yet initialized here
     puts "AnchorPane is '#{@AnchorPane.inspect}' (expected nil)"
   end
 
-  # Initialized is optional, and it is called when the fxml file has been loaded
+  # Initialize_fxml is optional, and it is called when the fxml file has been loaded
   # and bound to the fx_id's
-  def initialized(first, second)
+  def initialize_fxml(first, second)
     puts "FXML loaded"
     puts "#{first} #{second}"
     # fx_id's are initialized
