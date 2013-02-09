@@ -1,4 +1,4 @@
-require 'jrubyfx'
+require 'spec_helper'
 
 class FooControl
   include JRubyFX::DSL
