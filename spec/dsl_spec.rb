@@ -14,6 +14,21 @@ class FooControl
   register_type self
 end
 
+class BarControl
+  include JRubyFX::DSL
+
+  attr_reader :list
+
+  def add(value)
+    @list ||= []
+    @list << value
+  end
+
+  include_method_missing FooControl
+
+  register_type self
+end
+
 include JRubyFX::DSL
 
 describe JRubyFX::DSL do
@@ -51,5 +66,14 @@ describe JRubyFX::DSL do
     end
 
     f.size.should == 20
+  end
+
+  it "should add foos to bars" do
+    f = nil
+    b = bar_control do
+      f = foo_control
+    end
+
+    b.list.should == [f]
   end
 end
