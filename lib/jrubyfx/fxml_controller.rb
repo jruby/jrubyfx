@@ -25,7 +25,7 @@ class JRubyFX::Controller
   java_import 'javafx.fxml.FXMLLoader'
 
   # Controllers usually need access to the stage.
-  attr_accessor :stage
+  attr_accessor :stage, :scene
 
 
   ##
@@ -173,68 +173,17 @@ WARNIT
     end
   end
 
-  # FXML linked variable names by subclass
-  @@fxml_linked_args = {}
-
   ##
-  # call-seq:
-  #   fx_id :name, ...
-  #
-  # Register one or more variable names to bind to a fx:id in the FXML file.
-  # === Example
-  #   fx_id :myVar
-  #
-  # === Equivalent Java
-  #   @FXML
-  #   private ClassName myVar;
-  #
-  def self.fx_id(*name)
-    # we must distinguish between subclasses, hence self.
-    (@@fxml_linked_args[self] ||= []).concat(name)
-  end
-
+  #  Node Lookup Methods
   ##
-  # call-seq:
-  #   fx_id_optional :name, ...
-  #
-  # Register one or more variable name to bind to a fx:id in the FXML file if it exists.
-  # If the name cannot be found, don't complain.
-  # === Example
-  #   fx_id_optional :myVar
-  #
-  # === Equivalent Java
-  #   @FXML
-  #   private ClassName myVar;
-  #
-  def self.fx_id_optional(*names)
-    fx_id *names.map {|i| {i => :quiet} }
-  end
 
-  ##
-  # Set scene object (setter), and update fxml-injected values. If you are manually
-  # loading FXML, you MUST call this to link `fx_id` specified names.
-  def scene=(s)
-    @scene = s
-    (@@fxml_linked_args[self.class] ||= []).each do |name|
-      quiet = false
-      # you can specify name => [quiet/verbose], so we need to check for that
-      if name.is_a? Hash
-        quiet = name.values[0] == :quiet
-        name = name.keys[0]
-      end
-      # set each instance variable from the lookup on the scene
-      val = s.lookup("##{name}")
-      if val == nil && !quiet
-        puts "[WARNING] fx_id not found: #{name}. Is id set to a different value than fx:id? (if this is expected, use fx_id_optional)"
-      end
-      instance_variable_set("@#{name}".to_sym, val)
-    end
-  end
+  # searches for an element by id (or fx:id, prefering id)
+  def method_missing meth, *args, &block
+    # if the method is an id, return it if scene is attached
+    result = @scene.lookup "##{meth}" if @scene
+    return result if result
 
-  ##
-  # Return the scene object (getter)
-  def scene()
-    @scene
+    super
   end
 
   ##
