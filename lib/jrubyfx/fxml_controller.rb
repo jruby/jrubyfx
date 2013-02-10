@@ -180,10 +180,27 @@ WARNIT
   # searches for an element by id (or fx:id, prefering id)
   def method_missing meth, *args, &block
     # if the method is an id, return it if scene is attached
-    result = @scene.lookup "##{meth}" if @scene
+    result = find "##{meth}" if @scene
     return result if result
 
     super
+  end
+
+  # return first matched node or nil
+  def find css_selector
+    @scene.lookup css_selector
+  end
+
+  # Return first matched node or throw exception
+  def find! css_selector
+    res = find(css_selector)
+    raise "Selector(#{css_selector}) returned no results!" unless res
+    res
+  end
+
+  # return an array of matched nodes
+  def css css_selector
+    @scene.get_root.lookup_all(css_selector).map {|e| e}
   end
 
   ##
