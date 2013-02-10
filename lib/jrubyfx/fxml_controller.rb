@@ -27,6 +27,80 @@ class JRubyFX::Controller
   # Controllers usually need access to the stage.
   attr_accessor :stage, :scene
 
+  ##
+  # Construction as a Java Class
+  ##
+
+  # Load given fxml file onto the given stage. `settings` is an optional hash of:
+  # * :initialize => [array of arguments to pass to the initialize function]
+  # * :width => Default width of the Scene
+  # * :height => Default height of the Scene
+  # * :fill => Fill color of the Scene's background
+  # * :depth_buffer => JavaFX Scene DepthBuffer argument (look it up)
+  # * :relative_to =>  filename search for fxml realtive to this file
+  #
+  # === Examples
+  #
+  #   controller = MyFXController.new "Demo.fxml", stage
+  #
+  # === Equivalent Java
+  #   Parent root = FXMLLoader.load(getClass().getResource("Demo.fxml"));
+  #   Scene scene = new Scene(root);
+  #   stage.setScene(scene);
+  #   controller = root.getController();
+
+  def self.new filename, stage, settings={}
+    # Inherit from default settings
+    settings = {
+      width: -1,
+      height: -1,
+      fill: Color::WHITE,
+      depth_buffer: false,
+      relative_to: nil,
+      initialized: nil,
+    }.merge settings
+
+    # Magic self-java-ifying new call. (Creates a Java instance from our ruby)
+    self.become_java!
+
+    ctrl = self.allocate # like new, without initialize
+
+    # Set the stage so we can reference it if needed later
+    ctrl.stage = stage
+
+    # load the FXML file
+    root = load_fxml_resource filename, ctrl, settings[:relative_to]
+
+    # Unless the FXML root node is a scene, wrap that node in a scene
+    if root.is_a? Scene
+       scene = root
+    else
+      scene = Scene.new root, settings[:width], settings[:height], settings[:depth_buffer]
+      scene.set_fill settings[:fill]
+    end
+
+    # set the controller and stage scene
+    ctrl.scene = stage.scene = scene
+
+    # Everything is ready, call initialize_callback
+    if ctrl.private_methods.include? :initialize_callback
+      ctrl.send :initialize_callback, *settings[:initialize].to_a
+    end
+
+    # return the controller
+    ctrl
+  end
+
+  # FXMLLoader#load also calls initalize
+  # if defined, move initialize so we can call it when we're ready
+  def self.method_added meth
+    if meth == :initialize and not @ignore_method_added
+      @ignore_method_added = true
+      alias_method :initialize_callback, :initialize
+      self.send(:define_method, :initialize) {|do_not_call_me|}
+    end
+  end
+
 
   ##
   # Event Handlers
@@ -117,80 +191,6 @@ class JRubyFX::Controller
     }.each do |method, klass|
       # define the handy overloads that just pass our arguments in
       define_method("on_#{method}") { |name, &block| on name, klass, &block }
-    end
-  end
-
-  ##
-  # Construction as a Java Class
-  ##
-
-  # Load given fxml file onto the given stage. `settings` is an optional hash of:
-  # * :initialize => [array of arguments to pass to the initialize function]
-  # * :width => Default width of the Scene
-  # * :height => Default height of the Scene
-  # * :fill => Fill color of the Scene's background
-  # * :depth_buffer => JavaFX Scene DepthBuffer argument (look it up)
-  # * :relative_to =>  filename search for fxml realtive to this file
-  #
-  # === Examples
-  #
-  #   controller = MyFXController.new "Demo.fxml", stage
-  #
-  # === Equivalent Java
-  #   Parent root = FXMLLoader.load(getClass().getResource("Demo.fxml"));
-  #   Scene scene = new Scene(root);
-  #   stage.setScene(scene);
-  #   controller = root.getController();
-
-  def self.new filename, stage, settings={}
-    # Inherit from default settings
-    settings = {
-      width: -1,
-      height: -1,
-      fill: Color::WHITE,
-      depth_buffer: false,
-      relative_to: nil,
-      initialized: nil,
-    }.merge settings
-
-    # Magic self-java-ifying new call. (Creates a Java instance from our ruby)
-    self.become_java!
-
-    ctrl = self.allocate # like new, without initialize
-
-    # Set the stage so we can reference it if needed later
-    ctrl.stage = stage
-
-    # load the FXML file
-    root = load_fxml_resource filename, ctrl, settings[:relative_to]
-
-    # Unless the FXML root node is a scene, wrap that node in a scene
-    if root.is_a? Scene
-       scene = root
-    else
-      scene = Scene.new root, settings[:width], settings[:height], settings[:depth_buffer]
-      scene.set_fill settings[:fill]
-    end
-
-    # set the controller and stage scene
-    ctrl.scene = stage.scene = scene
-
-    # Everything is ready, call initialize_callback
-    if ctrl.private_methods.include? :initialize_callback
-      ctrl.send :initialize_callback, *settings[:initialize].to_a
-    end
-
-    # return the controller
-    ctrl
-  end
-
-  # FXMLLoader#load also calls initalize
-  # if defined, move initialize so we can call it when we're ready
-  def self.method_added meth
-    if meth == :initialize and not @ignore_method_added
-      @ignore_method_added = true
-      alias_method :initialize_callback, :initialize
-      self.send(:define_method, :initialize) {|do_not_call_me|}
     end
   end
 
