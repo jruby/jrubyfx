@@ -24,13 +24,27 @@ class SimpleFXApplication < JRubyFX::Application
     # assign the title
     stage.title = "Simple JavaFX FXML App in pure Ruby"
 
-    # Load our FXML using our controller. width and height are optional, as is
-    # either :fill => Color:: OR (not both) :depth_buffer => boolean. If you
-    # have a custom initialize_fxml function, pass in arguments as :intialize_fxml => [args]
-    # note the difference between the constructor (initialize_ruby) and fxml loaded (initialize_fxml)
-    @ctrlr = SimpleFXController.load_fxml("Demo.fxml", stage, :width => 620,
-      :height => 480, :initialize_ruby => ["Arguments", "are supported"],
-      :initialize_fxml => ["Send Stuff", "To initialized"])
+    # Load our FXML using our controller.
+    # Only fxml and stage are required
+    # Optional Settings Hash:
+    #   :width  => int
+    #   :height => int
+    #   :fill   => Color::
+    #   :depth_buffer => boolean
+    #   :initialize => [args]
+    #   :relative_to:  path_to_fxml_views
+
+    # Minimal:
+    # SimpleFXController.new "Demo.fxml", stage
+
+    # Full:
+    SimpleFXController.new "Demo.fxml", stage,
+        initialize:   ["Send Stuff", "To initialized"],
+        width:        150,
+        height:       500,
+        fill:         Color::PURPLE,
+        relative_to:  __FILE__,
+        depth_buffer: false
 
     # finally, show our app
     stage.show
