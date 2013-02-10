@@ -244,23 +244,21 @@ class JRubyFX::Controller
   # === Equivalent Java
   #   Parent root = FXMLLoader.load(getClass().getResource("Demo.fxml"));
   #
-  def self.load_fxml_resource(filename, ctrlr=nil, relative_to=0)
-    fx = FXMLLoader.new()
-    fx.location = if JRubyFX::Application.in_jar?
-      # If we are in a jar file, use the class loader to get the file from the jar (like java)
-      JRuby.runtime.jruby_class_loader.get_resource(filename)
-    else
-      if relative_to.is_a? Fixnum or relative_to == nil
+  def self.load_fxml_resource filename, controller = nil, relative_to = nil
+    fx = FXMLLoader.new
+    fx.location =
+      if JRubyFX::Application.in_jar?
+        # If we are in a jar file, use the class loader to get the file from the jar (like java)
+        JRuby.runtime.jruby_class_loader.get_resource filename
+      else
         # caller[0] returns a string like so:
         # "/home/user/.rvm/rubies/jruby-1.7.1/lib/ruby/1.9/irb/workspace.rb:80:in `eval'"
-        # and then we use a regex to filter out the filename
-        relative_to = caller[relative_to||0][/(.*):[0-9]+:in /, 1] # the 1 is the first match, aka everything up to the :
+        relative_to ||= caller[1][/(.*):[0-9]+:in /, 1] # the 1 is the first match, aka everything up to the :
+        # If we are in the normal filesystem, create a file url path relative to relative_to or this file
+        URL.new "file:#{File.join File.dirname(relative_to), filename}"
       end
-      # If we are in the normal filesystem, create a normal file url path relative to the main file
-      URL.new(URL.new("file:"), "#{File.dirname(relative_to)}/#{filename}")
-    end
     # we must set this here for JFX to call our events
-    fx.controller = ctrlr
-    return fx.load()
+    fx.controller = controller
+    fx.load
   end
 end
