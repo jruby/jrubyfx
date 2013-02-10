@@ -35,16 +35,16 @@ class SimpleFXApplication < JRubyFX::Application
     #   :relative_to:  path_to_fxml_views
 
     # Minimal:
-    # SimpleFXController.new "Demo.fxml", stage
+    SimpleFXController.new "Demo.fxml", stage
 
     # Full:
-    SimpleFXController.new "Demo.fxml", stage,
-        initialize:   ["Send Stuff", "To initialized"],
-        width:        150,
-        height:       500,
-        fill:         Color::PURPLE,
-        relative_to:  __FILE__,
-        depth_buffer: false
+    # SimpleFXController.new "Demo.fxml", stage,
+    #     initialize:   ["Send Stuff", "To initialized"],
+    #     width:        150,
+    #     height:       500,
+    #     fill:         Color::PURPLE,
+    #     relative_to:  __FILE__,
+    #     depth_buffer: false
 
     # finally, show our app
     stage.show
