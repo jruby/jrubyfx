@@ -26,14 +26,14 @@ module JRubyFX
     # Contains methods to be defined inside all classes that include JRubyFX
     module ClassUtils
       include JRubyFX::FXImports
-      
+
       ##
       # Register your own type for use in the DSL.
       #
       #   class MyFooWidget < Region
       #     #...
       #   end
-      #   #... 
+      #   #...
       #   register_type(MyFooWidget)
       #   register_type(MyFooWidget, "aliased_name")
       #
@@ -63,14 +63,14 @@ module JRubyFX
           end
         end
       end
-      
+
       # Lots of DSL extensions use these methods, so define them here so multiple classes can use them
-      
+
       ##
       # call-seq:
       #   include_add
       #   include_add :child_getter
-      # 
+      #
       # Include a function to add to child list (optional argument) without need
       # to ask for children
       #   include_add
@@ -83,9 +83,9 @@ module JRubyFX
           end
         end
       end
-      
+
       ##
-      # Adds a function to the class that Adds rotate to transform (manually 
+      # Adds a function to the class that Adds rotate to transform (manually
       # added ebcause there is a getRotate on Node already.  Use get_rotate
       # to get property
       def include_rotate
@@ -95,7 +95,7 @@ module JRubyFX
           end
         end
       end
-    
+
       ##
       # Adds a method_missing that automatically calls add if the DSL builds it
       # as the given type.
@@ -120,7 +120,7 @@ module JRubyFX
     end
 
     #--
-    # FIXME: This should be broken up with nice override for each type of 
+    # FIXME: This should be broken up with nice override for each type of
     # fx object so we can manually create static overrides.
     #++
     # The list of snake_case names mapped to full java classes to use for DSL mapping.
@@ -146,7 +146,7 @@ module JRubyFX
           res.merge!(values)
         end
       end)
-    
+
     # List of known overrides for enums.
     ENUM_OVERRIDES = {PathTransition::OrientationType => {:orthogonal_to_tangent => :orthogonal},
       BlendMode => {:src_over => :over, :src_atop => :atop, :color_dodge => :dodge, :color_burn => :burn},
@@ -163,7 +163,7 @@ module JRubyFX
     #
     # Another major portion of the DSL is the ability to implicitly add new
     # created components to their parent on construction.  There are a few
-    # places where this is undesirable.  In order to prevent implicit 
+    # places where this is undesirable.  In order to prevent implicit
     # construction you can add a '!' on the end:
     #   circle!(30)
     # This will construct a Circle but it will not add it into its parent
@@ -172,20 +172,20 @@ module JRubyFX
     def method_missing(name, *args, &block)
       clazz = NAME_TO_CLASSES[name.to_s.gsub(/!$/, '')]
       super unless clazz
-      
+
       build(clazz, *args, &block)
     end
 
     alias :node_method_missing :method_missing
-    
-    # Loads the special symbol to enum converter functions into all methods 
+
+    # Loads the special symbol to enum converter functions into all methods
     # and enums
     def self.load_enum_converter
       # load overrides
       ENUM_OVERRIDES.each do |cls, overrides|
         JRubyFX::Utils::CommonConverters.set_overrides_for cls, overrides
       end
-      
+
       # use reflection to load all enums into all_enums and methods that use them
       # into enum_methods
       mod_list = {
@@ -195,28 +195,28 @@ module JRubyFX
       JRubyFX::DSL::NAME_TO_CLASSES.each do |n,cls|
         cls.java_class.java_instance_methods.each do |method|
           args = method.argument_types.find_all(&:enum?).tap {|i| mod_list[:all] <<  i }
-          
+
           # one and only, must be a setter style
           if method.argument_types.length == 1 and (args.length == method.argument_types.length)
             mod_list[:methods] << [method.name, cls]
           end
         end if cls.respond_to? :ancestors and cls.ancestors.include? JavaProxy # some are not java classes. ignore those
       end
-      
+
       # Get the proper class (only need them once)
       mod_list[:all] = mod_list[:all].flatten.uniq.map {|i| JavaUtilities.get_proxy_class(i) }
-      
+
       # Inject our converter into each enum/class
       mod_list[:all].each do |enum|
         inject_symbol_converter enum
       end
-      
+
       # finally, "override" each method
       mod_list[:methods].each do |method|
         inject_enum_method_converter *method
       end
     end
-    
+
     # Adds `parse_ruby_symbols` method to given enum/class to enable symbol conversion
     def self.inject_symbol_converter(jclass)
       # inject!
@@ -228,13 +228,13 @@ module JRubyFX
         end
       end
     end
-    
+
     # "overrides" given function name in given class to parse ruby symbols into
     # proper enums. Rewrites method name as `my_method=` from `setMyMethod`
     def self.inject_enum_method_converter(jfunc, in_class)
       jclass = in_class.java_class.java_instance_methods.find_all {|i| i.name == jfunc.to_s}[0].argument_types[0]
       jclass = JavaUtilities.get_proxy_class(jclass)
-      
+
       # Define the conversion function as the snake cased assignment, calling parse_ruby
       in_class.class_eval do
         define_method "#{jfunc.to_s.gsub(/^set/i,'').snake_case}=" do |rbenum|
@@ -242,15 +242,15 @@ module JRubyFX
         end
       end
     end
-    
-    # This loads the entire DSL. Call this immediately after requiring 
+
+    # This loads the entire DSL. Call this immediately after requiring
     # this file, but not inside this file, or it requires itself twice.
     def self.load_dsl
-      rt = "#{File.dirname(__FILE__)}/core_ext"
+      rt = "#{File.dirname(__FILE__)}/core_ext".sub /\Ajar:/, ""
       Dir.glob("#{rt}/*.rb") do |file|
         require file
       end
-      
+
       JRubyFX::DSL.load_enum_converter()
     end
   end
