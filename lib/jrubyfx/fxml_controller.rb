@@ -98,31 +98,25 @@ class JRubyFX::Controller
     end
   end
 
-
-  # Get the singleton class, and add special overloads as fx_EVENT_handler
-  # This funky syntax allows us to define methods on self (like define_method("self.method"),
-  # except that does not work)
+  # Get the eigenclass, the singleton class of self, and add event handlers as on_EVENT
+  # This syntax allows us to define methods in class scope (eg: def self.on_touch )
   class << self
-    include JRubyFX::FXImports
-    {:key => KeyEvent,
-      :mouse => MouseEvent,
-      :touch => TouchEvent,
-      :gesture => GestureEvent,
-      :context => ContextMenuEvent,
+    {
+      :key          => KeyEvent,
+      :mouse        => MouseEvent,
+      :touch        => TouchEvent,
+      :gesture      => GestureEvent,
+      :context      => ContextMenuEvent,
       :context_menu => ContextMenuEvent,
-      :drag => DragEvent,
-      :ime => InputMethodEvent,
+      :drag         => DragEvent,
+      :ime          => InputMethodEvent,
       :input_method => InputMethodEvent,
-      :window => WindowEvent,
-      :action => ActionEvent,
-      :generic => Event}.each do |method, klass|
-      #instance_eval on the self instance so that these are defined as class methods
-      self.instance_eval do
-        # define the handy overloads that just pass our arguments in
-        define_method("on_#{method}") do |name, &block|
-          on(name, klass, &block)
-        end
-      end
+      :window       => WindowEvent,
+      :action       => ActionEvent,
+      :generic      => Event
+    }.each do |method, klass|
+      # define the handy overloads that just pass our arguments in
+      define_method("on_#{method}") { |name, &block| on name, klass, &block }
     end
   end
 
