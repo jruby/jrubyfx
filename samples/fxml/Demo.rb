@@ -20,7 +20,7 @@ require 'jrubyfx'
 # Inherit from JRubyFX::Application to create our Application
 class SimpleFXApplication < JRubyFX::Application
   # we must override start to get a stage on application initialization
-  def start stage
+  def start(stage)
     # assign the title
     stage.title = "Simple JavaFX FXML App in pure Ruby"
 
@@ -34,17 +34,10 @@ class SimpleFXApplication < JRubyFX::Application
     #   :initialize => [args]
     #   :relative_to:  path_to_fxml_views
 
-    # Minimal:
-    SimpleFXController.new "Demo.fxml", stage
-
     # Full:
-    # SimpleFXController.new "Demo.fxml", stage,
-    #     initialize:   ["Send Stuff", "To initialized"],
-    #     width:        150,
-    #     height:       500,
-    #     fill:         Color::PURPLE,
-    #     relative_to:  __FILE__,
-    #     depth_buffer: false
+    SimpleFXController.new "Demo.fxml", stage,
+      initialize: ["Send Stuff", "To initialized"],
+      fill: :purple # you can use symbols instead of Color objects
 
     # finally, show our app
     stage.show
@@ -60,7 +53,7 @@ class SimpleFXController < JRubyFX::Controller
   # Setup the View
   ##
 
-  def initialize first, second
+  def initialize(first, second)
     puts "FXML loaded"
     puts "#{first} #{second}"
 
