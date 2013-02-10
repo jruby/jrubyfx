@@ -51,7 +51,30 @@ class SimpleFXController < JRubyFX::Controller
     puts "#{first} #{second}"
 
     # find elements by fx:id or id (prefers non-namespaced id when both present)
-    puts "Find by Ruby magic", send(:AnchorPane), root
+    puts "Find by Ruby magic", send(:AnchorPane), root, nil
+
+    puts "Find single node CSS lookup", find('#AnchorPane'), find!("#root"), nil
+
+    # Save a Node for quick access later
+    @anchor_plane = find('#AnchorPane')
+
+    puts "find returns #{find('#not_found').inspect} when no match."
+    begin
+      find!("#not_found")
+    rescue
+      puts "find! raises exceptions\n"
+    end
+
+    # find elements by simple css selector (case-sensitive)
+    puts "\nFind by basic CSS selector:"
+    ['AnchorPane','Pane','#root','MenuBar','Button'].each do |query|
+      puts "\t#{query} => #{css(query).inspect}"
+    end
+
+    puts "\nComplex CSS doesn't work:"
+    ['MenuBar Menu','MenuBar MenuItem','MenuItem','Menu','[textFill="WHITE"]','[fx|id]'].each do |query|
+      puts "\t#{query} => #{css(query).inspect}"
+    end
   end
 
 
