@@ -15,14 +15,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
-
-# Require JRubyFX library so we can get JRubyFX::Application and JRubyFX::Controller
 require 'jrubyfx'
 
 # Inherit from JRubyFX::Application to create our Application
 class SimpleFXApplication < JRubyFX::Application
   # we must override start to get a stage on application initialization
-  def start(stage)
+  def start stage
     # assign the title
     stage.title = "Simple JavaFX FXML App in pure Ruby"
 
@@ -40,7 +38,7 @@ class SimpleFXApplication < JRubyFX::Application
 end
 
 # Inherit from JRubyFX::Controller to create our controller for this FXML file.
-# You will need one Controller per FXML file under normal conditions.
+# You will need one Controller per FXML file
 class SimpleFXController < JRubyFX::Controller
 
   # Here we declare that AnchorPane is a fx:id in the file so that we have
@@ -50,50 +48,77 @@ class SimpleFXController < JRubyFX::Controller
   # at the id value, NOT the fx:id value. Get rid of id or keep it the same
   fx_id :AnchorPane
 
-  # if one controller will be used for multiple forms, use fx_id_optional
-  # instead of fx_id to avoid warnings that the id can't be found
+  ##
+  # Setup the View
+  ##
 
-  # initialize_ruby is optional, and it is the actual ruby constructor
-  def initialize_ruby(first, second)
-    puts "Ruby new"
-    puts "#{first} #{second}"
-    # note that fx_id's are NOT yet initialized here
-    puts "AnchorPane is '#{@AnchorPane.inspect}' (expected nil)"
-  end
-
-  # Initialize_fxml is optional, and it is called when the fxml file has been loaded
-  # and bound to the fx_id's
-  def initialize_fxml(first, second)
+  def initialize first, second
     puts "FXML loaded"
     puts "#{first} #{second}"
     # fx_id's are initialized
     puts "AnchorPane is '#{@AnchorPane.inspect}' (expected non-nil)"
   end
 
-  # This is how events are defined in code.
+
+  ##
+  # Handle Events
+  ##
+
   # This will be called from FXML by onAction="#click"
-  fx_handler :click do
+  on :click_green do
     puts "Clicked Green"
   end
 
-  # fx_action_handler and fx_handler all the same for standard ActionEvents
-  # you can even register one handler for multiple events by using an array
-  # of names like so:
-  # fx_handler [:event1, :event2] do ... end
-  fx_action_handler :clickbl do
-    puts "Clicked Black"
-    # This is the fx:id linked variable
-    p @AnchorPane
+  # `on_action` and `on` are the same for standard ActionEvents
+  on_action :click_purple do
+    puts "Clicked Purple"
   end
 
   # If you want to capture the ActionEvent object, just request it like this
-  fx_handler :clickre do |arg|
-    puts "Clicked Red"
-    p arg
+  on :click_red do |arg|
+    puts "Clicked Red", arg
   end
 
+  # you can even register one handler for multiple events by using an array
+  on [:click_blue, :click_orange, :click_black] do
+    puts "Clicked Blue, Orange, or Black"
+  end
+
+  # this is a different style
+  on(:quit) { Platform.exit }
+
+  # For key events, you must use on_key
+  on_key :keyPressed do |e|
+    puts "You pressed a key!"
+    puts "Alt: #{e.alt_down?} Ctrl: #{e.control_down?} Shift: #{e.shift_down?} Meta (Windows): #{e.meta_down?} Shortcut: #{e.shortcut_down?}"
+    puts "Key Code: #{e.code} Character: #{e.character.to_i} Text: '#{e.text}'"
+  end
+
+  # For Context menu event, you must use on_context or on_context_menu
+  on_context :cmenu do
+    puts "Context Menu Requested"
+  end
+
+  # Full list of mappings:
+  # on              is for ActionEvent
+  # on_action       is for ActionEvent
+  # on_key          is for KeyEvent
+  # on_mouse        is for MouseEvent
+  # on_touch        is for TouchEvent
+  # on_gesture      is for GestureEvent
+  # on_context      is for ContextMenuEvent
+  # on_context_menu is for ContextMenuEvent
+  # on_drag         is for DragEvent
+  # on_ime          is for InputMethodEvent
+  # on_input_method is for InputMethodEvent
+  # on_window       is for WindowEvent
+  # on_generic      is for Event
+  #
+  # And if you need a custom Event, you can use:
+  # on :name, YourCustomEvent do |e| ... end
+
   # Actually do something: export jar! Found under file menu
-  fx_handler :export_jar do
+  on :export_jar do
 
     # the build function lets you set properties and call functions on an object
     # however, you can't reference stage, scene, or any local methods
@@ -125,35 +150,6 @@ class SimpleFXController < JRubyFX::Controller
       puts "Success!"
     end
   end
-
-  # For key events, you must use fx_key_handler
-  fx_key_handler :keyPressed do |e|
-    puts "You pressed a key!"
-    puts "Alt: #{e.alt_down?} Ctrl: #{e.control_down?} Shift: #{e.shift_down?} Meta (Windows): #{e.meta_down?} Shortcut: #{e.shortcut_down?}"
-    puts "Key Code: #{e.code} Character: #{e.character.to_i} Text: '#{e.text}'"
-  end
-
-  # For Context menu event, you must use fx_context_handler
-  fx_context_handler :cmenu do
-    puts "Context Menu Requested"
-  end
-
-  # Full list of mappings:
-  # fx_key_handler is for KeyEvent
-  # fx_mouse_handler is for MouseEvent
-  # fx_touch_handler is for TouchEvent
-  # fx_gesture_handler is for GestureEvent
-  # fx_context_handler is for ContextMenuEvent
-  # fx_context_menu_handler is for ContextMenuEvent
-  # fx_drag_handler is for DragEvent
-  # fx_ime_handler is for InputMethodEvent
-  # fx_input_method_handler is for InputMethodEvent
-  # fx_window_handler is for WindowEvent
-  # fx_action_handler is for ActionEvent
-  # fx_generic_handler is for Event
-  #
-  # And if you need a custom Event, you can use:
-  # fx_handler :name, YourCustomEvent do |e| ... end
 end
 
 # Launch our application!

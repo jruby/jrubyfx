@@ -6,17 +6,20 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 
-<AnchorPane fx:id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" onKeyPressed="#keyPressed" onContextMenuRequested="#cmenu">
+<AnchorPane fx:id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onContextMenuRequested="#cmenu" onKeyPressed="#keyPressed" prefHeight="200.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml">
   <children>
     <BorderPane prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <center>
-        <Pane fx:id="root" prefHeight="200.0" prefWidth="200.0">
+        <Pane fx:id="root" prefHeight="307.0" prefWidth="600.0">
           <children>
-            <GridPane layoutX="314.0" layoutY="60.0" prefHeight="38.0" prefWidth="198.0">
+            <GridPane layoutX="14.0" layoutY="35.0" prefHeight="85.0" prefWidth="572.0">
               <children>
-                <Button onAction="#click" id="" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-border-radius: 5 0 0 5;&#10;-fx-background-radius: 5 0 0 5;&#10;-fx-background-color: green;&#10;" text="Forward" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <Button onAction="#clickre" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-border-radius: 0 5 5 0;&#10;-fx-background-radius: 0 5 5 0;&#10;-fx-background-color: red;" text="Reverse" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                <Button onAction="#clickbl" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-border-radius: 0;&#10;-fx-background-radius: 0;&#10;-fx-background-color: black" text="Off" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <Button id="" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#click_green" style="-fx-border-radius: 5 0 0 0;&#10;-fx-background-radius: 5 0 0 0;&#10;-fx-background-color: green;&#10;" text="Green" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#click_red" style="-fx-border-radius: 0 5 0 0;&#10;-fx-background-radius: 0 5 0 0;&#10;-fx-background-color: red;" text="Red" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#click_black" style="-fx-border-radius: 0;&#10;-fx-background-radius: 0;&#10;-fx-background-color: black" text="Black" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#click_purple" style="-fx-border-radius: 0;&#10;-fx-background-radius: 0;&#10;-fx-background-color: purple" text="Purple" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#click_orange" style="-fx-border-radius: 0 0 0 5;&#10;-fx-background-radius: 0 0 0 5;&#10;-fx-background-color: orange" text="Orange" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#click_blue" style="-fx-border-radius: 0 0 5 0;&#10;-fx-background-radius: 0 0 5 0;&#10;-fx-background-color: blue" text="Blue" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="1" />
               </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -24,6 +27,7 @@
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
@@ -35,7 +39,8 @@
           <menus>
             <Menu mnemonicParsing="false" text="File">
               <items>
-                <MenuItem mnemonicParsing="false" text="Export this example as a Jar (takes awhile as it has to download 20M of JRuby)" onAction="#export_jar" />
+                <MenuItem mnemonicParsing="false" onAction="#export_jar" text="Export this example as a Jar (takes awhile as it has to download 20M of JRuby)" />
+                <MenuItem mnemonicParsing="false" onAction="#quit" text="Quit" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Edit">
