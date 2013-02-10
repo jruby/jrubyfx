@@ -41,12 +41,6 @@ end
 # You will need one Controller per FXML file
 class SimpleFXController < JRubyFX::Controller
 
-  # Here we declare that AnchorPane is a fx:id in the file so that we have
-  # access to it as @AnchorPane later.
-  # If you have multiple you can comma separate them, or add another
-  # fx_id statement. NOTE! If fx:id and id are different, then this will look
-  # at the id value, NOT the fx:id value. Get rid of id or keep it the same
-  fx_id :AnchorPane
 
   ##
   # Setup the View
@@ -55,8 +49,9 @@ class SimpleFXController < JRubyFX::Controller
   def initialize first, second
     puts "FXML loaded"
     puts "#{first} #{second}"
-    # fx_id's are initialized
-    puts "AnchorPane is '#{@AnchorPane.inspect}' (expected non-nil)"
+
+    # find elements by fx:id or id (prefers non-namespaced id when both present)
+    puts "Find by Ruby magic", send(:AnchorPane), root
   end
 
 
