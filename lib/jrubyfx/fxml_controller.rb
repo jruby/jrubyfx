@@ -49,7 +49,7 @@ class JRubyFX::Controller
   #   stage.setScene(scene);
   #   controller = root.getController();
 
-  def self.new filename, stage, settings={}
+  def self.new(filename, stage, settings={})
     # Inherit from default settings
     settings = {
       width: -1,
@@ -69,14 +69,14 @@ class JRubyFX::Controller
     ctrl.stage = stage
 
     # load the FXML file
-    root = load_fxml_resource filename, ctrl, settings[:relative_to]
+    root = get_fxml_loader(filename, ctrl, settings[:relative_to]).load
 
     # Unless the FXML root node is a scene, wrap that node in a scene
     if root.is_a? Scene
        scene = root
     else
       scene = Scene.new root, settings[:width], settings[:height], settings[:depth_buffer]
-      scene.set_fill settings[:fill]
+      scene.fill = settings[:fill]
     end
 
     # set the controller and stage scene
@@ -91,9 +91,9 @@ class JRubyFX::Controller
     ctrl
   end
 
-  # FXMLLoader#load also calls initalize
+  # FXMLLoader#load also calls initialize
   # if defined, move initialize so we can call it when we're ready
-  def self.method_added meth
+  def self.method_added(meth)
     if meth == :initialize and not @ignore_method_added
       @ignore_method_added = true
       alias_method :initialize_callback, :initialize
@@ -172,7 +172,7 @@ class JRubyFX::Controller
     end
   end
 
-  # Get the eigenclass, the singleton class of self, and add event handlers as on_EVENT
+  # Get the metaclass, the singleton class of self, and add event handlers as on_EVENT
   # This syntax allows us to define methods in class scope (eg: def self.on_touch )
   class << self
     {
@@ -200,7 +200,7 @@ class JRubyFX::Controller
   ##
 
   # searches for an element by id (or fx:id, prefering id)
-  def method_missing meth, *args, &block
+  def method_missing(meth, *args, &block)
     # if the method is an id, return it if scene is attached
     result = find "##{meth}" if @scene
     return result if result
@@ -209,42 +209,41 @@ class JRubyFX::Controller
   end
 
   # return first matched node or nil
-  def find css_selector
+  def find(css_selector)
     @scene.lookup css_selector
   end
 
   # Return first matched node or throw exception
-  def find! css_selector
+  def find!(css_selector)
     res = find(css_selector)
     raise "Selector(#{css_selector}) returned no results!" unless res
     res
   end
 
   # return an array of matched nodes
-  def css css_selector
+  def css(css_selector)
     @scene.get_root.lookup_all(css_selector).map {|e| e}
   end
 
 
   ##
   # call-seq:
-  #   load_fxml_resource(filename) => Parent
-  #   load_fxml_resource(filename, controller_instance) => Parent
-  #   load_fxml_resource(filename, controller_instance, relative_to) => Parent
+  #   get_fxml_loader(filename) => FXMLLoader
+  #   get_fxml_loader(filename, controller_instance) => FXMLLoader
+  #   get_fxml_loader(filename, controller_instance, relative_to) => FXMLLoader
   #
-  # Load a FXML file given a filename and a controller and return the root element
+  # Load a FXML file given a filename and a controller and return the loader
   # relative_to can be a file that this should be relative to, or an index
-  # of the caller number. If you are calling this from a function, pass 0
-  # as you are the immediate caller of this function.
+  # of the caller number.
   # === Examples
-  #   root = JRubyFX::Controller.load_fxml_resource("Demo.fxml")
+  #   root = JRubyFX::Controller.get_fxml_loader("Demo.fxml").load
   #
-  #   root = JRubyFX::Controller.load_fxml_resource("Demo.fxml", my_controller)
+  #   root = JRubyFX::Controller.get_fxml_loader("Demo.fxml", my_controller).load
   #
   # === Equivalent Java
   #   Parent root = FXMLLoader.load(getClass().getResource("Demo.fxml"));
   #
-  def self.load_fxml_resource filename, controller = nil, relative_to = nil
+  def self.get_fxml_loader(filename, controller = nil, relative_to = nil)
     fx = FXMLLoader.new
     fx.location =
       if JRubyFX::Application.in_jar?
@@ -259,6 +258,18 @@ class JRubyFX::Controller
       end
     # we must set this here for JFX to call our events
     fx.controller = controller
+    fx
+  end
+
+  ##
+  # call-seq:
+  #   load_fxml_control(filename, controller_root)
+  #
+  # Loads given filename as the markup for the controller (custom controls)
+  #
+  def self.load_fxml_control(filename, root)
+    fx = get_fxml_loader(filename, root)
+    fx.root = root
     fx.load
   end
 end
