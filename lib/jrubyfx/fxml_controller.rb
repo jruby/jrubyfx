@@ -27,42 +27,47 @@ class JRubyFX::Controller
   # Controllers usually need access to the stage.
   attr_accessor :stage
 
+
+  ##
+  # Event Handlers
+  ##
+
   ##
   # call-seq:
-  #   fx_handler(callback) { |event_info| block } => Method
-  #   fx_handler(callback, EventType) { |event_info| block } => Method
-  #   fx_type_handler(callback) { |event_info| block } => Method
+  #   on(callback) { |event_info| block } => Method
+  #   on(callback, EventType) { |event_info| block } => Method
+  #   on_type(callback) { |event_info| block } => Method
   #
   # Registers a function of name `name` for a FXML defined event with the body in the block
   # Note: there are overrides for most of the default types, so you should never
   # need to manually specify the `type` argument unless you have custom events.
-  # The overrides are in the format fx_*_handler where * is the event type (ex:
-  # fx_key_handler for KeyEvent).
-  # === Overloads
-  # * fx_key_handler is for KeyEvent
-  # * fx_mouse_handler is for MouseEvent
-  # * fx_touch_handler is for TouchEvent
-  # * fx_gesture_handler is for GestureEvent
-  # * fx_context_handler is for ContextMenuEvent
-  # * fx_context_menu_handler is for ContextMenuEvent
-  # * fx_drag_handler is for DragEvent
-  # * fx_ime_handler is for InputMethodEvent
-  # * fx_input_method_handler is for InputMethodEvent
-  # * fx_window_handler is for WindowEvent
-  # * fx_action_handler is for ActionEvent
-  # * fx_generic_handler is for Event
+  # The overrides are in the format on_* where * is the event type (ex: on_key for KeyEvent).
+  #
+  # === Convienence Methods
+  # * on_key           is for KeyEvent
+  # * on_mouse         is for MouseEvent
+  # * on_touch         is for TouchEvent
+  # * on_gesture       is for GestureEvent
+  # * on_context       is for ContextMenuEvent
+  # * on_context_menu  is for ContextMenuEvent
+  # * on_drag          is for DragEvent
+  # * on_ime           is for InputMethodEvent
+  # * on_input_method  is for InputMethodEvent
+  # * on_window        is for WindowEvent
+  # * on_action        is for ActionEvent
+  # * on_generic       is for Event
   #
   # === Examples
-  #   fx_handler :click do
+  #   on :click do
   #     puts "button clicked"
   #   end
   #
-  #   fx_mouse_handler :moved do |event|
+  #   on_mouse :moved do |event|
   #     puts "Mouse Moved"
   #     p event
   #   end
   #
-  #   fx_key_handler :keypress do
+  #   on_key :keypress do
   #     puts "Key Pressed"
   #   end
   #
@@ -82,16 +87,17 @@ class JRubyFX::Controller
   #     System.out.println("Key Pressed");
   #   }
   #
-  def self.fx_handler(names, type=ActionEvent, &block)
+  def self.on(names, type=ActionEvent, &block)
     [names].flatten.each do |name|
       class_eval do
-        #must define this way so block executes in class scope, not static scope
-        define_method(name, block)
-        #the first arg is the return type, the rest are params
+        # must define this way so block executes in class scope, not static scope
+        define_method name, block
+        # the first arg is the return type, the rest are params
         add_method_signature name, [Void::TYPE, type]
       end
     end
   end
+
 
   # Get the singleton class, and add special overloads as fx_EVENT_handler
   # This funky syntax allows us to define methods on self (like define_method("self.method"),
@@ -113,8 +119,8 @@ class JRubyFX::Controller
       #instance_eval on the self instance so that these are defined as class methods
       self.instance_eval do
         # define the handy overloads that just pass our arguments in
-        define_method("fx_#{method}_handler") do |name, &block|
-          fx_handler(name, klass, &block)
+        define_method("on_#{method}") do |name, &block|
+          on(name, klass, &block)
         end
       end
     end
