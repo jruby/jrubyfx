@@ -24,6 +24,15 @@ class JRubyFX::Controller
   java_import 'java.net.URL'
   java_import 'javafx.fxml.FXMLLoader'
 
+  @@default_settings = {
+    width: -1,
+    height: -1,
+    fill: Color::WHITE,
+    depth_buffer: false,
+    relative_to: nil,
+    initialized: nil,
+  }
+
   # Controllers usually need access to the stage.
   attr_accessor :stage, :scene
 
@@ -51,19 +60,13 @@ class JRubyFX::Controller
 
   def self.new(filename, stage, settings={})
     # Inherit from default settings
-    settings = {
-      width: -1,
-      height: -1,
-      fill: Color::WHITE,
-      depth_buffer: false,
-      relative_to: nil,
-      initialized: nil,
-    }.merge settings
+    settings = @@default_settings.merge settings
 
     # Magic self-java-ifying new call. (Creates a Java instance from our ruby)
     self.become_java!
 
-    ctrl = self.allocate # like new, without initialize
+    # like new, without initialize
+    ctrl = self.allocate
 
     # Set the stage so we can reference it if needed later
     ctrl.stage = stage
@@ -73,7 +76,7 @@ class JRubyFX::Controller
 
     # Unless the FXML root node is a scene, wrap that node in a scene
     if root.is_a? Scene
-       scene = root
+      scene = root
     else
       scene = Scene.new root, settings[:width], settings[:height], settings[:depth_buffer]
       scene.fill = settings[:fill]
@@ -81,6 +84,7 @@ class JRubyFX::Controller
 
     # set the controller and stage scene
     ctrl.scene = stage.scene = scene
+    ctrl.instance_variable_set :@nodes_by_id, {}
 
     # Everything is ready, call initialize_callback
     if ctrl.private_methods.include? :initialize_callback
@@ -201,9 +205,11 @@ class JRubyFX::Controller
 
   # searches for an element by id (or fx:id, prefering id)
   def method_missing(meth, *args, &block)
-    # if the method is an id, return it if scene is attached
-    result = find "##{meth}" if @scene
-    return result if result
+    # if scene is attached, and the method is an id of a node in scene
+    if @scene
+      @nodes_by_id[meth] ||= find "##{meth}"
+      return @nodes_by_id[meth] if @nodes_by_id[meth]
+    end
 
     super
   end
