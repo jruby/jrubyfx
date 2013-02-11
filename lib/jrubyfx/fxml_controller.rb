@@ -81,6 +81,7 @@ class JRubyFX::Controller
 
     # set the controller and stage scene
     ctrl.scene = stage.scene = scene
+    ctrl.instance_variable_set :@nodes_by_id, {}
 
     # Everything is ready, call initialize_callback
     if ctrl.private_methods.include? :initialize_callback
@@ -201,9 +202,11 @@ class JRubyFX::Controller
 
   # searches for an element by id (or fx:id, prefering id)
   def method_missing meth, *args, &block
-    # if the method is an id, return it if scene is attached
-    result = find "##{meth}" if @scene
-    return result if result
+    # if scene is attached, and the method is an id of a node in scene
+    if @scene
+      @nodes_by_id[meth] ||= find "##{meth}"
+      return @nodes_by_id[meth] if @nodes_by_id[meth]
+    end
 
     super
   end
