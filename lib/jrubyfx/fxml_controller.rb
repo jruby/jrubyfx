@@ -65,7 +65,8 @@ class JRubyFX::Controller
     # Magic self-java-ifying new call. (Creates a Java instance from our ruby)
     self.become_java!
 
-    ctrl = self.allocate # like new, without initialize
+    # like new, without initialize
+    ctrl = self.allocate
 
     # Set the stage so we can reference it if needed later
     ctrl.stage = stage
@@ -75,7 +76,7 @@ class JRubyFX::Controller
 
     # Unless the FXML root node is a scene, wrap that node in a scene
     if root.is_a? Scene
-       scene = root
+      scene = root
     else
       scene = Scene.new root, settings[:width], settings[:height], settings[:depth_buffer]
       scene.set_fill settings[:fill]
