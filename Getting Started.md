@@ -214,7 +214,7 @@ This basically says that there is a control in the FXML file with the fx:id prop
 	class HelloWorldController < JRubyFX::Controller
 		fx_id :helloLabel
 	
-		fx_handler :sayClick do
+		fx_handler :sayClicked do
 			@helloLabel.text = "You clicked me!"
 		end
 	end
@@ -223,14 +223,14 @@ Whoa, what is the fx_handler stuff? Just think of it like a normal function, but
 
 	(not valid code)
 	fx_handler
-	def sayClick
+	def sayClicked
 		@helloLabel.text = "You clicked me!"
 	end
 
 #### Event types
 onAction uses the default event type, so you can get away with `fx_handler`. If you have a mouse event, keyboard event, etc, then you need to use `fx_mouse_handler` or `fx_key_handler`, respectively. A full list of handlers is in samples/fxml/Demo.rb, or line 102 to 113 of lib/fxml_controller.rb in the sources for JavaFXML (`:mouse => MouseEvent` means fx_mouse_handler handles the native Java `MouseEvent` events). If there is not a custom override, you can use the full version of `fx_handler`:
 
-	fx_handler :click, ActionEvent do
+	fx_handler :sayClicked, ActionEvent do
 		@helloLabel.text = "You clicked me!"
 	end
 
@@ -259,7 +259,7 @@ Code listing for Hello.fxml:
 		    <Font size="66.0" />
 		  </font>
 		</Label>
-		<Button mnemonicParsing="false" onAction="#click" prefHeight="49.0" prefWidth="166.0" text="Click Me!">
+		<Button mnemonicParsing="false" onAction="#sayClicked" prefHeight="49.0" prefWidth="166.0" text="Click Me!">
 		  <font>
 		    <Font size="23.0" />
 		  </font>
@@ -282,7 +282,7 @@ Code listing for Hello.rb:
 	class HelloWorldController < JRubyFX::Controller
 		fx_id :helloLabel
 	
-		fx_handler :click do
+		fx_handler :sayClicked do
 			@helloLabel.text = "You clicked me!"
 		end
 	end
