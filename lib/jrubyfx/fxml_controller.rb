@@ -73,15 +73,8 @@ class JRubyFX::Controller
 
     # set the controller and stage scene
     ctrl.scene = stage.scene = scene
-    ctrl.instance_variable_set :@nodes_by_id, {}
 
-    # Everything is ready, call initialize_callback
-    if ctrl.private_methods.include? :initialize_callback
-      ctrl.send :initialize_callback, *settings[:initialize].to_a
-    end
-
-    # return the controller
-    ctrl
+    # finish init and return
+    ctrl.initialize_controller *settings[:initialize].to_a
   end
-
 end

@@ -64,15 +64,9 @@ module JRubyFX::ControllerBase
 
       # custom controls are their own scene
       ctrl.scene = ctrl
-      ctrl.instance_variable_set :@nodes_by_id, {}
-
-      # Everything is ready, call initialize_callback
-      if ctrl.private_methods.include? :initialize_callback
-        ctrl.send :initialize_callback, *args, &block
-      end
 
       # return the controller
-      ctrl
+      ctrl.initialize_controller *args, &block
     end
 
     #decorator to force becoming java class
@@ -193,6 +187,18 @@ module JRubyFX::ControllerBase
     end
   end
 
+  # Initialize all controllers
+  def initialize_controller(*args, &block)
+    @nodes_by_id = {}
+
+    # Everything is ready, call initialize_callback
+    if private_methods.include? :initialize_callback
+      self.send :initialize_callback, *args, &block
+    end
+
+    #return ourself
+    self
+  end
 
   ##
   #  Node Lookup Methods
