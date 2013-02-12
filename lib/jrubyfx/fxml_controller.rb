@@ -27,7 +27,7 @@ class JRubyFX::Controller
   @@default_settings = {
     width: -1,
     height: -1,
-    fill: Color::WHITE,
+    fill: :white,
     depth_buffer: false,
     relative_to: nil,
     initialized: nil,
