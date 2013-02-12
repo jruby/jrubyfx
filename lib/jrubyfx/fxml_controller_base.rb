@@ -58,7 +58,7 @@ module JRubyFX::ControllerBase
       self.superclass.instance_method(:initialize).bind(ctrl).call
 
       # load the FXML file with the current control as the root
-      fx = ControllerBase.get_fxml_loader(@filename || guess_filename(ctrl), ctrl)
+      fx = ControllerBase.get_fxml_loader(@filename || guess_filename(ctrl), ctrl, @relative_to)
       fx.root = ctrl
       fx.load
 
@@ -75,8 +75,10 @@ module JRubyFX::ControllerBase
     end
 
     # Set the filename of the fxml this control is part of
-    def custom_fxml_control(fxml=nil, name = nil)
+    def custom_fxml_control(fxml=nil, name = nil, relative_to = nil)
       @filename = fxml
+      # snag the filename from the caller
+      @relative_to = relative_to || caller[0][/(.*):[0-9]+:in /, 1]
       register_type self, name
     end
 

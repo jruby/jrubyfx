@@ -86,7 +86,8 @@ class SimpleFXController < JRubyFX::Controller
       puts "\t#{query} => #{css(query).inspect}"
     end
 
-    @anchor_pane.children.add(ComplexControl.new("BOKERKS!!!!!>....."))
+    # you can use custom controls as if they were built in via the dsl
+    @anchor_pane.children.add complex_control("BOKERKS!!!!!>.....")
   end
 
 
