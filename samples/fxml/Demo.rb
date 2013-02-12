@@ -37,7 +37,7 @@ class SimpleFXApplication < JRubyFX::Application
     # Full:
     SimpleFXController.new "Demo.fxml", stage,
       initialize: ["Send Stuff", "To initialized"],
-      fill: :purple # you can use symbols instead of Color objects
+      fill: :wheat # you can use symbols instead of Color objects
 
     # finally, show our app
     stage.show
