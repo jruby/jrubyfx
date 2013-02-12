@@ -33,7 +33,7 @@ begin
   end
 	# Java 8 (after b75) and above has JavaFX as part of the normal distib, only require it if we are 7 or below
   jdk_version = ENV_JAVA["java.runtime.version"]
-  require 'jfxrt.jar' if jdk_version.match(/^1\.[0-7]{1}\..*/) or jdk_version[10..11].to_i < 75
+  require 'jfxrt.jar' if ENV['JFX_DIR'] or jdk_version.match(/^1\.[0-7]{1}\..*/) or jdk_version[10..11].to_i < 75
   testit = Java.javafx.application.Application
 rescue  LoadError, NameError
   puts "JavaFX runtime not found.  Please install Java 7u6 or newer or set environment variable JFX_DIR to the folder that contains jfxrt.jar "
