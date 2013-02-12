@@ -30,16 +30,69 @@ module JRubyFX::ControllerBase
     fill: :white,
     depth_buffer: false,
     relative_to: nil,
-    initialized: nil,
+    initialized: nil
   }
+
+  attr_accessor :scene
+
   def self.included(base)
     base.extend(ClassMethods)
   end
 
+  # class methods for FXML controllers
   module ClassMethods
     include JRubyFX
     include JRubyFX::DSL
-    
+
+    # This is the default override for custom controls
+    # Normal FXML controllers will use Control#new
+    def new(*args, &block)
+      # Custom controls don't always need to be pure java
+      self.become_java! if @force_java
+
+      # like new, without initialize
+      ctrl = self.allocate
+
+      # JRuby complains loudly (probably broken behavior) if we don't call the ctor
+      # FIXME: we should be able to take arguments
+      self.superclass.instance_method(:initialize).bind(ctrl).call
+
+      # load the FXML file with the current control as the root
+      fx = ControllerBase.get_fxml_loader(@filename || guess_filename(ctrl), ctrl)
+      fx.root = ctrl
+      fx.load
+
+      # custom controls are their own scene
+      ctrl.scene = ctrl
+      ctrl.instance_variable_set :@nodes_by_id, {}
+
+      # Everything is ready, call initialize_callback
+      if ctrl.private_methods.include? :initialize_callback
+        ctrl.send :initialize_callback, *args, &block
+      end
+
+      # return the controller
+      ctrl
+    end
+
+    #decorator to force becoming java class
+    def become_java
+      @force_java = true
+    end
+
+    # Set the filename of the fxml this control is part of
+    def custom_fxml_control(fxml=nil, name = nil)
+      @filename = fxml
+      register_type self, name
+    end
+
+    # guess the fxml filename if nobody set it
+    def guess_filename(obj)
+      firstTry = obj.class.name[/([\w]*)$/, 1] + ".fxml"
+      #TODO: check to see if snake_case version is on disk
+      firstTry
+    end
+
     # FXMLLoader#load also calls initialize
     # if defined, move initialize so we can call it when we're ready
     def method_added(meth)
@@ -120,9 +173,6 @@ module JRubyFX::ControllerBase
         end
       end
     end
-
-    # Get the metaclass, the singleton class of self, and add event handlers as on_EVENT
-    # This syntax allows us to define methods in class scope (eg: def self.on_touch )
 
     {
       :key          => KeyEvent,
@@ -210,17 +260,5 @@ module JRubyFX::ControllerBase
     # we must set this here for JFX to call our events
     fx.controller = controller
     fx
-  end
-
-  ##
-  # call-seq:
-  #   load_fxml_control(filename, controller_root)
-  #
-  # Loads given filename as the markup for the controller (custom controls)
-  #
-  def self.load_fxml_control(filename, root)
-    fx = get_fxml_loader(filename, root)
-    fx.root = root
-    fx.load
   end
 end

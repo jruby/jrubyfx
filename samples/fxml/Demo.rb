@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =end
 require 'jrubyfx'
+require_relative 'complex_control'
 
 # Inherit from JRubyFX::Application to create our Application
 class SimpleFXApplication < JRubyFX::Application
@@ -84,6 +85,8 @@ class SimpleFXController < JRubyFX::Controller
     ['MenuBar Menu','MenuBar MenuItem','MenuItem','Menu','[textFill="WHITE"]','[fx|id]'].each do |query|
       puts "\t#{query} => #{css(query).inspect}"
     end
+
+    @anchor_pane.children.add(ComplexControl.new("BOKERKS!!!!!>....."))
   end
 
 

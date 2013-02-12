@@ -23,7 +23,7 @@ class JRubyFX::Controller
   include JRubyFX::ControllerBase
 
   # Controllers usually need access to the stage.
-  attr_accessor :stage, :scene
+  attr_accessor :stage
 
   ##
   # Construction as a Java Class
