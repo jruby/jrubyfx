@@ -18,7 +18,7 @@ limitations under the License.
 require 'jrubyfx'
 
 # Inherit from this class for FXML controllers
-module JRubyFX::ControllerBase
+module JRubyFX::Control
   include JRubyFX
   include JRubyFX::DSL
   java_import 'java.net.URL'

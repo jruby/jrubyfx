@@ -16,11 +16,11 @@ limitations under the License.
 =end
 
 require 'jrubyfx'
-require_relative 'fxml_controller_base'
+require_relative 'fxml_control'
 
 # Inherit from this class for FXML controllers
 class JRubyFX::Controller
-  include JRubyFX::ControllerBase
+  include JRubyFX::Control
 
   # Controllers usually need access to the stage.
   attr_accessor :stage

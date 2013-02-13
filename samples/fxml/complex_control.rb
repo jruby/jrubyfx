@@ -1,8 +1,7 @@
 require 'jrubyfx'
 
 class ComplexControl < Java::javafx::scene::layout::BorderPane
-  include JRubyFX::ControllerBase
-  custom_fxml_control
+  include JRubyFX::Control
 
   def initialize(text)
     @textBox = textBox
