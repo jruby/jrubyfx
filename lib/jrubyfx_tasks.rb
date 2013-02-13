@@ -19,7 +19,6 @@ limitations under the License.
 require 'open-uri'
 require 'rake'
 require 'tmpdir'
-require "ant"
 require "pathname"
 
 module JRubyFX
@@ -108,6 +107,9 @@ module JRubyFX
       if ENV_JAVA["java.runtime.version"].match(/^1\.[0-7]{1}\..*/)
         raise "You must install JDK 8 to use the native-bundle packaging tools. You can still create an executable jar, though."
       end
+
+      # the native bundling uses ant
+      require "ant"
       
       output_jar = Pathname.new(output_jar)
       dist_dir = output_jar.parent
