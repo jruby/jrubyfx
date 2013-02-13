@@ -31,10 +31,15 @@ begin
       jfx_path.gsub(/[\/\\][amdix345678_]+$/, "") # strip i386 or amd64 (including variants). TODO: ARM
     end
   end
-	# Java 8 (after b75) and above has JavaFX as part of the normal distib, only require it if we are 7 or below
-  jdk_version = ENV_JAVA["java.runtime.version"]
-  require 'jfxrt.jar' if ENV['JFX_DIR'] or jdk_version.match(/^1\.[0-7]{1}\..*/) or (jdk_version.match(/^1\.[8]{1}\..*/) and jdk_version.match(/-b(\d+)$/)[-1].to_i < 75)
-  testit = Java.javafx.application.Application
+
+  # Java 8 (after ea-b75) and above has JavaFX as part of the normal distib, only require it if we are 7 or below
+  jre = ENV_JAVA["java.runtime.version"].match %r{^(?<version>(?<major>\d+)\.(?<minor>\d+))\.(?<patch>\d+)(_\d+)?-?(?<release>ea|u\d)?(-?b(?<build>\d+))?}
+  require 'jfxrt.jar' if ENV['JFX_DIR'] or
+    jre[:version].to_f < 1.8 or
+    (jre[:version].to_f == 1.8 and jre[:release] == 'ea' and jre[:build].to_i < 75)
+
+  # Attempt to load a javafx class
+  Java.javafx.application.Application
 rescue  LoadError, NameError
   puts "JavaFX runtime not found.  Please install Java 7u6 or newer or set environment variable JFX_DIR to the folder that contains jfxrt.jar "
   puts "If you have Java 7u6 or later, this is a bug. Please report to the issue tracker on github. Include your OS version, 32/64bit, and architecture (x86, ARM, PPC, etc)"
