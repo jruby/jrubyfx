@@ -37,6 +37,9 @@ module JRubyFX::Control
 
   def self.included(base)
     base.extend(ClassMethods)
+    # register ourselves as a control. overridable with custom_fxml_control
+    base.instance_variable_set("@relative_to", caller[0][/(.*):[0-9]+:in /, 1])
+    register_type base
   end
 
   # class methods for FXML controllers
@@ -48,17 +51,17 @@ module JRubyFX::Control
     # Normal FXML controllers will use Control#new
     def new(*args, &block)
       # Custom controls don't always need to be pure java
-      self.become_java! if @force_java
+      become_java! if @force_java
 
       # like new, without initialize
-      ctrl = self.allocate
+      ctrl = allocate
 
       # JRuby complains loudly (probably broken behavior) if we don't call the ctor
       # FIXME: we should be able to take arguments
       self.superclass.instance_method(:initialize).bind(ctrl).call
 
       # load the FXML file with the current control as the root
-      fx = ControllerBase.get_fxml_loader(@filename || guess_filename(ctrl), ctrl, @relative_to)
+      fx = Control.get_fxml_loader(@filename || guess_filename(ctrl), ctrl, @relative_to)
       fx.root = ctrl
       fx.load
 
@@ -79,7 +82,7 @@ module JRubyFX::Control
       @filename = fxml
       # snag the filename from the caller
       @relative_to = relative_to || caller[0][/(.*):[0-9]+:in /, 1]
-      register_type self, name
+      register_type(self, name) if name
     end
 
     # guess the fxml filename if nobody set it

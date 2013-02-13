@@ -52,16 +52,16 @@ class JRubyFX::Controller
     settings = @@default_settings.merge settings
 
     # Magic self-java-ifying new call. (Creates a Java instance from our ruby)
-    self.become_java!
+    become_java!
 
     # like new, without initialize
-    ctrl = self.allocate
+    ctrl = allocate
 
     # Set the stage so we can reference it if needed later
     ctrl.stage = stage
 
     # load the FXML file
-    root = ControllerBase.get_fxml_loader(filename, ctrl, settings[:relative_to]).load
+    root = Control.get_fxml_loader(filename, ctrl, settings[:relative_to]).load
 
     # Unless the FXML root node is a scene, wrap that node in a scene
     if root.is_a? Scene
