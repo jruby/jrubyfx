@@ -38,7 +38,7 @@ module JRubyFX::Control
   module ClassMethods
     include JRubyFX::DSL
 
-
+    #nested including
     def included(base)
       base.extend(JRubyFX::Control::ClassMethods)
       # register ourselves as a control. overridable with custom_fxml_control
@@ -52,7 +52,9 @@ module JRubyFX::Control
     # Normal FXML controllers will use Control#new
     def new(*args, &block)
       # Custom controls don't always need to be pure java
-      become_java! if @force_java
+      puts "Force java is"
+      p @force_java
+      become_java!
 
       # like new, without initialize
       ctrl = allocate
@@ -156,6 +158,7 @@ module JRubyFX::Control
     def on(names, type=ActionEvent, &block)
       [names].flatten.each do |name|
         class_eval do
+          puts "defining #{name} on #{self}"
           # must define this way so block executes in class scope, not static scope
           define_method name, block
           # the first arg is the return type, the rest are params
@@ -202,7 +205,7 @@ module JRubyFX::Control
     @nodes_by_id = {}
 
     # custom controls are their own scene
-    self.scene = self
+    self.scene = self unless @scene
 
     # Everything is ready, call initialize_callback
     if private_methods.include? :initialize_callback
@@ -219,6 +222,7 @@ module JRubyFX::Control
 
   # searches for an element by id (or fx:id, prefering id)
   def method_missing(meth, *args, &block)
+    p meth, 'is missing', @scene
     # if scene is attached, and the method is an id of a node in scene
     if @scene
       @nodes_by_id[meth] ||= find "##{meth}"

@@ -31,8 +31,6 @@ module JRubyFX::Controller
     initialized: nil
   }
 
-  @@force_java = true
-
   # Controllers usually need access to the stage.
   attr_accessor :stage
 
@@ -64,6 +62,8 @@ module JRubyFX::Controller
 
     # Set the stage so we can reference it if needed later
     self.stage = stage
+    puts "about to load #{filename} into #{self}"
+    p self.methods
 
     # load the FXML file
     root = Control.get_fxml_loader(filename, self, settings[:relative_to]).load
@@ -77,7 +77,7 @@ module JRubyFX::Controller
     end
 
     # set the controller and stage scene
-    stage.scene = scene
+    @scene = stage.scene = scene
 
     finish_initialization *settings[:initialize].to_a
   end
