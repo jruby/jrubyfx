@@ -29,31 +29,25 @@ module JRubyFX::Control
     base.extend(ClassMethods)
     # register ourselves as a control. overridable with custom_fxml_control
     base.instance_variable_set("@relative_to", caller[0][/(.*):[0-9]+:in /, 1])
-    puts "including (#{base.is_a? Class}) #{self.inspect} => #{base.inspect}..."
     register_type base if base.is_a? Class
-    puts "included (#{base.is_a? Class}) #{self.inspect} => #{base.inspect}"
   end
 
   # class methods for FXML controllers
   module ClassMethods
     include JRubyFX::DSL
 
-    #nested including
+    #nested including, TODO: don't duplicate this
     def included(base)
       base.extend(JRubyFX::Control::ClassMethods)
       # register ourselves as a control. overridable with custom_fxml_control
       base.instance_variable_set("@relative_to", caller[0][/(.*):[0-9]+:in /, 1])
-    puts "including2 (#{base.is_a? Class}) (#{caller[0][/(.*):[0-9]+:in /, 1]}) #{self.inspect} => #{base.inspect}..."
-    JRubyFX::DSL::ClassUtils.register_type base if base.is_a? Class
-    puts "included2 (#{base.is_a? Class}) #{self.inspect} => #{base.inspect}"
+      JRubyFX::DSL::ClassUtils.register_type base if base.is_a? Class
     end
 
     # This is the default override for custom controls
     # Normal FXML controllers will use Control#new
     def new(*args, &block)
-      # Custom controls don't always need to be pure java
-      puts "Force java is"
-      p @force_java
+      # Custom controls don't always need to be pure java, but oh well...
       become_java!
 
       # like new, without initialize
@@ -61,7 +55,7 @@ module JRubyFX::Control
 
       # return the controller
       ctrl.initialize_controller({relative_to: @relative_to,
-          filename: @filename || guess_filename(self)},
+          filename: @filename || guess_filename(ctrl)},
         *args, &block)
     end
 
@@ -158,7 +152,6 @@ module JRubyFX::Control
     def on(names, type=ActionEvent, &block)
       [names].flatten.each do |name|
         class_eval do
-          puts "defining #{name} on #{self}"
           # must define this way so block executes in class scope, not static scope
           define_method name, block
           # the first arg is the return type, the rest are params
@@ -222,7 +215,6 @@ module JRubyFX::Control
 
   # searches for an element by id (or fx:id, prefering id)
   def method_missing(meth, *args, &block)
-    p meth, 'is missing', @scene
     # if scene is attached, and the method is an id of a node in scene
     if @scene
       @nodes_by_id[meth] ||= find "##{meth}"

@@ -62,8 +62,6 @@ module JRubyFX::Controller
 
     # Set the stage so we can reference it if needed later
     self.stage = stage
-    puts "about to load #{filename} into #{self}"
-    p self.methods
 
     # load the FXML file
     root = Control.get_fxml_loader(filename, self, settings[:relative_to]).load

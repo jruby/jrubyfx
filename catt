@@ -1,0 +1,41 @@
+diff --git a/lib/jrubyfx/fxml_controller_base.rb b/lib/jrubyfx/fxml_controller_base.rb
+index 04c0b4f..7660408 100644
+--- a/lib/jrubyfx/fxml_controller_base.rb
++++ b/lib/jrubyfx/fxml_controller_base.rb
+@@ -54,8 +54,8 @@ module JRubyFX::ControllerBase
+       ctrl = self.allocate
+ 
+       # JRuby complains loudly (probably broken behavior) if we don't call the ctor
+-      # FIXME: we should be able to take arguments
+-      self.superclass.instance_method(:initialize).bind(ctrl).call
++      super_args = @initialize_super.call(*args) if @initialize_super
++      self.superclass.instance_method(:initialize).bind(ctrl).call *super_args.to_a
+ 
+       # load the FXML file with the current control as the root
+       fx = ControllerBase.get_fxml_loader(@filename || guess_filename(ctrl), ctrl, @relative_to)
+@@ -82,6 +82,10 @@ module JRubyFX::ControllerBase
+       register_type self, name
+     end
+ 
++    def initialize_super(&block)
++      @initialize_super = block
++    end
++
+     # guess the fxml filename if nobody set it
+     def guess_filename(obj)
+       firstTry = obj.class.name[/([\w]*)$/, 1] + ".fxml"
+diff --git a/samples/fxml/complex_control.rb b/samples/fxml/complex_control.rb
+index 8f23ec8..8f2011e 100644
+--- a/samples/fxml/complex_control.rb
++++ b/samples/fxml/complex_control.rb
+@@ -3,6 +3,10 @@ require 'jrubyfx'
+ class ComplexControl < Java::javafx::scene::layout::BorderPane
+   include JRubyFX::ControllerBase
+   custom_fxml_control
++  
++  initialize_super do |text|
++    [] #put args to super here
++  end
+ 
+   def initialize(text)
+     @textBox = textBox
