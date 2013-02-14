@@ -19,19 +19,9 @@ require 'jrubyfx'
 
 # Inherit from this class for FXML controllers
 module JRubyFX::Control
-  include JRubyFX
   include JRubyFX::DSL
   java_import 'java.net.URL'
   java_import 'javafx.fxml.FXMLLoader'
-
-  @@default_settings = {
-    width: -1,
-    height: -1,
-    fill: :white,
-    depth_buffer: false,
-    relative_to: nil,
-    initialized: nil
-  }
 
   attr_accessor :scene
 

@@ -19,8 +19,17 @@ require 'jrubyfx'
 require_relative 'fxml_control'
 
 # Inherit from this class for FXML controllers
-class JRubyFX::Controller
+module JRubyFX::Controller
   include JRubyFX::Control
+
+  DEFAULT_SETTINGS = {
+    width: -1,
+    height: -1,
+    fill: :white,
+    depth_buffer: false,
+    relative_to: nil,
+    initialized: nil
+  }
 
   # Controllers usually need access to the stage.
   attr_accessor :stage
@@ -49,7 +58,7 @@ class JRubyFX::Controller
 
   def self.new(filename, stage, settings={})
     # Inherit from default settings
-    settings = @@default_settings.merge settings
+    settings = DEFAULT_SETTINGS.merge settings
 
     # Magic self-java-ifying new call. (Creates a Java instance from our ruby)
     become_java!
