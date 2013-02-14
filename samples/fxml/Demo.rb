@@ -45,10 +45,10 @@ class SimpleFXApplication < JRubyFX::Application
   end
 end
 
-# Inherit from JRubyFX::Controller to create our controller for this FXML file.
+# Include JRubyFX::Controller to create our controller for this FXML file.
 # You will need one Controller per FXML file
-class SimpleFXController < JRubyFX::Controller
-
+class SimpleFXController
+  include JRubyFX::Controller
 
   ##
   # Setup the View

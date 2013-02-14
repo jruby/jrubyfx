@@ -31,6 +31,8 @@ module JRubyFX::Controller
     initialized: nil
   }
 
+  @@force_java = true
+
   # Controllers usually need access to the stage.
   attr_accessor :stage
 
@@ -56,21 +58,15 @@ module JRubyFX::Controller
   #   stage.setScene(scene);
   #   controller = root.getController();
 
-  def self.new(filename, stage, settings={})
-    # Inherit from default settings
-    settings = DEFAULT_SETTINGS.merge settings
-
-    # Magic self-java-ifying new call. (Creates a Java instance from our ruby)
-    become_java!
-
-    # like new, without initialize
-    ctrl = allocate
+  def initialize_controller(opt, filename, stage, settings={})
+    # Inherit from default settings with overloaded relative_to
+    settings = DEFAULT_SETTINGS.merge({relative_to: self.class.instance_variable_get("@relative_to")}).merge settings
 
     # Set the stage so we can reference it if needed later
-    ctrl.stage = stage
+    self.stage = stage
 
     # load the FXML file
-    root = Control.get_fxml_loader(filename, ctrl, settings[:relative_to]).load
+    root = Control.get_fxml_loader(filename, self, settings[:relative_to]).load
 
     # Unless the FXML root node is a scene, wrap that node in a scene
     if root.is_a? Scene
@@ -81,9 +77,8 @@ module JRubyFX::Controller
     end
 
     # set the controller and stage scene
-    ctrl.scene = stage.scene = scene
+    stage.scene = scene
 
-    # finish init and return
-    ctrl.initialize_controller *settings[:initialize].to_a
+    finish_initialization *settings[:initialize].to_a
   end
 end

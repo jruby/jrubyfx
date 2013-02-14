@@ -29,13 +29,24 @@ module JRubyFX::Control
     base.extend(ClassMethods)
     # register ourselves as a control. overridable with custom_fxml_control
     base.instance_variable_set("@relative_to", caller[0][/(.*):[0-9]+:in /, 1])
-    register_type base
+    puts "including (#{base.is_a? Class}) #{self.inspect} => #{base.inspect}..."
+    register_type base if base.is_a? Class
+    puts "included (#{base.is_a? Class}) #{self.inspect} => #{base.inspect}"
   end
 
   # class methods for FXML controllers
   module ClassMethods
-    include JRubyFX
     include JRubyFX::DSL
+
+
+    def included(base)
+      base.extend(JRubyFX::Control::ClassMethods)
+      # register ourselves as a control. overridable with custom_fxml_control
+      base.instance_variable_set("@relative_to", caller[0][/(.*):[0-9]+:in /, 1])
+    puts "including2 (#{base.is_a? Class}) (#{caller[0][/(.*):[0-9]+:in /, 1]}) #{self.inspect} => #{base.inspect}..."
+    JRubyFX::DSL::ClassUtils.register_type base if base.is_a? Class
+    puts "included2 (#{base.is_a? Class}) #{self.inspect} => #{base.inspect}"
+    end
 
     # This is the default override for custom controls
     # Normal FXML controllers will use Control#new
@@ -46,20 +57,10 @@ module JRubyFX::Control
       # like new, without initialize
       ctrl = allocate
 
-      # JRuby complains loudly (probably broken behavior) if we don't call the ctor
-      # FIXME: we should be able to take arguments
-      self.superclass.instance_method(:initialize).bind(ctrl).call
-
-      # load the FXML file with the current control as the root
-      fx = Control.get_fxml_loader(@filename || guess_filename(ctrl), ctrl, @relative_to)
-      fx.root = ctrl
-      fx.load
-
-      # custom controls are their own scene
-      ctrl.scene = ctrl
-
       # return the controller
-      ctrl.initialize_controller *args, &block
+      ctrl.initialize_controller({relative_to: @relative_to,
+          filename: @filename || guess_filename(self)},
+        *args, &block)
     end
 
     #decorator to force becoming java class
@@ -183,8 +184,25 @@ module JRubyFX::Control
   end
 
   # Initialize all controllers
-  def initialize_controller(*args, &block)
+  def initialize_controller(options={}, *args, &block)
+
+    # JRuby complains loudly (probably broken behavior) if we don't call the ctor
+    # FIXME: we should be able to take arguments
+    self.class.superclass.instance_method(:initialize).bind(self).call
+
+    # load the FXML file with the current control as the root
+    fx = Control.get_fxml_loader(options[:filename], self, options[:relative_to])
+    fx.root = self
+    fx.load
+
+    finish_initialization *args, &block
+  end
+
+  def finish_initialization(*args, &block)
     @nodes_by_id = {}
+
+    # custom controls are their own scene
+    self.scene = self
 
     # Everything is ready, call initialize_callback
     if private_methods.include? :initialize_callback
