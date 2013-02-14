@@ -43,7 +43,7 @@ require 'jrubyfx'
 class #{name_guess}Application < JRubyFX::Application
   def start(stage)
     with(stage, title: "#{name_guess}", width: 600, height: 400)
-    #{name_guess}Controller.load_fxml("#{File.basename(fxml)}", stage)
+    #{name_guess}Controller.new("#{File.basename(fxml)}", stage)
     stage.show()
   end
 end
@@ -51,19 +51,29 @@ end
 class #{name_guess}Controller < JRubyFX::Controller
 END
 
+  fx_ids = [nil]
   File.open(fxml, "r") do |fx|
     handlers = "\n"
+
     fx.each_line do |line|
       line.scan(/fx:id="([^ "':]+)"/) do |match| 
-        output << "  fx_id :#{match[0]}\n"
+        fx_ids << match[0]
       end
       # TODO: may not work with funky non-latin characters
       # Yes, I used regex, yes its xml, yes I now have two problems.
       line.scan(/on((([A-Z]*[a-z]*)*?)[A-Z]+[a-z]+)="#([^ "':]+)"/) do |match| 
-        handlers << "  fx_#{match[1].snake_case}#{(match[1].length >0 ? "_" : "")}handler :#{match[3]} do |event|\n    # TODO: Auto-generated event handler\n"
+        handlers <<
+          if match[2]
+           "  on_#{match[1].snake_case} :#{match[3]} do |event|\n"
+          else
+            "  on :#{match[3]} do |event|\n"
+          end
+        handlers << "    # TODO: Auto-generated event handler\n"
         handlers << "    puts \"#{match[0]} event '#{match[3]}' called\"\n  end\n\n"
       end
     end
+    output << "\n  # nodes with ruby method-like fx:ids may be accessed directly"
+    output << "\n  def initialize#{fx_ids.join "\n    # "}\n  end\n"
     output << handlers
   end
   
