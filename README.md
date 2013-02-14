@@ -17,7 +17,7 @@ gem install jrubyfx
 
 Manual Build and Install
 -----
-Build is done using rake/gem/bundler/rdoc. You obviously need JRuby, Java 1.7 (with JavaFX) also.
+Build is done using rake/gem/bundler/rdoc. You need JRuby (1.9 mode), Java >1.6 with JavaFX, but Java 1.7 or 1.8 are recommended. Building native application packages requires JDK 8.
 
 ```text
 rake install
@@ -90,8 +90,7 @@ If you want rdoc, run `rake rdoc`.
 Issues
 ------
 * You must NOT set fx:controller in the FXML files. At the moment, due to JRuby bugs, Java is unable
-  to initialize Ruby objects in this way. See Demo.rb for proper way to set the controller (passing it
-  in to load_fxml())
+  to initialize Ruby objects in this way. See Demo.rb for the proper way to set the controller (passing the fxml and stage into Controller#new)
 * You must use the provided JavaFXImpl::Launcher to launch the app (aka: call _yourFXApplicationClass_.launch()). This is due to the same JRuby bugs
   as above.
 * Errors loading jfxrt.jar are bugs. Please report if you encounter this issue, tell us your platform,

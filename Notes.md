@@ -78,4 +78,13 @@ However, if you DON'T want this behavior, append a ! to the end of the type. ex:
 # FXML Controllers
 Due to limitations in JRuby, you cannot place fx:controller attributes in fxml files. Similarly, you can't place ruby-only controls in FXML files, though you can add them later once FXML has loaded.
 
-When creating controllers, `Controller.new` does NOT call `initialize`, as `initialize` is magically called by `FXMLLoader`. Instead, `initialize` has been split up into `initialize_ruby`, which is called by `new`, and `initialize_fxml`, which is called when the fxml has been loaded, and all fx_id's have been bound
+When creating controllers, `Controller.new` calls `initialize` after the FXML has been loaded. Nodes with fx:ids (or plain ids) can be accessed by missing_method calls (`my_fx_id` or `send(:NonMethodCaseFXID)` if the id is uppercase). They nodes are looked up on demand and cached for rapid access later (there is no need to create instance variables).
+
+### Finding nodes
+
+	my_fx_id    # node or raises MethodMissing
+	send(:FXID) # node or raises MethodMissing
+	find(css)   # returns one node or nil
+	find!(css)  # returns one node or raises an exception
+	css(css)    # returns all matching nodes or an empty array
+	scene[css]  # returns all matching nodes or an empty array
