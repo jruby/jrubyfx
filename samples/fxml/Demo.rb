@@ -36,7 +36,7 @@ class SimpleFXApplication < JRubyFX::Application
     #   :relative_to:  path_to_fxml_views
 
     # Full:
-    SimpleFXController.new "Demo.fxml", stage,
+    SimpleFXController.load_into stage, "Demo.fxml",
       initialize: ["Send Stuff", "To initialized"],
       fill: :wheat # you can use symbols instead of Color objects
 
