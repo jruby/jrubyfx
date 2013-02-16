@@ -72,9 +72,9 @@ module JRubyFX::Controller
     #   stage.setScene(scene);
     #   controller = root.getController();
 
-    def load_into(stage, filename, settings={})
+    def load_into(stage, settings={})
       # Inherit from default settings with overloaded relative_to
-      settings = DEFAULT_SETTINGS.merge({relative_to: self.class.instance_variable_get("@relative_to")}).merge settings
+      settings = DEFAULT_SETTINGS.merge({relative_to: self.instance_variable_get("@relative_to")}).merge settings
 
       # Custom controls don't always need to be pure java, but oh well...
       become_java!
@@ -85,6 +85,8 @@ module JRubyFX::Controller
       # Set the stage so we can reference it if needed later
       ctrl.stage = stage
 
+      filename = settings[:filename] || self.instance_variable_get("@filename") || guess_filename(ctrl)
+      
       # load the FXML file
       root = Controller.get_fxml_loader(filename, ctrl, settings[:relative_to]).load
 
