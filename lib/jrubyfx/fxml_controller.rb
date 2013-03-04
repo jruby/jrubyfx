@@ -19,8 +19,8 @@ require 'jrubyfx'
 require_relative 'fxml_control'
 
 # Inherit from this class for FXML controllers
-module JRubyFX::Controller
-  include JRubyFX::Control
+module JRubyFX::ControllerFAIL
+  include JRubyFX::Controller
 
   DEFAULT_SETTINGS = {
     width: -1,

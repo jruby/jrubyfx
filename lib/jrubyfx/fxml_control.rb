@@ -18,12 +18,22 @@ limitations under the License.
 require 'jrubyfx'
 
 # Inherit from this class for FXML controllers
-module JRubyFX::Control
+module JRubyFX::Controller
   include JRubyFX::DSL
   java_import 'java.net.URL'
   java_import 'javafx.fxml.FXMLLoader'
 
-  attr_accessor :scene
+  DEFAULT_SETTINGS = {
+    width: -1,
+    height: -1,
+    fill: :white,
+    depth_buffer: false,
+    relative_to: nil,
+    initialized: nil
+  }
+
+  # Controllers usually need access to the stage.
+  attr_accessor :stage, :scene
 
   def self.included(base)
     base.extend(ClassMethods)
@@ -38,10 +48,59 @@ module JRubyFX::Control
 
     #nested including, TODO: don't duplicate this
     def included(base)
-      base.extend(JRubyFX::Control::ClassMethods)
+      base.extend(JRubyFX::Controller::ClassMethods)
       # register ourselves as a control. overridable with custom_fxml_control
       base.instance_variable_set("@relative_to", caller[0][/(.*):[0-9]+:in /, 1])
       JRubyFX::DSL::ClassUtils.register_type base if base.is_a? Class
+    end
+
+    # Load given fxml file onto the given stage. `settings` is an optional hash of:
+    # * :initialize => [array of arguments to pass to the initialize function]
+    # * :width => Default width of the Scene
+    # * :height => Default height of the Scene
+    # * :fill => Fill color of the Scene's background
+    # * :depth_buffer => JavaFX Scene DepthBuffer argument (look it up)
+    # * :relative_to =>  filename search for fxml realtive to this file
+    #
+    # === Examples
+    #
+    #   controller = MyFXController.new "Demo.fxml", stage
+    #
+    # === Equivalent Java
+    #   Parent root = FXMLLoader.load(getClass().getResource("Demo.fxml"));
+    #   Scene scene = new Scene(root);
+    #   stage.setScene(scene);
+    #   controller = root.getController();
+
+    def load_into(stage, settings={})
+      # Inherit from default settings with overloaded relative_to
+      settings = DEFAULT_SETTINGS.merge({relative_to: self.instance_variable_get("@relative_to"),
+        filename: self.instance_variable_get("@filename") || guess_filename(ctr)}).merge settings
+
+      # Custom controls don't always need to be pure java, but oh well...
+      become_java!
+
+      # like new, without initialize
+      ctrl = allocate
+
+      # Set the stage so we can reference it if needed later
+      ctrl.stage = stage
+
+      # load the FXML file
+      root = Controller.get_fxml_loader(settings[:filename], ctrl, settings[:relative_to]).load
+
+      # Unless the FXML root node is a scene, wrap that node in a scene
+      if root.is_a? Scene
+        scene = root
+      else
+        scene = Scene.new root, settings[:width], settings[:height], settings[:depth_buffer]
+        scene.fill = settings[:fill]
+      end
+
+      # set the controller and stage scene
+      ctrl.scene = stage.scene = scene
+
+      ctrl.finish_initialization *settings[:initialize].to_a
     end
 
     # This is the default override for custom controls
@@ -65,7 +124,7 @@ module JRubyFX::Control
     end
 
     # Set the filename of the fxml this control is part of
-    def custom_fxml_control(fxml=nil, name = nil, relative_to = nil)
+    def fxml_root(fxml=nil, name = nil, relative_to = nil)
       @filename = fxml
       # snag the filename from the caller
       @relative_to = relative_to || caller[0][/(.*):[0-9]+:in /, 1]
@@ -179,19 +238,27 @@ module JRubyFX::Control
     end
   end
 
+  #default java ctor
+  def java_ctor(ctor, initialize_arguments)
+    ctor.call
+  end
+
   # Initialize all controllers
   def initialize_controller(options={}, *args, &block)
 
     # JRuby complains loudly (probably broken behavior) if we don't call the ctor
-    # FIXME: we should be able to take arguments
-    self.class.superclass.instance_method(:initialize).bind(self).call
+    java_ctor self.class.superclass.instance_method(:initialize).bind(self), args
 
     # load the FXML file with the current control as the root
-    fx = Control.get_fxml_loader(options[:filename], self, options[:relative_to])
-    fx.root = self
-    fx.load
+    load_fxml_root options[:filename], options[:relative_to]
 
     finish_initialization *args, &block
+  end
+
+  def load_fxml_root(filename, relative_to=nil)
+    fx = Controller.get_fxml_loader(filename, self, relative_to)
+    fx.root = self
+    fx.load
   end
 
   def finish_initialization(*args, &block)
