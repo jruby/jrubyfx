@@ -62,13 +62,13 @@ class SimpleFXController
 
     # find elements by fx:id or id (prefers non-namespaced id when both present)
     # If your element is the same ID as a control type, you must call send or find
-    puts "Find by Ruby magic", rootAnchorPane(), root, nil
+    puts "Find by Ruby magic", _rootAnchorPane(), _root, nil
 
     puts "Find single node CSS lookup", find('#rootAnchorPane'), find!("#root"), nil
 
     # Save a Node for quick access later
     # note that rootAnchorPane is a magic method
-    @anchor_pane = rootAnchorPane
+    @anchor_pane = _rootAnchorPane
 
     puts "find returns #{find('#not_found').inspect} when no match."
     begin

@@ -283,8 +283,8 @@ module JRubyFX::Controller
   # searches for an element by id (or fx:id, prefering id)
   def method_missing(meth, *args, &block)
     # if scene is attached, and the method is an id of a node in scene
-    if @scene
-      @nodes_by_id[meth] ||= find "##{meth}"
+    if @scene and meth.to_s.start_with? "_" # underscore == its an id
+      @nodes_by_id[meth] ||= find "##{meth[1..-1]}"
       return @nodes_by_id[meth] if @nodes_by_id[meth]
     end
 

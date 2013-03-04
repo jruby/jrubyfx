@@ -14,7 +14,7 @@ class ComplexControl < Java::javafx::scene::layout::BorderPane
     #force override
     load_fxml_root "ComplexControl.fxml"
 
-    @textBox = textBox
+    @textBox = _textBox
     @label = lookup("#label")
     @label.text = text
   end
