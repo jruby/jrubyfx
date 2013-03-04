@@ -23,3 +23,12 @@ class Java::javafx::scene::control::Menu
   include_method_missing MenuItem
   include_add :getItems
 end
+
+
+# JRubyFX DSL extensions for JavaFX Menus
+class Java::javafx::scene::control::ContextMenu
+  include JRubyFX::DSL
+
+  include_method_missing MenuItem
+  include_add :getItems
+end
