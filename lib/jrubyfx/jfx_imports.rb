@@ -67,7 +67,7 @@ module JRubyFX
         PauseTransition RotateTransition ScaleTransition SequentialTransition StrokeTransition Timeline Transition TranslateTransition],
         :application => ['Platform'],
         :beans => {
-          :property => ['SimpleDoubleProperty'],
+          :property => %w[SimpleBooleanProperty SimpleDoubleProperty SimpleFloatProperty SimpleIntegerProperty SimpleListProperty SimpleLongProperty SimpleMapProperty SimpleObjectProperty SimpleSetProperty SimpleStringProperty],
           #TODO: import more
           :value => ['ChangeListener']
         },
