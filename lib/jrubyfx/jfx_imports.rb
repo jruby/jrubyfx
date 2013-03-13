@@ -82,7 +82,7 @@ module JRubyFX
           PieChart ScatterChart StackedAreaChart StackedBarChart ValueAxis XYChart],
           :control => %w[Accordion Button Cell CheckBox CheckBoxTreeItem CheckMenuItem ChoiceBox ColorPicker ComboBox ContextMenu Hyperlink
           Label ListCell ListView Menu MenuBar MenuButton MenuItem Pagination PasswordField PopupControl ProgressBar ProgressIndicator RadioButton
-          RadioMenuItem ScrollBar ScrollPane Separator SeparatorMenuItem Slider SplitMenuButton SplitPane Tab TableView TableColumn TabPane TextArea
+          RadioMenuItem ScrollBar ScrollPane Separator SeparatorMenuItem Slider SplitMenuButton SplitPane Tab TableView TableCell TableColumn TabPane TextArea
           TextField TitledPane ToggleButton ToggleGroup ToolBar Tooltip TreeCell TreeItem TreeView ContentDisplay OverrunStyle SelectionMode],
           :effect => %w[Blend BlendMode Bloom BlurType BoxBlur ColorAdjust ColorInput DisplacementMap DropShadow GaussianBlur Glow ImageInput
           InnerShadow Lighting MotionBlur PerspectiveTransform Reflection SepiaTone Shadow],
