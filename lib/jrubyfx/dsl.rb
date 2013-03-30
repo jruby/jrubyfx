@@ -295,8 +295,9 @@ module JRubyFX
 
     def logical_lookup(*args)
       unless self.is_a?(Node)
-        # TODO: flush this out a bit more
-        raise "WHOA! NOT A NODE!"
+        p self
+        p self.to_s
+        return self_test_lookup(*args)
       end
       self.lookup(*args) || self.tap do |x|
         return nil unless x.respond_to? :children

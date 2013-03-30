@@ -21,4 +21,5 @@ class Java::javafx::scene::image::ImageView
   extend JRubyFX::Utils::CommonConverters
 
   converter_for :viewport, [:rectangle2d]
+  # NO: logical_child :image this is not possible as the image is not a node, hnce no id
 end
