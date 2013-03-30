@@ -293,7 +293,7 @@ module JRubyFX::Controller
 
   # return first matched node or nil
   def find(css_selector)
-    @scene.lookup css_selector
+    @scene.lookup(css_selector) || @scene.logical_lookup(css_selector)
   end
 
   # Return first matched node or throw exception

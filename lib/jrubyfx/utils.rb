@@ -23,7 +23,7 @@ class Hash
   # call-seq:
   #   flat_tree_inject() {|results, key, value| block} => array
   #   flat_tree_inject(Hash) {|results, key, value| block} => hash
-  #   
+  #
   # Execute given block against all nodes in the hash tree, returning `results`.
   # Similar to Hash#each except goes into all sub-Hashes
   #
@@ -41,9 +41,9 @@ end
 class String
   # call-seq:
   #   snake_case() => string
-  #   
+  #
   # Converts a CamelCaseString to a snake_case_string
-  # 
+  #
   #   "JavaFX".snake_case #=> "java_fx"
   #
   def snake_case
@@ -52,5 +52,14 @@ class String
     gsub(/([a-z\d])([A-Z])/,'\1_\2').
     tr("-", "_").
     downcase
+  end
+end
+
+module Enumerable
+  def map_find(&block)
+    m = {}
+    m[self.find do |i|
+      m[i] = block.call(i)
+    end]
   end
 end

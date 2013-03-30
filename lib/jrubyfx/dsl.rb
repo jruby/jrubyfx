@@ -97,6 +97,33 @@ module JRubyFX
       end
 
       ##
+      # Adds a function to the class to override lookup to properly search
+      # logical trees
+      def logical_children(prop_name)
+        self.class_eval do
+          define_method :logical_lookup do |*args|
+            self.lookup(*args)|| self.send(prop_name).tap do |item|
+              return item.map_find {|i| i.logical_lookup(*args)}
+            end
+          end
+        end
+      end
+
+      ##
+      # Adds a function to the class to override lookup to properly search
+      # logical trees
+      def logical_child(prop_name)
+        self.class_eval do
+          define_method :logical_lookup do |*args|
+            self.lookup(*args)|| self.send(prop_name).tap do |item|
+              # TODO: optimize
+              return item.logical_lookup(*args)
+            end
+          end
+        end
+      end
+
+      ##
       # Adds a method_missing that automatically calls add if the DSL builds it
       # as the given type.
       # This will defer to node to construct proper object, but will
@@ -171,6 +198,11 @@ module JRubyFX
     #
     def method_missing(name, *args, &block)
       clazz = NAME_TO_CLASSES[name.to_s.gsub(/!$/, '')]
+
+      if caller[0] == caller[2]
+        raise "Whoa! method_missing caught infinite loop. Trying to run #{name}(#{args.inspect}) failed. Method not found."
+      end
+
       super unless clazz
 
       build(clazz, *args, &block)
@@ -240,6 +272,23 @@ module JRubyFX
         define_method "#{jfunc.to_s.gsub(/^set/i,'').snake_case}=" do |rbenum|
           java_send jfunc, [jclass], jclass.parse_ruby_symbols(rbenum)
         end
+      end
+    end
+
+    def logical_lookup(*args)
+      unless self.is_a?(Node)
+        # TODO: flush this out a bit more
+        if args.length > 0 and args[0].start_with? "#"
+          return (if "##{self.id}" == args[0]
+              self
+            else
+              nil
+            end)
+        end
+      end
+      self.lookup(*args) || self.tap do |x|
+        return nil unless x.respond_to? :children
+        return x.children.map_find{|i| i.logical_lookup(*args)}
       end
     end
 

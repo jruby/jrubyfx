@@ -16,19 +16,13 @@ limitations under the License.
 =end
 require 'jrubyfx/dsl'
 
-# JRubyFX DSL extensions for JavaFX Scenes
-class Java::javafx::scene::Scene
+# JRubyFX DSL extensions for JavaFX TabPanes
+class Java::javafx::scene::control::TabPane
   include JRubyFX::DSL
-  extend JRubyFX::Utils::CommonConverters
 
-  converter_for :fill, [:color]
+  logical_children :tabs
+end
 
-  logical_child :root
-
-  class << self
-    extend JRubyFX::Utils::CommonConverters
-
-    converter_for :new, [:none], [:none, :color], [:none, :none, :none],
-       [:none, :none, :none, :color]
-  end
+class Java::javafx::scene::control::Tab
+  include JRubyFX::DSL
 end
