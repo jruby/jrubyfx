@@ -102,7 +102,11 @@ module JRubyFX
       def logical_children(prop_name)
         self.class_eval do
           define_method :logical_lookup do |*args|
-            self.lookup(*args)|| self.send(prop_name).tap do |item|
+            if respond_to? :lookup
+              self.lookup(*args)
+            else
+              self.self_test_lookup(*args)
+            end || self.send(prop_name).tap do |item|
               return item.map_find {|i| i.logical_lookup(*args)}
             end
           end
@@ -115,7 +119,11 @@ module JRubyFX
       def logical_child(prop_name)
         self.class_eval do
           define_method :logical_lookup do |*args|
-            self.lookup(*args)|| self.send(prop_name).tap do |item|
+            if respond_to? :lookup
+              self.lookup(*args)
+            else
+              self.self_test_lookup(*args)
+            end || self.send(prop_name).tap do |item|
               # TODO: optimize
               return item.logical_lookup(*args)
             end
@@ -275,16 +283,20 @@ module JRubyFX
       end
     end
 
+    def self_test_lookup(selector)
+      if selector.start_with? "#"
+        return (if "##{self.id}" == selector
+            self
+          else
+            nil
+          end)
+      end
+    end
+
     def logical_lookup(*args)
       unless self.is_a?(Node)
         # TODO: flush this out a bit more
-        if args.length > 0 and args[0].start_with? "#"
-          return (if "##{self.id}" == args[0]
-              self
-            else
-              nil
-            end)
-        end
+        raise "WHOA! NOT A NODE!"
       end
       self.lookup(*args) || self.tap do |x|
         return nil unless x.respond_to? :children

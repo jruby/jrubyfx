@@ -16,15 +16,9 @@ limitations under the License.
 =end
 require 'jrubyfx/dsl'
 
-# JRubyFX DSL extensions for JavaFX TabPanes
-class Java::javafx::scene::control::TabPane
+# JRubyFX DSL extensions for JavaFX Accordions
+class Java::javafx::scene::control::Accordion
   include JRubyFX::DSL
 
-  logical_children :tabs
-end
-
-class Java::javafx::scene::control::Tab
-  include JRubyFX::DSL
-
-  logical_child :content
+  logical_children :panes
 end
