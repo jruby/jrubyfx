@@ -16,12 +16,12 @@ limitations under the License.
 =end
 
 require 'jrubyfx'
+require 'jrubyfx-fxmlloader'
 
 # Inherit from this class for FXML controllers
 module JRubyFX::Controller
   include JRubyFX::DSL
   java_import 'java.net.URL'
-  java_import 'javafx.fxml.FXMLLoader'
 
   DEFAULT_SETTINGS = {
     width: -1,
@@ -280,20 +280,9 @@ module JRubyFX::Controller
   #  Node Lookup Methods
   ##
 
-  # searches for an element by id (or fx:id, prefering id)
-  def method_missing(meth, *args, &block)
-    # if scene is attached, and the method is an id of a node in scene
-    if @scene and meth.to_s.start_with? "_" # underscore == its an id
-      @nodes_by_id[meth] ||= find "##{meth[1..-1]}"
-      return @nodes_by_id[meth] if @nodes_by_id[meth]
-    end
-
-    super
-  end
-
   # return first matched node or nil
   def find(css_selector)
-    @scene.lookup(css_selector) || @scene.logical_lookup(css_selector)
+    @scene.lookup(css_selector)
   end
 
   # Return first matched node or throw exception
@@ -327,7 +316,7 @@ module JRubyFX::Controller
   #   Parent root = FXMLLoader.load(getClass().getResource("Demo.fxml"));
   #
   def self.get_fxml_loader(filename, controller = nil, relative_to = nil)
-    fx = FXMLLoader.new
+    fx = FxmlLoader.new
     fx.location =
       if JRubyFX::Application.in_jar?
       # If we are in a jar file, use the class loader to get the file from the jar (like java)
