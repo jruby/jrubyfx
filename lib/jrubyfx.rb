@@ -25,3 +25,4 @@ JRubyFX::DSL.load_dsl # load it after we require the dsl package to not loop aro
 require_relative 'jrubyfx/fxml_application'
 require_relative 'jrubyfx/fxml_controller'
 require_relative 'jrubyfx/java_fx_impl'
+require_relative 'jrubyfx/inspect'
