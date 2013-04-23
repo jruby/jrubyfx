@@ -4,10 +4,8 @@ JRubyFX is a pure ruby wrapper for JavaFX 2.x with FXML support
 
 Status
 ------
-JRubyFX should be usable in its current form and able to run FXML apps if used properly (see Issues).
-The syntax of the FXML side of JRubyFX should be fairly stable, but the JavaFX DSL may change.
-At this point in time, no custom ruby controls are supported from FXML, though you
-can certainly create them in code.
+JRubyFX master should be usable in its current form and able to run simple FXML apps if used properly (see Issues).
+FXML syntax in master is very different from 0.9 series currently on rubygems and not yet fully stabilized in master. Use 0.9.2 if you care about this.
 
 Install
 -----
@@ -20,6 +18,7 @@ Manual Build and Install
 Build is done using rake/gem/bundler/rdoc. You need JRuby (1.9 mode), Java >1.6 with JavaFX, but Java 1.7 or 1.8 are recommended. Building native application packages requires JDK 8.
 
 ```text
+gem install jrubyfx-fxmlloader
 rake install
 ```
 Once the gem is installed, just run a ruby file that uses it normally.
@@ -91,6 +90,7 @@ Issues
 ------
 * You must NOT set fx:controller in the FXML files. At the moment, due to JRuby bugs, Java is unable
   to initialize Ruby objects in this way. See Demo.rb for the proper way to set the controller (passing the fxml and stage into Controller#new)
+* FXML support in master for very complex documents is untested. Report bugs against JRubyFX-FxmlLoader with the FXML file if it fails.
 * You must use the provided JavaFXImpl::Launcher to launch the app (aka: call _yourFXApplicationClass_.launch()). This is due to the same JRuby bugs
   as above.
 * Errors loading jfxrt.jar are bugs. Please report if you encounter this issue, tell us your platform,
