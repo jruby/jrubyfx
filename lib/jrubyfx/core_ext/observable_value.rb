@@ -23,7 +23,7 @@ module Java::javafx::beans::value::ObservableValue
   ##
   # call-seq:
   #   add_change_listener { |observable, old_value, new_value| block }
-  #   
+  #
   # Add a ruby block to call when the property changes changes
   def add_change_listener(&block)
     java_send :addListener, [ChangeListener.java_class], block
@@ -33,4 +33,25 @@ module Java::javafx::beans::value::ObservableValue
   # and we would need to examine each proc to determine which listener to
   # remove.  Probably a way to do it in each derived real class which actually
   # stores the listeners.
+end
+
+class Class
+  def property_writer(*symbol_names)
+    symbol_names.each do |symbol_name|
+      send(:define_method, symbol_name.id2name + "=") do |val|
+        instance_variable_get("@#{symbol_name}").setValue val
+      end
+    end
+  end
+  def property_reader(*symbol_names)
+    symbol_names.each do |symbol_name|
+      send(:define_method, symbol_name.id2name) do
+        instance_variable_get("@#{symbol_name}").getValue
+      end
+    end
+  end
+  def property_accessor(*symbol_names)
+    property_reader *symbol_names
+    property_writer *symbol_names
+  end
 end
