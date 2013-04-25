@@ -14,14 +14,36 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
+def timenow!(arg="now at")
+  puts "#{arg}: #{Time.now - $TIME}"
+end
+puts "starting"
+$TIME = Time.now
 require 'java' # for java_import
 require 'jruby/core_ext' # for the become_java!
+timenow!("required")
 
 # JRubyFX includes
 require_relative 'jrubyfx/jfx_imports'
+timenow! "importing java"
 require_relative 'jrubyfx/fxml_module'
+timenow! "loaded module"
 require_relative 'jrubyfx/dsl'
+timenow! "loaded dsl"
+if ARGV.include? "test"
+fo = File.open("testing-out.rb", "w")
+JRubyFX::DSL.compile_dsl(fo)
+fo.close
+puts "Done Writing jrfx!"
+exit 0
+elsif ARGV.include? "original"
 JRubyFX::DSL.load_dsl # load it after we require the dsl package to not loop around
+else
+       require 'testing-out.rb'
+end
+timenow! "dsled"
 require_relative 'jrubyfx/fxml_application'
 require_relative 'jrubyfx/fxml_controller'
 require_relative 'jrubyfx/java_fx_impl'
+
+timenow! "finished requireing it all"

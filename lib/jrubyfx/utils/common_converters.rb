@@ -26,7 +26,7 @@ module JRubyFX
 
       # argument converter method name suffix
       ARG_CONVERTER_SUFFIX = '_arg_converter'
-      
+
       # map of snake_cased colors to JavaFX Colors
       NAME_TO_COLORS = {
         'darkyellow' => Color.web('0xc0c000'),
@@ -44,7 +44,7 @@ module JRubyFX
           map.key?(value) ? map[value] : value
         end
       end
-      
+
       ##
       # Generate a converter for an enum of the given class
       def enum_converter(enum_class)
@@ -56,14 +56,14 @@ module JRubyFX
       ##
       # call-seq:
       #   animation_converter_for :property_name, ...
-      #   
+      #
       # Generates an animation adapter for the given properties so you can specify
       # transformations, etc with a hashmap of from, to values
       # === Examples
       #   animation_converter_for :value
-      #   
+      #
       #   ...
-      #   
+      #
       #   _my_type_(value: {0 => 360})
       #
       def animation_converter_for(*prop_names)
@@ -98,6 +98,7 @@ module JRubyFX
       # is useful for single var_args signatures.
       #
       def converter_for(method_name, *converters, &default)
+        puts "[converter for #{self}, #{method_name}]"
         sheep = lambda do |direct, this, *values|
           converter = converters.find { |e| e.length == values.length }
           converter = Array.new(values.length, default) unless converter
@@ -157,31 +158,42 @@ module JRubyFX
             Insets.new(value)
           elsif value.is_a? Array
             # top/bottom, left/right
-            value = [value[0], value[1], value[0], value[1]] if value.size == 2 
+            value = [value[0], value[1], value[0], value[1]] if value.size == 2
             Insets.new(*value)
           else
             value
           end
         },
       }
-      
+
+      ENUM_CACHE = {}
+
       # Store enum mapping overrides
-      @overrides = {}
-      
+      ENUM_OVERRIDES = {Java::javafxAnimation::PathTransition::OrientationType => {:orthogonal_to_tangent => :orthogonal},
+        Java::javafxSceneEffect::BlendMode => {:src_over => :over, :src_atop => :atop, :color_dodge => :dodge, :color_burn => :burn},
+        Java::javafxSceneControl::ContentDisplay => {:graphic_only => :graphic, :text_only => :text},
+        Java::javafxSceneEffect::BlurType => {:one_pass_box => [:one, :one_pass], :two_pass_box => [:two, :two_pass], :three_pass_box => [:three, :three_pass]},
+        Java::javafxStage::Modality => {:window_modal => :window, :application_modal => [:application, :app]}}
+
       # sets the given overrides for the given class/enum
       def self.set_overrides_for(enum_class,ovr)
-        @overrides[enum_class] = ovr
+        ENUM_OVERRIDES[enum_class] = ovr
       end
-      
+
       # Given a class, returns a hash of lowercase strings mapped to Java Enums
       def self.map_enums(enum_class)
-        res = enum_class.java_class.enum_constants.inject({}) {|res, i| res[i.to_s.downcase] = i; res }
-        (@overrides[enum_class]||[]).each do |oldk, newks|
+        res = Hash[enum_class.java_class.enum_constants.map {|i| [i.to_s.downcase, i] }]
+        (ENUM_OVERRIDES[enum_class]||[]).each do |oldk, newks|
           [newks].flatten.each do |newk|
             res[newk.to_s] = res[oldk.to_s]
           end
         end
         res
+      end
+
+      def self.parse_ruby_symbols(const, enum)
+        ENUM_CACHE[enum] = JRubyFX::Utils::CommonConverters.map_enums(enum) if  ENUM_CACHE[enum] == nil
+        ENUM_CACHE[enum][const.to_s] || const
       end
     end
   end

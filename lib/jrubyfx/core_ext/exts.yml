@@ -1,0 +1,45 @@
+## YAML Template.
+---
+"Java::JavafxScene::Node":
+   rotate: []
+   getter_setter: effect
+"Java::JavafxSceneControl::TabPane":
+   logical_children: tabs
+"Java::JavafxSceneControl::Tab":
+   logical_child: content
+"Java::JavafxScene::Scene":
+   logical_child: root
+   new_converter: [[none], [none, color], [none, none, none], [none, none, none, color]]
+"Java::JavafxScene::Parent":
+   method_missing: "Java::JavafxScene::Node"
+   add: get_children
+"Java::JavafxSceneControl::TreeItem":
+   method_missing: "Java::JavafxSceneControl::TreeItem"
+   add: get_children
+"Java::JavafxSceneControl::TableView":
+   method_missing: "Java::JavafxSceneControl::TableColumn"
+   add: get_columns
+"Java::JavafxAnimation::ParallelTransition":
+   method_missing: "Java::JavafxAnimation::Animation"
+   add: get_children
+"Java::JavafxSceneControl::MenuBar":
+   method_missing: "Java::JavafxSceneControl::Menu"
+   add: get_menus
+"Java::JavafxSceneControl::Menu":
+   method_missing: "Java::JavafxSceneControl::MenuItem"
+   add: get_items
+"Java::JavafxSceneControl::ContextMenu":
+   method_missing: "Java::JavafxSceneControl::MenuItem"
+   add: get_items
+"Java::JavafxAnimation::Timeline":
+   method_missing: "Java::JavafxAnimation::KeyFrame"
+   add: key_frames
+"Java::JavafxSceneShape::Path":
+   add: elements
+   rotate: []
+"Java::JavafxSceneControl::TitledPane":
+   logical_child: content
+"Java::JavafxSceneControl::ScrollPane":
+   logical_child: content
+"Java::JavafxSceneControl::Accordion":
+   logical_children: panes

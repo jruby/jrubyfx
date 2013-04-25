@@ -14,11 +14,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
-require 'jrubyfx/dsl'
 
 # JRubyFX DSL extensions for BorderPanes
 class Java::javafx::scene::layout::BorderPane
-  include JRubyFX::DSL
 
   # We don't want to add automatically for this type of pane
   alias :method_missing :node_method_missing

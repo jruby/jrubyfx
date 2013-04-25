@@ -18,12 +18,6 @@ require 'jrubyfx/dsl'
 
 # JRubyFX DSL extensions for JavaFX Scenes
 class Java::javafx::scene::Scene
-  include JRubyFX::DSL
-  extend JRubyFX::Utils::CommonConverters
-
-  converter_for :fill, [:color]
-
-  logical_child :root
 
   class << self
     extend JRubyFX::Utils::CommonConverters

@@ -20,19 +20,15 @@ require 'jrubyfx/dsl'
 class Java::javafx::animation::Timeline
   java_import Java::javafx.animation.KeyFrame
 
-  include JRubyFX::DSL
   extend JRubyFX::Utils::CommonConverters
 
-  include_add :key_frames
-  include_method_missing KeyFrame
-  
   # call-seq:
   #   animate myProperty, from_duration => to_duration, start_value => next_value
   #   animate myProperty, from_duration => [with_duration, ..., to_duration], start_value => [next_value, ...]
-  #   
+  #
   # Animates a given JavaFX property over the given duration, using the given values
   # as keyFrames
-  # 
+  #
   # === Examples
   #   animate translateXProperty, 0.sec => [100.ms, 1.sec], 0 => [500, 200]
   #   animate translateYProperty, 0.sec => 1.sec, 0 => 200
@@ -55,6 +51,6 @@ class Java::javafx::animation::Timeline
       key_frame(time[i], key_value(prop, values[i]))
     end
   end
-  
+
   converter_for :cycle_count, [map_converter(indefinite: Java::javafx::animation::Timeline::INDEFINITE)]
 end

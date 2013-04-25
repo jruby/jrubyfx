@@ -21,12 +21,6 @@ class Java::javafx::scene::shape::Path
   java_import Java::javafx.scene.shape.PathElement
   java_import Java::javafx.scene.transform.Transform
 
-  include JRubyFX::DSL
-
-  include_add :elements
-
-  include_rotate
-
   ##
   # This will defer to node to construct proper object, but will
   # optionally add paths primary child automatically if it is a
