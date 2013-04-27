@@ -35,8 +35,10 @@ Original Java source from: http://docs.oracle.com/javafx/2/get_started/jfxpub-ge
 
 require 'jrubyfx'
 
-class FXMLExampleController < JRubyFX::Controller
+class FXMLExampleController
+  include JRubyFX::Controller
+  fxml_root "fxml_example.fxml"
     on :handleSubmitButtonAction do
-        actiontarget.text = "Sign in button pressed"
+        @actiontarget.text = "Sign in button pressed"
     end
 end

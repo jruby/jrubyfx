@@ -40,7 +40,7 @@ require_relative 'FXMLExampleController'
 class FXMLExample < JRubyFX::Application
 
     def start(stage)
-        FXMLExampleController.new("fxml_example.fxml", stage)
+        FXMLExampleController.load_into(stage)
 
         stage.title = "FXML Welcome"
         stage.show()
