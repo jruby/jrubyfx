@@ -345,7 +345,7 @@ module JRubyFX
         new_converter: ->(on, *args){
           els = 0
           "  def self.new(*args)
-    super *RubyFX::Utils::CommonConverters.convert_args(args, #{args.map{|i|i.map(&:to_sym)}.inspect})
+    super *JRubyFX::Utils::CommonConverters.convert_args(args, #{args.map{|i|i.map(&:to_sym)}.inspect})
   end\n"
         },
       }
@@ -412,7 +412,7 @@ ENDNAIVE
         next if jfunc.include? "impl_"
         outf[in_class.to_s] << <<ENDNAIVE
   def #{jfunc.to_s.gsub(/^set/i,'').snake_case}=(value)
-    #{jfunc}(JRubyFX::Utils::CommonConverters.CONVERTERS[:color].call(value))
+    #{jfunc}(JRubyFX::Utils::CommonConverters::CONVERTERS[:color].call(value))
   end
 ENDNAIVE
       end
@@ -442,13 +442,13 @@ ENDNAIVE
 
     # This loads the entire DSL. Call this immediately after requiring
     # this file, but not inside this file, or it requires itself twice.
-    def self.load_dsl
+    def self.load_dsl(lec=true)
       rt = "#{File.dirname(__FILE__)}/core_ext".sub /\Ajar:/, ""
       Dir.glob("#{rt}/*.rb") do |file|
         require file
       end
 
-      JRubyFX::DSL.load_enum_converter()
+      JRubyFX::DSL.load_enum_converter() if lec
     end
 
     # This loads the entire DSL. Call this immediately after requiring

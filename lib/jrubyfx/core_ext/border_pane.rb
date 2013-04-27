@@ -17,6 +17,7 @@ limitations under the License.
 
 # JRubyFX DSL extensions for BorderPanes
 class Java::javafx::scene::layout::BorderPane
+  include JRubyFX::DSL
 
   # We don't want to add automatically for this type of pane
   alias :method_missing :node_method_missing

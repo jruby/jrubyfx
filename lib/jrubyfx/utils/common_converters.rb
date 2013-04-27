@@ -195,6 +195,26 @@ module JRubyFX
         ENUM_CACHE[enum] = JRubyFX::Utils::CommonConverters.map_enums(enum) if  ENUM_CACHE[enum] == nil
         ENUM_CACHE[enum][const.to_s] || const
       end
+
+      def self.convert_args(values, converters)
+        converter = converters.find { |e| e.length == values.length }
+        converter = Array.new(values.length) unless converter
+
+        # FIXME: Better error reporting on many things which can fail
+        i = 0
+        values = values.inject([]) do |s, value|
+          conv = converter[i]
+          if conv.kind_of? Proc
+            s << conv.call(value)
+          else
+            s << CONVERTERS[converter[i]].call(value)
+          end
+          i += 1
+          s
+        end
+        return values
+      end
     end
+
   end
 end

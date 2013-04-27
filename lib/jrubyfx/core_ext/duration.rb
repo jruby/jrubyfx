@@ -17,7 +17,7 @@ limitations under the License.
 require 'jrubyfx/dsl'
 
 # JRubyFX DSL extensions for JavaFX Duration
-class Fixnum
+class Numeric
   # defines #ms, #sec, etc to create a JavaFX duration object of respective type
   {:ms => :millis, :sec => :seconds, :min => :minutes,
     :hrs => :hours, :hr => :hours}.each do |rname, jname|
