@@ -36,8 +36,9 @@ JRubyFX::DSL.compile_dsl(fo)
 fo.close
 puts "Done Writing jrfx!"
 exit 0
-elsif ARGV.include? "original"
-JRubyFX::DSL.load_dsl # load it after we require the dsl package to not loop around
+elsif !ARGV.include? "load-it"
+JRubyFX::DSL.load_dsl false # load it after we require the dsl package to not loop around
+       require 'testing-out.rb'
 else
        require 'testing-out.rb'
 end
