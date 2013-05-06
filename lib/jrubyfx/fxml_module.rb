@@ -94,5 +94,61 @@ module JRubyFX
 
     with(obj, properties, &block)
   end
+  
+  def self.included(mod)
+    mod.extend(JRubyFX::FXMLClassUtils)
+  end
+  
+  module FXMLClassUtils
+    def fxml_raw_accessor(symbol_name, type=java::lang::String)
+      # TODO: RDoc
+      # TODO: somebody clean this up
+      # TODO: _reader and _writer
+      send(:define_method, symbol_name.id2name.snake_case + "=") do |val|
+        instance_variable_set("@#{symbol_name}", val)
+      end
+      send(:define_method, symbol_name.id2name.snake_case) do
+        instance_variable_get("@#{symbol_name}")
+      end
+      send(:define_method, symbol_name.id2name.snake_case + "GetType") do
+        return type.java_class
+      end
+      camel = symbol_name.id2name
+      camel = camel[0].upcase + camel[1..-1]
+      send(:define_method, "set" + camel) do |val|
+        instance_variable_set("@#{symbol_name}", val)
+      end
+      send(:define_method, "get" + camel) do
+        instance_variable_get("@#{symbol_name}")
+      end
+      send(:define_method, symbol_name.id2name + "GetType") do
+        return type.java_class
+      end
+    end
+    def fxml_accessor(symbol_name, type=java::lang::String)
+      # TODO: RDoc
+      # TODO: somebody clean this up
+      # TODO: _reader and _writer
+      send(:define_method, symbol_name.id2name.snake_case + "=") do |val|
+        instance_variable_get("@#{symbol_name}").setValue val
+      end
+      send(:define_method, symbol_name.id2name.snake_case) do
+        instance_variable_get("@#{symbol_name}").getValue
+      end
+      send(:define_method, symbol_name.id2name.snake_case + "GetType") do
+        return type.java_class
+      end
+      camel = symbol_name.id2name
+      camel = camel[0].upcase + camel[1..-1]
+      send(:define_method, "set" + camel) do |val|
+        instance_variable_get("@#{symbol_name}").setValue val
+      end
+      send(:define_method, "get" + camel) do
+        instance_variable_get("@#{symbol_name}").getValue
+      end
+      send(:define_method, symbol_name.id2name + "GetType") do
+        return type.java_class
+      end
+    end
+  end
 end
-
