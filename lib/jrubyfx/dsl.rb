@@ -210,9 +210,9 @@ module JRubyFX
           # FIXME: Is arity of splat the best way to do this?
           "  def #{name}(*r)
     if r.length > 0
-      set_effect *r
+      self.#{name} = r[0]
     else
-      get_effect
+      get_#{name}
     end
   end\n"
         },
@@ -222,6 +222,7 @@ module JRubyFX
     super *JRubyFX::Utils::CommonConverters.convert_args(args, #{args.map{|i|i.map(&:to_sym)}.inspect})
   end\n"
         },
+        dsl: ->(on, *args){" "},
       }
 
       #parse the ydescs
@@ -248,7 +249,6 @@ HERDOC
     def self.write_enum_method_converter(outf, in_class, jfuncnclasses)
       jfuncnclasses.each do |jfunc, jclass|
         next if jfunc.include? "impl_"
-#        next if in_class != Java::javafx::scene::Node && ['setBlendMode', 'setDepthTest', 'setCacheHint'].include?(jfunc)
         outf[in_class.to_s] << <<ENDNAIVE
   def #{jfunc.to_s.gsub(/^set/i,'').snake_case}=(rbenum)
     java_send #{jfunc.inspect}, [#{jclass}], JRubyFX::Utils::CommonConverters.parse_ruby_symbols(rbenum, #{jclass})
