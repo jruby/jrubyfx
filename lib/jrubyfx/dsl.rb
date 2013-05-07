@@ -46,102 +46,12 @@ module JRubyFX
       module_function :register_type
 
       ##
-      # Define a dual-mode method which acts as both a getter and
-      # setter depending on whether it has been supplied an argument
-      # or not.
-      #
-      def getter_setter(name)
-        puts "#{self}\n   getter_setter: #{name}"
-        self.class_eval do
-          # FIXME: Is arity of splat the best way to do this?
-          define_method(name) do |*r|
-            if r.length > 0
-              set_effect *r
-            else
-              get_effect
-            end
-          end
-        end
-      end
-
-      # Lots of DSL extensions use these methods, so define them here so multiple classes can use them
-
-      ##
-      # call-seq:
-      #   include_add
-      #   include_add :child_getter
-      #
-      # Include a function to add to child list (optional argument) without need
-      # to ask for children
-      #   include_add
-      #   include_add :elements
-      #
-      def include_add(adder = :get_children)
-        puts "[:add, #{self}, :#{adder}],"
-        self.class_eval do
-          define_method :add do |value|
-            self.send(adder) << value
-          end
-        end
-      end
-
-      ##
-      # Adds a function to the class that Adds rotate to transform (manually
-      # added ebcause there is a getRotate on Node already.  Use get_rotate
-      # to get property
-      def include_rotate
-        puts "[:rotate, #{self}],"
-        self.class_eval do
-          def rotate(*args) #:nodoc:
-            transforms << build(Rotate, *args)
-          end
-        end
-      end
-
-      ##
-      # Adds a function to the class to override lookup to properly search
-      # logical trees
-      def logical_children(prop_name)
-        puts "[:logical_children, #{self}, #{prop_name}],"
-        self.class_eval do
-          define_method :logical_lookup do |*args|
-            if respond_to? :lookup
-              self.lookup(*args)
-            else
-              self.self_test_lookup(*args)
-            end || self.send(prop_name).tap do |item|
-              return item.map_find {|i| i.logical_lookup(*args)}
-            end
-          end
-        end
-      end
-
-      ##
-      # Adds a function to the class to override lookup to properly search
-      # logical trees
-      def logical_child(prop_name)
-        puts "[:logical_child, #{self}, #{prop_name}],"
-        self.class_eval do
-          define_method :logical_lookup do |*args|
-            if respond_to? :lookup
-              self.lookup(*args)
-            else
-              self.self_test_lookup(*args)
-            end || self.send(prop_name).tap do |item|
-              # TODO: optimize
-              return item.logical_lookup(*args)
-            end
-          end
-        end
-      end
-
-      ##
       # Adds a method_missing that automatically calls add if the DSL builds it
       # as the given type.
       # This will defer to node to construct proper object, but will
       # optionally add paths primary child automatically if it is a
       # PathElement.
-      def include_method_missing(type)
+      def include_method_missing(type) # FIXME: only used by spec
         puts "[:method_missing, #{self}, #{type}],"
         self.class_eval do
           define_method :method_missing do |name, *args, &block|
@@ -220,41 +130,6 @@ module JRubyFX
 
     # Loads the special symbol to enum converter functions into all methods
     # and enums
-    def self.load_enum_converter
-
-      # use reflection to load all enums into all_enums and methods that use them
-      # into enum_methods
-      mod_list = {
-        :methods => [],
-        :all => []
-      }
-      JRubyFX::DSL::NAME_TO_CLASSES.each do |n,cls|
-        cls.java_class.java_instance_methods.each do |method|
-          args = method.argument_types.find_all(&:enum?).tap {|i| mod_list[:all] <<  i }
-
-          # one and only, must be a setter style
-          if method.argument_types.length == 1 and (args.length == method.argument_types.length)
-            mod_list[:methods] << [method.name, cls]
-          end
-        end if cls.respond_to? :ancestors and cls.ancestors.include? JavaProxy # some are not java classes. ignore those
-      end
-
-      # Get the proper class (only need them once)
-      mod_list[:all] = mod_list[:all].flatten.uniq.map {|i| JavaUtilities.get_proxy_class(i) }
-
-      # Inject our converter into each enum/class
-      mod_list[:all].each do |enum|
-        inject_symbol_converter enum
-      end
-
-      # finally, "override" each method
-      mod_list[:methods].each do |method|
-        inject_enum_method_converter *method
-      end
-    end
-
-    # Loads the special symbol to enum converter functions into all methods
-    # and enums
     def self.write_enum_converter(outf)
 
       # use reflection to load all enums into all_enums and methods that use them
@@ -268,7 +143,7 @@ module JRubyFX
           args = method.argument_types.find_all(&:enum?).tap {|i| mod_list[:all] <<  i }
 
           # one and only, must be a setter style
-          if method.argument_types.length == 1 and (args.length == method.argument_types.length)
+          if method.argument_types.length == 1 and (args.length == method.argument_types.length) and !(cls.ancestors[1].public_instance_methods.include? method.name.to_sym)
             mod_list[:methods][cls] = [] unless mod_list[:methods][cls]
             # stuff both method name and the type of the argument in
             mod_list[:methods][cls] << [method.name, JavaUtilities.get_proxy_class(args[0])]
@@ -294,7 +169,7 @@ module JRubyFX
           args = method.argument_types.find_all{|i| JavaUtilities.get_proxy_class(i).ancestors.include? Java::javafx.scene.paint.Paint}
 
           # one and only, must be a setter style
-          if args.length == 1  #TODO: multiple args
+          if args.length == 1  and !(cls.ancestors[1].public_instance_methods.include? method.name.to_sym) #TODO: multiple args
             mod_list[:methods][cls] = [] unless mod_list[:methods][cls]
             # stuff both method name and the type of the argument in
             mod_list[:methods][cls] << method.name
@@ -360,6 +235,7 @@ module JRubyFX
       end
 
       child_catcher.each do |clz, defs|
+        next if defs == "" || defs == nil
   # TODO: do we need to include the dsl? is this the fastest way to do it?
         outf<< <<HERDOC
 class #{clz}
@@ -369,35 +245,10 @@ HERDOC
       end
     end
 
-    # Adds `parse_ruby_symbols` method to given enum/class to enable symbol conversion
-    def self.inject_symbol_converter(jclass)
-      # inject!
-      class << jclass
-        define_method :parse_ruby_symbols do |const|
-          # cache it. It could be expensive
-          @map = JRubyFX::Utils::CommonConverters.map_enums(self) if @map == nil
-          @map[const.to_s] || const
-        end
-      end
-    end
-
-    # "overrides" given function name in given class to parse ruby symbols into
-    # proper enums. Rewrites method name as `my_method=` from `setMyMethod`
-    def self.inject_enum_method_converter(jfunc, in_class)
-      jclass = in_class.java_class.java_instance_methods.find_all {|i| i.name == jfunc.to_s}[0].argument_types[0]
-      jclass = JavaUtilities.get_proxy_class(jclass)
-
-      # Define the conversion function as the snake cased assignment, calling parse_ruby
-      in_class.class_eval do
-        define_method "#{jfunc.to_s.gsub(/^set/i,'').snake_case}=" do |rbenum|
-          java_send jfunc, [jclass], jclass.parse_ruby_symbols(rbenum)
-        end
-      end
-    end
-
     def self.write_enum_method_converter(outf, in_class, jfuncnclasses)
       jfuncnclasses.each do |jfunc, jclass|
         next if jfunc.include? "impl_"
+#        next if in_class != Java::javafx::scene::Node && ['setBlendMode', 'setDepthTest', 'setCacheHint'].include?(jfunc)
         outf[in_class.to_s] << <<ENDNAIVE
   def #{jfunc.to_s.gsub(/^set/i,'').snake_case}=(rbenum)
     java_send #{jfunc.inspect}, [#{jclass}], JRubyFX::Utils::CommonConverters.parse_ruby_symbols(rbenum, #{jclass})
@@ -441,7 +292,7 @@ ENDNAIVE
 
     # This loads the entire DSL. Call this immediately after requiring
     # this file, but not inside this file, or it requires itself twice.
-    def self.load_dsl(lec=false)
+    def self.load_dsl
       unless File.size? "#{File.dirname(__FILE__)}/core_ext/precompiled.rb"
         puts "Please run `rake reflect` to generate the converters"
         exit -1
@@ -450,14 +301,11 @@ ENDNAIVE
       Dir.glob("#{rt}/*.rb") do |file|
         require file
       end
-
-      JRubyFX::DSL.load_enum_converter() if lec
     end
 
     # This loads the entire DSL. Call this immediately after requiring
     # this file, but not inside this file, or it requires itself twice.
     def self.compile_dsl(out)
-
       JRubyFX::DSL.write_enum_converter out
     end
   end
