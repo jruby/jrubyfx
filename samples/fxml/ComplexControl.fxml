@@ -8,14 +8,14 @@
 <?import javafx.scene.paint.*?>
 
 <fx:root type="javafx.scene.layout.BorderPane" id="BorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="-1.0" xmlns:fx="http://javafx.com/fxml">
-	<left>
-		<Label fx:id="label" text="Label" BorderPane.alignment="CENTER_RIGHT">
-			<BorderPane.margin>
-				<Insets left="5.0" right="5.0" />
-			</BorderPane.margin>
-		</Label>
-	</left>
-	<right>
-		<TextField fx:id="textBox" prefWidth="200.0" />
-	</right>
+  <left>
+    <Label fx:id="label" text="Label" BorderPane.alignment="CENTER_RIGHT">
+      <BorderPane.margin>
+        <Insets left="5.0" right="5.0" />
+      </BorderPane.margin>
+    </Label>
+  </left>
+  <right>
+    <TextField fx:id="textBox" onAction="#announce_it" prefWidth="400.0" />
+  </right>
 </fx:root>

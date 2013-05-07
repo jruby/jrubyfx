@@ -89,7 +89,7 @@ class SimpleFXController
     end
 
     # you can use custom controls as if they were built in via the dsl
-    @anchor_pane.children.add complex_control("BOKERKS!!!!!>.....")
+    @ui_border_pane.bottom = complex_control("Enter text and hit enter:")
   end
 
 

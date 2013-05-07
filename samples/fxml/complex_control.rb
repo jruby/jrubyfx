@@ -23,4 +23,10 @@ class ComplexControl < Java::javafx::scene::layout::BorderPane
   def text=(v)
     @textBox.text = v
   end
+  
+  # This is an event handler
+  def announce_it # optional: add argument e
+    puts "Text box contains: #{text}"
+    self.text = ""
+  end
 end
