@@ -82,7 +82,7 @@ Require the 'jrubyfx' file/gem, and subclass JRubyFX::Application (and JRubyFX::
 At the bottom of the file, call _yourFXApplicationClass_.launch().
 Override start(stage) in the application. See samples/fxml/Demo.rb for commented FXML example,
 or the fils in samples/javafx for non-FXML (programatic JavaFX, but you should really
-look into FXML, its better) or see the Getting Started Guide and the Notes.
+look into FXML, its better) or see the [Getting Started Guide](https://github.com/jruby/jrubyfx/wiki/Getting-Started) and the Notes.
 
 If you want rdoc, run `rake rdoc`.
 
