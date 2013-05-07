@@ -28,14 +28,14 @@ class SimpleFXApplication < JRubyFX::Application
     # Load our FXML using our controller.
     # Only fxml and stage are required
     # Optional Settings Hash:
-    #   :width  => int
-    #   :height => int
-    #   :fill   => Color::
+    #   :width        => int
+    #   :height       => int
+    #   :fill         => Color::
     #   :depth_buffer => boolean
-    #   :initialize => [args]
-    #   :relative_to:  path_to_fxml_views
+    #   :initialize   => [args]
+    #   :relative_to  => path_to_fxml_views
+    #   :filename     => FXML file to use
 
-    # Full:
     SimpleFXController.load_into stage,
       initialize: ["Send Stuff", "To initialized"],
       fill: :wheat # you can use symbols instead of Color objects
