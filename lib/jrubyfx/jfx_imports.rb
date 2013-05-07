@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =end
 
-require 'jrubyfx/utils'
+require_relative 'utils'
 
 # Update load path to include the JavaFX runtime and fail nicely if we can't find it
 begin

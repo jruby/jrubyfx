@@ -33,11 +33,14 @@ base_dir = File.dirname(__FILE__)
 cd base_dir unless Dir.pwd == base_dir
 main_script = nil if main_script == "nil"
 
+touch "lib/jrubyfx/core_ext/precompiled.rb" # Get around rake globbing issue
+
 desc "Clean all build artifacts except jruby-complete.jar"
 task :clean do
   rm_rf target if File.exists? target
   rm_rf "pkg" if File.exists? "pkg"
   rm_rf "doc" if File.exists? "doc"
+  rm_rf "lib/jrubyfx/core_ext/precompiled.rb"
 end
 
 desc "Clean all build artifacts INCLUDING jruby-complete.jar"
@@ -45,10 +48,28 @@ task :clean_jruby => :clean do
   rm_rf "#{ENV['HOME']}/.jruby-jar"
 end
 
+desc "Precompile all the reflection"
+task :reflect do
+  require 'java' # for java_import
+  require 'jruby/core_ext' # for the become_java!
+
+  # JRubyFX includes
+  require_relative 'lib/jrubyfx/jfx_imports'
+  require_relative 'lib/jrubyfx/fxml_module'
+  require_relative 'lib/jrubyfx/dsl'
+  fo = File.open("lib/jrubyfx/core_ext/precompiled.rb", "w")
+  JRubyFX::DSL.compile_dsl(fo)
+  fo.flush
+  fo.close
+  puts "Done Writing jrfx!"
+end
+
 desc "Run a script without installing the gem"
-task :run do
+task :run => :reflect do
   ruby "-I lib '#{main_script||'samples/fxml/Demo.rb'}'"
 end
+
+task :gem => :reflect
 
 # The gemspec exports the global $spec variable for us
 load 'jrubyfx.gemspec'
@@ -67,7 +88,7 @@ task :download_jruby_jar do
 end
 
 desc "Create a full jar with embedded JRuby and given script (via main_script and src ENV var)"
-task :jar => [:clean, :download_jruby_jar] do
+task :jar => [:clean, :download_jruby_jar, :precompile] do
   JRubyFX::Tasks::jarify_jrubyfx(src, main_script, target, output_jar, jar: jar)
 end
 

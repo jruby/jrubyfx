@@ -14,7 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
-require 'jrubyfx/utils/common_converters'
+require_relative 'common_converters'
 
 module JRubyFX
   # Several utilities that have no better place to go

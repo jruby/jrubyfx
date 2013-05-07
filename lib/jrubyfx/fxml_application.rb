@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =end
 
-require 'jrubyfx'
+require_relative '../jrubyfx'
 
 ##
 # Inherit from this class for FXML Applications. You must use this class for both

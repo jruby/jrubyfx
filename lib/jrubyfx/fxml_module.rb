@@ -15,8 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =end
 
-require 'jrubyfx'
-require 'jrubyfx/utils/common_utils'
+require_relative 'utils/common_utils'
 
 # This module contains useful methods for defining JavaFX code. Include it in your
 # class to use it, and the JRubyFX::FXImports. JRubyFX::Application and JRubyFX::Controller already include it.

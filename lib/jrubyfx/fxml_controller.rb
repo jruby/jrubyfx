@@ -15,7 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =end
 
-require 'jrubyfx'
 require 'jrubyfx-fxmlloader'
 
 # Inherit from this class for FXML controllers

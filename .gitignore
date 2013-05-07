@@ -8,3 +8,4 @@ Gemfile.lock
 *doc/
 .ruby-version
 *.bak
+lib/jrubyfx/core_ext/precompiled.rb

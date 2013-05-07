@@ -15,7 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =end
 require 'java'
-require 'jrubyfx'
 
 module JRubyFX
   # Defines a nice DSL for building JavaFX applications. Include it in a class for
@@ -442,7 +441,11 @@ ENDNAIVE
 
     # This loads the entire DSL. Call this immediately after requiring
     # this file, but not inside this file, or it requires itself twice.
-    def self.load_dsl(lec=true)
+    def self.load_dsl(lec=false)
+      unless File.size? "#{File.dirname(__FILE__)}/core_ext/precompiled.rb"
+        puts "Please run `rake reflect` to generate the converters"
+        exit -1
+      end
       rt = "#{File.dirname(__FILE__)}/core_ext".sub /\Ajar:/, ""
       Dir.glob("#{rt}/*.rb") do |file|
         require file
