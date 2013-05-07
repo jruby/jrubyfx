@@ -43,16 +43,17 @@ require 'jrubyfx'
 class #{name_guess}Application < JRubyFX::Application
   def start(stage)
     with(stage, title: "#{name_guess}", width: 600, height: 400)
-    #{name_guess}Controller.new("#{File.basename(fxml)}", stage)
+    #{name_guess}Controller.load_into(stage, relative_to: #{fxml.inspect})
     stage.show()
   end
 end
 
 class #{name_guess}Controller
   include JRubyFX::Controller
+  fxml_root "#{File.basename(fxml)}"
 END
 
-  fx_ids = [nil]
+  fx_ids = []
   File.open(fxml, "r") do |fx|
     handlers = "\n"
 
@@ -63,18 +64,13 @@ END
       # TODO: may not work with funky non-latin characters
       # Yes, I used regex, yes its xml, yes I now have two problems.
       line.scan(/on((([A-Z]*[a-z]*)*?)[A-Z]+[a-z]+)="#([^ "':]+)"/) do |match|
-        handlers <<
-          if match[2]
-           "  on_#{match[1].snake_case} :#{match[3]} do |event|\n"
-          else
-            "  on :#{match[3]} do |event|\n"
-          end
+        handlers << "  def #{match[3]}(event)\n"
         handlers << "    # TODO: Auto-generated event handler\n"
         handlers << "    puts \"#{match[0]} event '#{match[3]}' called\"\n  end\n\n"
       end
     end
     output << "\n  # nodes with ruby method-like fx:ids may be accessed directly"
-    output << "\n  def initialize#{fx_ids.join "\n    # "}\n  end\n"
+    output << "\n  def initialize\n#{fx_ids.map{|x|"    puts \"fx:id=\\\"#{x}\\\" was not injected: check your FXML file '#{File.basename(fxml)}'.\" unless @#{x}"}.join "\n"}\n  end\n"
     output << handlers
   end
 
