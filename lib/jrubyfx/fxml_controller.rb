@@ -32,7 +32,7 @@ module JRubyFX::Controller
   }
 
   # Controllers usually need access to the stage.
-  attr_accessor :stage, :scene
+  attr_writer :stage, :scene
 
   def self.included(base)
     base.extend(ClassMethods)

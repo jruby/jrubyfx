@@ -98,7 +98,7 @@ module JRubyFX
       # is useful for single var_args signatures.
       #
       def converter_for(method_name, *converters, &default)
-        puts "[converter for #{self}, #{method_name}]"
+       # puts "[converter for #{self}, #{method_name}]"
         sheep = lambda do |direct, this, *values|
           converter = converters.find { |e| e.length == values.length }
           converter = Array.new(values.length, default) unless converter

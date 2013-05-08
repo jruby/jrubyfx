@@ -167,7 +167,7 @@ class SimpleFXController
       add_extension_filter("Java Archive (*.jar)")
     end
     # Show the dialog!
-    file = dialog.showSaveDialog(stage)
+    file = dialog.showSaveDialog(@stage)
 
     unless file == nil
       output_jar = file.path
