@@ -74,4 +74,9 @@ class Java::javafx::stage::Stage
     root = code.arity == 1 ? code[node] : instance_eval(&code)
     build(Scene, root, *args).tap { |scene| set_scene scene }
   end
+  
+  def fxml(source, options={})
+    # TODO: source == "file.fxml"
+    source.load_into self, options
+  end
 end
