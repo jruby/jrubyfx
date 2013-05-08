@@ -26,6 +26,8 @@ Once the gem is installed, just run a ruby file that uses it normally.
 **NOTE:** If you don't have JRuby installed as the `ruby` command, use `jruby -S rake` instead of `rake`. If
 you are using RVM, this does not apply to you (though make sure you `rvm use jruby`).
 
+**If you are reporting bugs or encountering fxml issues:** please install [master jrubyfx-fxmlloader](https://github.com/byteit101/JRubyFX-FXMLLoader/) instead of from rubygems
+
 Creating a Jar
 --------------
 If you want to distribute your application, you can create a jar with embedded JRuby.
