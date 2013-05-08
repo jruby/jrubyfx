@@ -293,7 +293,7 @@ module JRubyFX::Controller
 
   # return an array of matched nodes
   def css(css_selector)
-    @scene.get_root.lookup_all(css_selector).map {|e| e}
+    @scene.get_root.lookup_all(css_selector).to_a
   end
 
 

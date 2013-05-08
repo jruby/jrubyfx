@@ -44,24 +44,6 @@ module JRubyFX
         JRubyFX::DSL::NAME_TO_CLASSES[name.to_s] = type
       end
       module_function :register_type
-
-      ##
-      # Adds a method_missing that automatically calls add if the DSL builds it
-      # as the given type.
-      # This will defer to node to construct proper object, but will
-      # optionally add paths primary child automatically if it is a
-      # PathElement.
-      def include_method_missing(type) # FIXME: only used by spec
-        puts "[:method_missing, #{self}, #{type}],"
-        self.class_eval do
-          define_method :method_missing do |name, *args, &block|
-            # we must manually call super otherwise it will call super(type)
-            super(name, *args, &block).tap do |obj|
-              add(obj) if obj.kind_of?(type) && !name.to_s.end_with?('!')
-            end
-          end
-        end
-      end
     end
 
     # When a class includes JRubyFX, extend (add to the metaclass) ClassUtils

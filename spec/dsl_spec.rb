@@ -24,8 +24,6 @@ class BarControl
     @list << value
   end
 
-  include_method_missing FooControl
-
   register_type self
 end
 
@@ -72,6 +70,7 @@ describe JRubyFX::DSL do
     f = nil
     b = bar_control do
       f = foo_control
+      add f
     end
 
     b.list.should == [f]
