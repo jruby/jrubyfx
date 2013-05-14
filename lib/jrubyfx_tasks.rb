@@ -83,6 +83,12 @@ module JRubyFX
       FileList["#{File.dirname(__FILE__)}/*"].each do |librb|
         cp_r librb, target
       end
+      
+      #copy fxmlloader in
+      require 'jrubyfx-fxmlloader'
+      FileList["#{File.dirname(MAGIC_FXML_JAVAFX_JRUBYFX_FXMLLOADER__FILE__LOCATION_SUPER_SECRET)}/*"].each do |librb|
+        cp_r librb, target
+      end
 
       # edit the jar
       base_dir = Dir.pwd
