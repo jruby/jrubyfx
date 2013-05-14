@@ -176,10 +176,10 @@ class SimpleFXController
       # import the jarification tasks
       require 'jrubyfx_tasks'
       # Download jruby (current version running)
-      JRubyFXTasks::download_jruby(JRUBY_VERSION)
+      JRubyFX::Tasks::download_jruby(JRUBY_VERSION)
       # Create a jar of all file in this same folder, this file is the root script,
       #  no fixed staging dir, and save it to our file we specified
-      JRubyFXTasks::jarify_jrubyfx("#{File.dirname(__FILE__)}/*", __FILE__, nil, output_jar)
+      JRubyFX::Tasks::jarify_jrubyfx("#{File.dirname(__FILE__)}/*", __FILE__, nil, output_jar)
       puts "Success!"
     end
   end
