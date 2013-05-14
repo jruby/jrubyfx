@@ -39,13 +39,11 @@ require_relative 'FXMLTableViewController'
 require_relative 'FormattedTableCellFactory'
 
 class FXMLTableView <  JRubyFX::Application
-    
-    def start(primaryStage)
-        primaryStage.title = "FXML TableView Example"
-        FXMLTableViewController.load_into primaryStage
-        primaryStage.show
-    end
- 
+  def start(primaryStage)
+    primaryStage.title = "FXML TableView Example"
+    FXMLTableViewController.load_into primaryStage
+    primaryStage.show
+  end
 end
 
 FXMLTableView.launch

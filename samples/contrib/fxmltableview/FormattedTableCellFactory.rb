@@ -1,5 +1,4 @@
 =begin
-/*
  * Copyright (c) 2012, 2013 Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,31 +30,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 =end
 
-#package fxmltableview;
-#
-#import java.text.Format;
-#import javafx.geometry.Pos;
-#import javafx.scene.Node;
-#import javafx.scene.control.TableCell;
-#import javafx.scene.control.TableColumn;
-#import javafx.scene.text.TextAlignment;
-#import javafx.util.Callback;
-
 class FormattedTableCellFactory
   include Java::javafx.util.Callback
   include JRubyFX
   
   fxml_raw_accessor :alignment, Java::javafx.scene.text.TextAlignment
   fxml_raw_accessor :format, java.text.Format
-  
-  # workaround for https://github.com/jruby/jruby/issues/709
-  def java_kind_of?(*args)
-    false
-  end
-  # workaround for above bug
-  def java_class
-    Java::javafx.util.Callback.java_class
-  end
+
+  # workarounds for https://github.com/jruby/jruby/issues/709 in Jruby 1.7.3. You don't need this if you have 1.7.4
+  def java_kind_of?(*args);false;end;def java_class;Java::javafx.util.Callback.java_class;end
 
   def call(param)
     cell = FormattedTableCellFactory_TableCell.new(@format)
