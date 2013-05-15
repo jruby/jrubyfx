@@ -25,8 +25,54 @@ module Java::javafx::beans::value::ObservableValue
   #   add_change_listener { |observable, old_value, new_value| block }
   #
   # Add a ruby block to call when the property changes changes
+  def add_change_listener(type=nil, &block)
+    unless type
+      type = :list if self.is_a? Java::javafx::collections::ObservableList
+      type = :map if self.is_a? Java::javafx::collections::ObservableMap
+    end
+    if type == :list || type == :map
+      super(&block)
+    else
+      java_send :addListener, [ChangeListener.java_class], block
+    end
+  end
+
+  # FIXME: Not sure how to remove with this API.  We are passing in a proc
+  # and we would need to examine each proc to determine which listener to
+  # remove.  Probably a way to do it in each derived real class which actually
+  # stores the listeners.
+end
+
+# JRubyFX DSL extensions for JavaFX ObservableLists
+module Java::javafx::collections::ObservableList
+  java_import Java::javafx.collections.ListChangeListener
+
+  ##
+  # call-seq:
+  #   add_change_listener { |change| block }
+  #
+  # Add a ruby block to call when the property changes changes
   def add_change_listener(&block)
-    java_send :addListener, [ChangeListener.java_class], block
+    java_send :addListener, [ListChangeListener.java_class], block
+  end
+
+  # FIXME: Not sure how to remove with this API.  We are passing in a proc
+  # and we would need to examine each proc to determine which listener to
+  # remove.  Probably a way to do it in each derived real class which actually
+  # stores the listeners.
+end
+
+# JRubyFX DSL extensions for JavaFX ObservableMaps
+module Java::javafx::collections::ObservableMap
+  java_import Java::javafx.collections.MapChangeListener
+
+  ##
+  # call-seq:
+  #   add_change_listener { |change| block }
+  #
+  # Add a ruby block to call when the property changes changes
+  def add_change_listener(&block)
+    java_send :addListener, [MapChangeListener.java_class], block
   end
 
   # FIXME: Not sure how to remove with this API.  We are passing in a proc
