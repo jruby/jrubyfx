@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml">
+  <children>
+    <SplitPane dividerPositions="0.5" focusTraversable="true" prefHeight="501.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="99.0">
+      <items>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <children>
+            <ListView fx:id="tables" onMouseClicked="#table_selected" prefHeight="598.0" prefWidth="197.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+          </children>
+          <padding>
+            <Insets left="1.0" />
+          </padding>
+        </AnchorPane>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="598.0" prefWidth="435.9999000000025">
+          <children>
+            <SplitPane dividerPositions="0.22937625754527163" focusTraversable="true" orientation="VERTICAL" prefHeight="598.0" prefWidth="595.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                  <children>
+                    <TableView fx:id="schema_details" prefHeight="160.0" prefWidth="593.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                      <columns>
+                        <TableColumn prefWidth="75.0" text="ColumnX" />
+                        <TableColumn prefWidth="75.0" text="ColumnX" />
+                      </columns>
+                    </TableView>
+                  </children>
+                  <padding>
+                    <Insets />
+                  </padding>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                  <children>
+                    <TableView fx:id="table_data" prefHeight="430.0" prefWidth="593.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                      <columns>
+                        <TableColumn prefWidth="75.0" text="ColumnX" />
+                        <TableColumn prefWidth="75.0" text="ColumnX" />
+                      </columns>
+                    </TableView>
+                  </children>
+                </AnchorPane>
+              </items>
+            </SplitPane>
+          </children>
+        </AnchorPane>
+      </items>
+    </SplitPane>
+    <VBox id="VBox" alignment="CENTER" layoutX="1.0" layoutY="1.0" prefHeight="98.0" spacing="5.0">
+      <children>
+        <HBox prefHeight="38.0" prefWidth="800.0">
+          <children>
+            <Label text="Schema Browser" textAlignment="CENTER">
+              <font>
+                <Font name="System Bold" size="24.0" />
+              </font>
+            </Label>
+          </children>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+          <children>
+            <Label text="Service:">
+              <font>
+                <Font name="System Bold" size="13.0" fx:id="x1" />
+              </font>
+            </Label>
+            <TextField prefWidth="200.0" />
+            <Label font="$x1" text="User:" />
+            <PasswordField prefWidth="94.0" />
+            <Label font="$x1" text="Pass:" />
+            <PasswordField prefWidth="123.0" />
+            <Button mnemonicParsing="false" text="Connect" />
+          </children>
+          <padding>
+            <Insets left="5.0" />
+          </padding>
+        </HBox>
+      </children>
+    </VBox>
+  </children>
+</AnchorPane>
