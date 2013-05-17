@@ -83,7 +83,7 @@ module JRubyFX::Controller
     def load_into(stage, settings={})
       # Inherit from default settings
       settings = DEFAULT_SETTINGS.merge({root_dir: (self.instance_variable_get("@fxml_root_dir") || fxml_root),
-          filename: self.instance_variable_get("@filename") || guess_filename(ctr)}).merge settings
+          filename: self.instance_variable_get("@filename")}).merge settings
 
       # Custom controls don't always need to be pure java, but oh well...
       become_java!
@@ -115,15 +115,17 @@ module JRubyFX::Controller
     # Normal FXML controllers will use Control#new
     def new(*args, &block)
       # Custom controls don't always need to be pure java, but oh well...
-      become_java!
+      become_java! if @filename
 
       # like new, without initialize
       ctrl = allocate
 
+      ctrl.initialize_controller(DEFAULT_SETTINGS.merge({root_dir: @fxml_root_dir || fxml_root,
+            filename: @filename}),
+        *args, &block) if @filename
+
       # return the controller
-      ctrl.initialize_controller({root_dir: @fxml_root_dir || fxml_root,
-          filename: @filename || guess_filename(ctrl)},
-        *args, &block)
+      ctrl
     end
 
     #decorator to force becoming java class
@@ -137,13 +139,6 @@ module JRubyFX::Controller
       # snag the filename from the caller
       @fxml_root_dir = root_dir
       register_type(self, name) if name
-    end
-
-    # guess the fxml filename if nobody set it
-    def guess_filename(obj)
-      firstTry = obj.class.name[/([\w]*)$/, 1] + ".fxml"
-      #TODO: check to see if snake_case version is on disk
-      firstTry
     end
 
     ##
