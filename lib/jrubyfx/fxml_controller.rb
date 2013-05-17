@@ -40,7 +40,7 @@ module JRubyFX::Controller
     base.instance_variable_set("@relative_to", caller[0][/(.*):[0-9]+:in /, 1])
     register_type base if base.is_a? Class
   end
-
+  
   # class methods for FXML controllers
   module ClassMethods
     include JRubyFX::DSL
@@ -74,7 +74,7 @@ module JRubyFX::Controller
     def load_into(stage, settings={})
       # Inherit from default settings with overloaded relative_to
       settings = DEFAULT_SETTINGS.merge({relative_to: self.instance_variable_get("@relative_to"),
-        filename: self.instance_variable_get("@filename") || guess_filename(ctr)}).merge settings
+          filename: self.instance_variable_get("@filename") || guess_filename(ctr)}).merge settings
 
       # Custom controls don't always need to be pure java, but oh well...
       become_java!
@@ -136,17 +136,6 @@ module JRubyFX::Controller
       #TODO: check to see if snake_case version is on disk
       firstTry
     end
-
-    # FXMLLoader#load also calls initialize
-    # if defined, move initialize so we can call it when we're ready
-    def method_added(meth)
-      if meth == :initialize and not @ignore_method_added
-        @ignore_method_added = true
-        alias_method :initialize_callback, :initialize
-        self.send(:define_method, :initialize) {|do_not_call_me|}
-      end
-    end
-
 
     ##
     # Event Handlers
@@ -217,24 +206,6 @@ module JRubyFX::Controller
         end
       end
     end
-
-    {
-      :key          => KeyEvent,
-      :mouse        => MouseEvent,
-      :touch        => TouchEvent,
-      :gesture      => GestureEvent,
-      :context      => ContextMenuEvent,
-      :context_menu => ContextMenuEvent,
-      :drag         => DragEvent,
-      :ime          => InputMethodEvent,
-      :input_method => InputMethodEvent,
-      :window       => WindowEvent,
-      :action       => ActionEvent,
-      :generic      => Event
-    }.each do |method, klass|
-      # define the handy overloads that just pass our arguments in
-      define_method("on_#{method}") { |name, &block| on name, klass, &block }
-    end
   end
 
   #default java ctor
@@ -266,9 +237,9 @@ module JRubyFX::Controller
     # custom controls are their own scene
     self.scene = self unless @scene
 
-    # Everything is ready, call initialize_callback
-    if private_methods.include? :initialize_callback
-      self.send :initialize_callback, *args, &block
+    # Everything is ready, call initialize
+    if private_methods.include? :initialize
+      self.send :initialize, *args, &block
     end
 
     #return ourself
