@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+
+<VBox id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="90.0" prefWidth="225.0" xmlns:fx="http://javafx.com/fxml">
+  <children>
+    <TextField fx:id="textField" />
+    <Label prefWidth="200.0" text="${textField.text}" />
+    <Slider max="1.0" min="-1.0" showTickLabels="false" showTickMarks="false" value="${controller.qtest}" />
+  </children>
+</VBox>
