@@ -82,4 +82,8 @@ class Java::javafx::stage::Stage
       source.load_into self, options
     end
   end
+  
+  def fxml=(source)
+    fxml(source)
+  end
 end
