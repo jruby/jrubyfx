@@ -76,7 +76,10 @@ class Java::javafx::stage::Stage
   end
   
   def fxml(source, options={})
-    # TODO: source == "file.fxml"
-    source.load_into self, options
+    if source.is_a? String
+      JRubyFX::Controller.load_fxml_only(source, self, options)
+    else
+      source.load_into self, options
+    end
   end
 end

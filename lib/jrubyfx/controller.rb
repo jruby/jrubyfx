@@ -251,6 +251,29 @@ module JRubyFX::Controller
   def css(css_selector)
     @scene.get_root.lookup_all(css_selector).to_a
   end
+  
+  # Loads a controller-less file
+  def self.load_fxml_only(filename, stage, settings={})
+    # Inherit from default settings
+    settings = DEFAULT_SETTINGS.merge({root_dir: fxml_root,
+        filename: filename}).merge settings
+
+    # load the FXML file
+    root = Controller.get_fxml_loader(settings[:filename], nil, settings[:root_dir]).load
+      
+    # TODO: de-duplicate this code
+
+    # Unless the FXML root node is a scene, wrap that node in a scene
+    if root.is_a? Scene
+      scene = root
+    else
+      scene = Scene.new root, settings[:width], settings[:height], settings[:depth_buffer]
+      scene.fill = settings[:fill]
+    end
+
+    # set the controller and stage scene
+    stage.scene = scene
+  end
 
 
   ##
