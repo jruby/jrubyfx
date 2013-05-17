@@ -131,7 +131,7 @@ ENDL
 
   # JRubyFX includes
   require_relative 'lib/jrubyfx/imports'
-  require_relative 'lib/jrubyfx/fxml_module'
+  require_relative 'lib/jrubyfx/module'
   require_relative 'lib/jrubyfx/dsl'
   fo = File.open("lib/jrubyfx/core_ext/precompiled.rb", "w")
   JRubyFX::DSL.compile_dsl(fo)

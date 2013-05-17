@@ -23,9 +23,9 @@ unless File.size? "#{File.dirname(__FILE__)}/jrubyfx/imports.rb"
 end
 # JRubyFX includes
 require_relative 'jrubyfx/imports'
-require_relative 'jrubyfx/fxml_module'
+require_relative 'jrubyfx/module'
 require_relative 'jrubyfx/dsl'
 JRubyFX::DSL.load_dsl # load it after we require the dsl package to not loop around
-require_relative 'jrubyfx/fxml_application'
-require_relative 'jrubyfx/fxml_controller'
+require_relative 'jrubyfx/application'
+require_relative 'jrubyfx/controller'
 require_relative 'jrubyfx/java_fx_impl'
