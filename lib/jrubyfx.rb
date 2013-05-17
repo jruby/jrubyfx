@@ -17,8 +17,12 @@ limitations under the License.
 require 'java' # for java_import
 require 'jruby/core_ext' # for the become_java!
 
+unless File.size? "#{File.dirname(__FILE__)}/jrubyfx/imports.rb"
+  puts "Please run `rake reflect` to generate the imports"
+  exit -1
+end
 # JRubyFX includes
-require_relative 'jrubyfx/jfx_imports'
+require_relative 'jrubyfx/imports'
 require_relative 'jrubyfx/fxml_module'
 require_relative 'jrubyfx/dsl'
 JRubyFX::DSL.load_dsl # load it after we require the dsl package to not loop around

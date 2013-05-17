@@ -56,28 +56,8 @@ module JRubyFX
     # fx object so we can manually create static overrides.
     #++
     # The list of snake_case names mapped to full java classes to use for DSL mapping.
-    # This list is dynamically generated using JRubyFX::FXImports::JFX_CLASS_HIERARCHY and
-    # Hash.flat_tree_inject.
-    NAME_TO_CLASSES = {
-      # observable structs
-      'observable_array_list' => proc { |*args| FXCollections.observable_array_list(*args) },
-      'double_property' => SimpleDoubleProperty,
-      'xy_chart_series' => Java::javafx.scene.chart.XYChart::Series,
-      'xy_chart_data' => Java::javafx.scene.chart.XYChart::Data,
-    }.merge(JFX_CLASS_HIERARCHY.flat_tree_inject(Hash) do |res, name, values|
-        # Merge in auto-generated list of classes from all the imported classes
-        unless values.is_a? Hash
-          values.map do |i|
-            # this regexp does snake_casing
-            # TODO: Anybody got a better way to get the java class instead of evaling its name?
-            res.merge!({i.snake_case.gsub(/(h|v)_(line|box)/, '\1\2') => eval(i)})
-          end
-          res
-        else
-          # we are not at a leaf node anymore, merge in previous work
-          res.merge!(values)
-        end
-      end)
+    # This list is dynamically generated using the `rake reflect` task. DO NOT EDIT THE COMMENT AT THE END!
+    require_relative 'dsl_map'
 
     # List of known overrides for enums.
 

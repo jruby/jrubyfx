@@ -53,6 +53,7 @@ module JRubyFX
 
     # If something is missing, just java_import it in your code.
     # And then ask us to put it in this list
+    ###### IMPORTANT LINE ##### (see rakefile, this is a magic line, don't delete)
 
     ##
     # This is the list of all classes in JavaFX that most apps should care about.
@@ -105,11 +106,12 @@ module JRubyFX
     }
 
     # Imports all the listed JavaFX classes
-    java_import *(JFX_CLASS_HIERARCHY.flat_tree_inject do |res, name, values|
+    $WRITE_OUT << "java_import "
+    $WRITE_OUT << (JFX_CLASS_HIERARCHY.flat_tree_inject do |res, name, values|
         name = "#{name.to_s}."
         name = "" if name == "."
         res.concat(values.map{|i| "#{name}#{i}"})
-      end)
-    java_import 'java.lang.Void'
+      end).map{|x| "'#{x}'"}.join(",")
+    $WRITE_OUT << "\njava_import 'java.lang.Void'"
   end
 end
