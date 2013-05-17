@@ -18,6 +18,9 @@ limitations under the License.
 require 'jrubyfx'
 require_relative 'complex_control'
 
+# Declare that all FXML files are relative to the directory this script is in.
+fxml_dir File.dirname(__FILE__)
+
 # Inherit from JRubyFX::Application to create our Application
 class SimpleFXApplication < JRubyFX::Application
   # we must override start to get a stage on application initialization
@@ -50,6 +53,7 @@ end
 class SimpleFXController
   include JRubyFX::Controller
 
+  # This is relative to the fxml_dir as defined above
   fxml_root "Demo.fxml"
 
   ##

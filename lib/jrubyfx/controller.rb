@@ -17,6 +17,17 @@ limitations under the License.
 
 require 'jrubyfx-fxmlloader'
 
+# Special methods
+module Kernel
+  def fxml_dir(value=nil)
+    if value
+      @@jrubyfx_fxml_dir = value
+    else
+      @@jrubyfx_fxml_dir
+    end
+  end
+end
+
 # Inherit from this class for FXML controllers
 module JRubyFX::Controller
   include JRubyFX::DSL
@@ -37,7 +48,6 @@ module JRubyFX::Controller
   def self.included(base)
     base.extend(ClassMethods)
     # register ourselves as a control. overridable with custom_fxml_control
-    base.instance_variable_set("@relative_to", caller[0][/(.*):[0-9]+:in /, 1])
     register_type base if base.is_a? Class
   end
   
@@ -49,7 +59,6 @@ module JRubyFX::Controller
     def included(base)
       base.extend(JRubyFX::Controller::ClassMethods)
       # register ourselves as a control. overridable with custom_fxml_control
-      base.instance_variable_set("@relative_to", caller[0][/(.*):[0-9]+:in /, 1])
       JRubyFX::DSL::ClassUtils.register_type base if base.is_a? Class
     end
 
@@ -73,7 +82,7 @@ module JRubyFX::Controller
 
     def load_into(stage, settings={})
       # Inherit from default settings with overloaded relative_to
-      settings = DEFAULT_SETTINGS.merge({relative_to: self.instance_variable_get("@relative_to"),
+      settings = DEFAULT_SETTINGS.merge({relative_to: (self.instance_variable_get("@relative_to") || (fxml_dir + "/x")),
           filename: self.instance_variable_get("@filename") || guess_filename(ctr)}).merge settings
 
       # Custom controls don't always need to be pure java, but oh well...
@@ -112,7 +121,7 @@ module JRubyFX::Controller
       ctrl = allocate
 
       # return the controller
-      ctrl.initialize_controller({relative_to: @relative_to,
+      ctrl.initialize_controller({relative_to: @relative_to || (fxml_dir + "/x"),
           filename: @filename || guess_filename(ctrl)},
         *args, &block)
     end
@@ -126,7 +135,7 @@ module JRubyFX::Controller
     def fxml_root(fxml=nil, name = nil, relative_to = nil)
       @filename = fxml
       # snag the filename from the caller
-      @relative_to = relative_to || caller[0][/(.*):[0-9]+:in /, 1]
+      @relative_to = relative_to
       register_type(self, name) if name
     end
 
@@ -292,9 +301,7 @@ module JRubyFX::Controller
       # If we are in a jar file, use the class loader to get the file from the jar (like java)
       JRuby.runtime.jruby_class_loader.get_resource filename
     else
-      # caller[0] returns a string like so:
-      # "/home/user/.rvm/rubies/jruby-1.7.1/lib/ruby/1.9/irb/workspace.rb:80:in `eval'"
-      relative_to ||= caller[1][/(.*):[0-9]+:in /, 1] # the 1 is the first match, aka everything up to the :
+      relative_to ||= (fxml_dir + "/x")
       # If we are in the normal filesystem, create a file url path relative to relative_to or this file
       URL.new "file:#{File.join File.dirname(relative_to), filename}"
     end
