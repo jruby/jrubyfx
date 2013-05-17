@@ -17,7 +17,7 @@ limitations under the License.
 
 require 'jrubyfx-fxmlloader'
 
-# Special methods
+# Special methods for fxml loading
 module Kernel
   def fxml_dir(value=nil)
     if value
@@ -152,41 +152,19 @@ module JRubyFX::Controller
 
     ##
     # call-seq:
-    #   on(callback) { |event_info| block } => Method
-    #   on(callback, EventType) { |event_info| block } => Method
-    #   on_type(callback) { |event_info| block } => Method
+    #   on(callback, ...) { |event_info| block } => Method
     #
-    # Registers a function of name `name` for a FXML defined event with the body in the block
-    # Note: there are overrides for most of the default types, so you should never
-    # need to manually specify the `type` argument unless you have custom events.
-    # The overrides are in the format on_* where * is the event type (ex: on_key for KeyEvent).
-    #
-    # === Convienence Methods
-    # * on_key           is for KeyEvent
-    # * on_mouse         is for MouseEvent
-    # * on_touch         is for TouchEvent
-    # * on_gesture       is for GestureEvent
-    # * on_context       is for ContextMenuEvent
-    # * on_context_menu  is for ContextMenuEvent
-    # * on_drag          is for DragEvent
-    # * on_ime           is for InputMethodEvent
-    # * on_input_method  is for InputMethodEvent
-    # * on_window        is for WindowEvent
-    # * on_action        is for ActionEvent
-    # * on_generic       is for Event
+    # Registers a function of name `name` for a FXML defined event with the body in the block.
+    # Note you can also just use normal methods
     #
     # === Examples
     #   on :click do
     #     puts "button clicked"
     #   end
     #
-    #   on_mouse :moved do |event|
-    #     puts "Mouse Moved"
+    #   on :moved, :pressed do |event|
+    #     puts "Mouse Moved or Key Pressed"
     #     p event
-    #   end
-    #
-    #   on_key :keypress do
-    #     puts "Key Pressed"
     #   end
     #
     # === Equivalent Java
@@ -197,27 +175,25 @@ module JRubyFX::Controller
     #
     #   @FXML
     #   private void moved(MouseEvent event) {
-    #     System.out.println("Mouse Moved");
+    #     System.out.println("Mouse Moved or Key Pressed");
     #   }
     #
     #   @FXML
     #   private void keypress(KeyEvent event) {
-    #     System.out.println("Key Pressed");
+    #     System.out.println("Key Pressed or Key Pressed");
     #   }
     #
-    def on(names, type=ActionEvent, &block)
+    def on(names, &block)
       [names].flatten.each do |name|
         class_eval do
           # must define this way so block executes in class scope, not static scope
           define_method name, block
-          # the first arg is the return type, the rest are params
-          add_method_signature name, [Void::TYPE, type]
         end
       end
     end
   end
 
-  #default java ctor
+  #default java ctor, override for arguments
   def java_ctor(ctor, initialize_arguments)
     ctor.call
   end
@@ -299,6 +275,7 @@ module JRubyFX::Controller
     fx.location =
       if JRubyFX::Application.in_jar?
       # If we are in a jar file, use the class loader to get the file from the jar (like java)
+      # TODO: should just be able to use URLs
       JRuby.runtime.jruby_class_loader.get_resource filename
     else
       relative_to ||= (fxml_dir + "/x")
