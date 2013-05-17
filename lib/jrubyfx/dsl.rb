@@ -56,7 +56,7 @@ module JRubyFX
     # fx object so we can manually create static overrides.
     #++
     # The list of snake_case names mapped to full java classes to use for DSL mapping.
-    # This list is dynamically generated using the `rake reflect` task. DO NOT EDIT THE COMMENT AT THE END!
+    # This list is dynamically generated using the `rake reflect` task.
     require_relative 'dsl_map'
 
     # List of known overrides for enums.
