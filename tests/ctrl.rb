@@ -5,10 +5,19 @@ fxml_root File.dirname(__FILE__)
 
 class NoCtrlApplication < JRubyFX::Application
   def start(stage)
-    with(stage, title: "NoCtrl") do
-      fxml "noCtrl.fxml"
+    with(stage, title: "Controller") do
+      fxml "ctrl.fxml"
       show
     end
+  end
+end
+
+class FxmlRefController
+  include JRubyFX::Controller
+  
+  def close_it
+    puts "Closing it properly"
+    Platform.exit
   end
 end
 
