@@ -15,7 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =end
 #:nodoc: all
-require_relative '../jrubyfx'
 
 # Due to certain bugs in JRuby 1.7 (namely some newInstance mapping bugs), we
 # are forced to re-create the Launcher if we want a pure ruby wrapper

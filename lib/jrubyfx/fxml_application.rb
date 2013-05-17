@@ -15,8 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =end
 
-require_relative '../jrubyfx'
-
 ##
 # Inherit from this class for FXML Applications. You must use this class for both
 # raw JavaFX and FXML as it contains the launch method.
