@@ -19,7 +19,7 @@ require 'jrubyfx'
 require_relative 'complex_control'
 
 # Declare that all FXML files are relative to the directory this script is in.
-fxml_dir File.dirname(__FILE__)
+fxml_root File.dirname(__FILE__)
 
 # Inherit from JRubyFX::Application to create our Application
 class SimpleFXApplication < JRubyFX::Application
@@ -36,7 +36,7 @@ class SimpleFXApplication < JRubyFX::Application
     #   :fill         => Color::
     #   :depth_buffer => boolean
     #   :initialize   => [args]
-    #   :relative_to  => path_to_fxml_views
+    #   :root_dir     => path_to_fxml_views
     #   :filename     => FXML file to use
 
     SimpleFXController.load_into stage,
@@ -53,8 +53,9 @@ end
 class SimpleFXController
   include JRubyFX::Controller
 
-  # This is relative to the fxml_dir as defined above
-  fxml_root "Demo.fxml"
+  # This is relative to the fxml_root as defined above
+  # This says that this class by default will launch this fxml file
+  fxml "Demo.fxml"
 
   ##
   # Setup the View

@@ -37,8 +37,8 @@ require 'jrubyfx'
 
 class FXMLExampleController
   include JRubyFX::Controller
-  fxml_root "fxml_example.fxml"
-    on :handleSubmitButtonAction do
-        @actiontarget.text = "Sign in button pressed"
-    end
+  fxml "fxml_example.fxml"
+  on :handleSubmitButtonAction do
+    @actiontarget.text = "Sign in button pressed"
+  end
 end

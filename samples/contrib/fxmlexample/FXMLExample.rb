@@ -36,15 +36,14 @@ Original Java source from: http://docs.oracle.com/javafx/2/get_started/jfxpub-ge
 
 require 'jrubyfx'
 require_relative 'FXMLExampleController'
+fxml_root File.dirname(__FILE__)
 
 class FXMLExample < JRubyFX::Application
-
-    def start(stage)
-        FXMLExampleController.load_into(stage)
-
-        stage.title = "FXML Welcome"
-        stage.show()
-    end
+  def start(stage)
+    FXMLExampleController.load_into(stage)
+    stage.title = "FXML Welcome"
+    stage.show()
+  end
 end
 
 FXMLExample.launch

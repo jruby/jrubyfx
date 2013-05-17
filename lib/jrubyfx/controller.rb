@@ -19,9 +19,9 @@ require 'jrubyfx-fxmlloader'
 
 # Special methods for fxml loading
 module Kernel
-  def fxml_dir(value=nil)
+  def fxml_root(value=nil)
     if value
-      @@jrubyfx_fxml_dir = value
+      @@jrubyfx_fxml_dir = File.expand_path(value)
     else
       @@jrubyfx_fxml_dir
     end
@@ -38,7 +38,7 @@ module JRubyFX::Controller
     height: -1,
     fill: :white,
     depth_buffer: false,
-    relative_to: nil,
+    root_dir: nil,
     initialized: nil
   }
 
@@ -68,7 +68,7 @@ module JRubyFX::Controller
     # * :height => Default height of the Scene
     # * :fill => Fill color of the Scene's background
     # * :depth_buffer => JavaFX Scene DepthBuffer argument (look it up)
-    # * :relative_to =>  filename search for fxml realtive to this file
+    # * :root_dir =>  filename search for fxml realtive to this file
     #
     # === Examples
     #
@@ -81,8 +81,8 @@ module JRubyFX::Controller
     #   controller = root.getController();
 
     def load_into(stage, settings={})
-      # Inherit from default settings with overloaded relative_to
-      settings = DEFAULT_SETTINGS.merge({relative_to: (self.instance_variable_get("@relative_to") || (fxml_dir + "/x")),
+      # Inherit from default settings
+      settings = DEFAULT_SETTINGS.merge({root_dir: (self.instance_variable_get("@fxml_root_dir") || fxml_root),
           filename: self.instance_variable_get("@filename") || guess_filename(ctr)}).merge settings
 
       # Custom controls don't always need to be pure java, but oh well...
@@ -95,7 +95,7 @@ module JRubyFX::Controller
       ctrl.stage = stage
 
       # load the FXML file
-      root = Controller.get_fxml_loader(settings[:filename], ctrl, settings[:relative_to]).load
+      root = Controller.get_fxml_loader(settings[:filename], ctrl, settings[:root_dir]).load
 
       # Unless the FXML root node is a scene, wrap that node in a scene
       if root.is_a? Scene
@@ -121,7 +121,7 @@ module JRubyFX::Controller
       ctrl = allocate
 
       # return the controller
-      ctrl.initialize_controller({relative_to: @relative_to || (fxml_dir + "/x"),
+      ctrl.initialize_controller({root_dir: @fxml_root_dir || fxml_root,
           filename: @filename || guess_filename(ctrl)},
         *args, &block)
     end
@@ -132,10 +132,10 @@ module JRubyFX::Controller
     end
 
     # Set the filename of the fxml this control is part of
-    def fxml_root(fxml=nil, name = nil, relative_to = nil)
+    def fxml(fxml=nil, name = nil, root_dir = nil)
       @filename = fxml
       # snag the filename from the caller
-      @relative_to = relative_to
+      @fxml_root_dir = root_dir
       register_type(self, name) if name
     end
 
@@ -205,13 +205,13 @@ module JRubyFX::Controller
     java_ctor self.class.superclass.instance_method(:initialize).bind(self), args
 
     # load the FXML file with the current control as the root
-    load_fxml_root options[:filename], options[:relative_to]
+    load_fxml options[:filename], options[:root_dir]
 
     finish_initialization *args, &block
   end
 
-  def load_fxml_root(filename, relative_to=nil)
-    fx = Controller.get_fxml_loader(filename, self, relative_to)
+  def load_fxml(filename, root_dir=nil)
+    fx = Controller.get_fxml_loader(filename, self, root_dir)
     fx.root = self
     fx.load
   end
@@ -257,11 +257,10 @@ module JRubyFX::Controller
   # call-seq:
   #   get_fxml_loader(filename) => FXMLLoader
   #   get_fxml_loader(filename, controller_instance) => FXMLLoader
-  #   get_fxml_loader(filename, controller_instance, relative_to) => FXMLLoader
+  #   get_fxml_loader(filename, controller_instance, root_dir) => FXMLLoader
   #
   # Load a FXML file given a filename and a controller and return the loader
-  # relative_to can be a file that this should be relative to, or an index
-  # of the caller number.
+  # root_dir is a directory that the file is relative to.
   # === Examples
   #   root = JRubyFX::Controller.get_fxml_loader("Demo.fxml").load
   #
@@ -270,7 +269,7 @@ module JRubyFX::Controller
   # === Equivalent Java
   #   Parent root = FXMLLoader.load(getClass().getResource("Demo.fxml"));
   #
-  def self.get_fxml_loader(filename, controller = nil, relative_to = nil)
+  def self.get_fxml_loader(filename, controller = nil, root_dir = nil)
     fx = FxmlLoader.new
     fx.location =
       if JRubyFX::Application.in_jar?
@@ -278,9 +277,9 @@ module JRubyFX::Controller
       # TODO: should just be able to use URLs
       JRuby.runtime.jruby_class_loader.get_resource filename
     else
-      relative_to ||= (fxml_dir + "/x")
+      root_dir ||= fxml_root
       # If we are in the normal filesystem, create a file url path relative to relative_to or this file
-      URL.new "file:#{File.join File.dirname(relative_to), filename}"
+      URL.new "file:#{File.join root_dir, filename}"
     end
     # we must set this here for JFX to call our events
     fx.controller = controller

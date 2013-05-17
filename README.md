@@ -86,7 +86,7 @@ Override start(stage) in the application. See samples/fxml/Demo.rb for commented
 or the fils in samples/javafx for non-FXML (programatic JavaFX, but you should really
 look into FXML, its better) or see the [Getting Started Guide](https://github.com/jruby/jrubyfx/wiki/Getting-Started) and the Notes.
 
-If you want rdoc, run `rake rdoc`.
+If you want rdoc, run `rake rdoc`. Please note that there are lots of generated methods and conventions that are not in the RDoc. Please read the Getting Started Guide or the tutorials.
 
 Issues
 ------

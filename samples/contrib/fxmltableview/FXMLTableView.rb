@@ -37,6 +37,7 @@ Original Java File from http://docs.oracle.com/javafx/2/fxml_get_started/jfxpub-
 require 'jrubyfx'
 require_relative 'FXMLTableViewController'
 require_relative 'FormattedTableCellFactory'
+fxml_root File.dirname(__FILE__)
 
 class FXMLTableView <  JRubyFX::Application
   def start(primaryStage)
