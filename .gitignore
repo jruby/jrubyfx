@@ -9,3 +9,5 @@ Gemfile.lock
 .ruby-version
 *.bak
 lib/jrubyfx/core_ext/precompiled.rb
+lib/jrubyfx/imports.rb
+lib/jrubyfx/dsl_map.rb
