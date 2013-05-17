@@ -102,8 +102,8 @@ class SimpleFXController
     puts "Clicked Green"
   end
 
-  # `on_action` and `on` are the same for standard ActionEvents
-  on_action :click_purple do
+  # `def` and `on` are the same
+  on :click_purple do
     puts "Clicked Purple"
   end
 
@@ -112,7 +112,7 @@ class SimpleFXController
     puts "Clicked Red", arg
   end
 
-  # you can even register one handler for multiple events by using an array
+  # you can even register one handler for multiple events by using an array with `on`
   on [:click_blue, :click_orange, :click_black] do
     puts "Clicked Blue, Orange, or Black"
   end
@@ -120,38 +120,19 @@ class SimpleFXController
   # this is a different style
   on(:quit) { Platform.exit }
 
-  # For key events, you must use on_key
-  on_key :keyPressed do |e|
+  # standard methods also work
+  def keyPressed(e)
     puts "You pressed a key!"
     puts "Alt: #{e.alt_down?} Ctrl: #{e.control_down?} Shift: #{e.shift_down?} Meta (Windows): #{e.meta_down?} Shortcut: #{e.shortcut_down?}"
     puts "Key Code: #{e.code} Character: #{e.character.to_i} Text: '#{e.text}'"
   end
 
-  # For Context menu event, you must use on_context or on_context_menu
-  on_context :cmenu do
+  def cmenu
     puts "Context Menu Requested"
   end
 
-  # Full list of mappings:
-  # on              is for ActionEvent
-  # on_action       is for ActionEvent
-  # on_key          is for KeyEvent
-  # on_mouse        is for MouseEvent
-  # on_touch        is for TouchEvent
-  # on_gesture      is for GestureEvent
-  # on_context      is for ContextMenuEvent
-  # on_context_menu is for ContextMenuEvent
-  # on_drag         is for DragEvent
-  # on_ime          is for InputMethodEvent
-  # on_input_method is for InputMethodEvent
-  # on_window       is for WindowEvent
-  # on_generic      is for Event
-  #
-  # And if you need a custom Event, you can use:
-  # on :name, YourCustomEvent do |e| ... end
-
   # Actually do something: export jar! Found under file menu
-  on :export_jar do
+  def export_jar
 
     # the build function lets you set properties and call functions on an object
     # however, you can't reference stage, scene, or any local methods
