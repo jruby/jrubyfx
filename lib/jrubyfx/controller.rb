@@ -47,6 +47,7 @@ module JRubyFX::Controller
 
   def self.included(base)
     base.extend(ClassMethods)
+    base.extend(JRubyFX::FXMLClassUtils)
     # register ourselves as a control. overridable with custom_fxml_control
     register_type base if base.is_a? Class
   end

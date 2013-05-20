@@ -14,6 +14,7 @@ end
 class MytestingController
   include JRubyFX::Controller
   fxml "bindings.fxml"
+  fxml_accessor :qtest, SimpleDoubleProperty
 
   # nodes with ruby method-like fx:ids may be accessed directly
   def initialize
@@ -22,25 +23,10 @@ class MytestingController
       loop {
         sleep 0.1
         run_later do
-          @test.setValue(Math.sin(t+=0.03))
+          @qtest.setValue(Math.sin(t+=0.03))
         end
       }
     end
-  end
-  def qtestGetType
-    java.lang.Double
-  end
-  def getQtest
-    qtestProperty.get
-  end
-  def setQtest(x)
-    qtestProperty.set(x)
-  end
-  def qtestProperty
-    unless @test
-      @test = SimpleDoubleProperty.new(self, "qtest")
-    end
-    @test
   end
 
 end
