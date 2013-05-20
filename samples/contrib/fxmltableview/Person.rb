@@ -37,14 +37,14 @@ require 'java'
 
 class Person
   include JRubyFX
-  fxml_accessor :email, java.lang.String
-  fxml_accessor :firstName, java.lang.String
-  fxml_accessor :lastName, java.lang.String
+  fxml_accessor :email, SimpleStringProperty
+  fxml_accessor :firstName, SimpleStringProperty
+  fxml_accessor :lastName, SimpleStringProperty
 
   def initialize(firstName="",lastName="", email="")
-    @firstName = SimpleStringProperty.new(firstName);
-    @lastName = SimpleStringProperty.new(lastName);
-    @email = SimpleStringProperty.new(email);
+    self.first_name = firstName
+    self.last_name = lastName
+    self.email = email
   end
 end
 

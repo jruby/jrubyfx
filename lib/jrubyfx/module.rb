@@ -124,30 +124,49 @@ module JRubyFX
         return type.java_class
       end
     end
-    def fxml_accessor(symbol_name, type=java::lang::String)
+    def fxml_accessor(symbol_name,ptype=Java::javafx.beans.property.SimpleStringProperty, type=nil)
       # TODO: RDoc
       # TODO: somebody clean this up
-      # TODO: _reader and _writer
+      # TODO: _reader and _writer ? maybe? not?
+      pname = symbol_name.id2name + "Property"
+      unless type
+        type = ptype.java_class.java_instance_methods.find_all{|x|x.name == "getValue"}.map{|x|x.return_type}.find_all{|x|x != java.lang.Object.java_class}
+        if type.length != 1
+          raise "Unknown property type. Please manually supply a type or report this as a bug"
+        end
+        type = type[0]
+      else
+        type = type.java_class
+      end
       send(:define_method, symbol_name.id2name.snake_case + "=") do |val|
-        instance_variable_get("@#{symbol_name}").setValue val
+        send(pname).setValue val
       end
       send(:define_method, symbol_name.id2name.snake_case) do
-        instance_variable_get("@#{symbol_name}").getValue
+        send(pname).getValue
       end
       send(:define_method, symbol_name.id2name.snake_case + "GetType") do
-        return type.java_class
+        return type
       end
       camel = symbol_name.id2name
       camel = camel[0].upcase + camel[1..-1]
       send(:define_method, "set" + camel) do |val|
-        instance_variable_get("@#{symbol_name}").setValue val
+        send(pname).setValue val
       end
       send(:define_method, "get" + camel) do
-        instance_variable_get("@#{symbol_name}").getValue
+        send(pname).getValue
       end
       send(:define_method, symbol_name.id2name + "GetType") do
-        return type.java_class
+        return type
       end
+      send(:define_method, pname) do
+        unless instance_variable_get("@#{symbol_name}")
+          instance_variable_set("@#{symbol_name}", ptype.new(self, symbol_name.to_s))
+        end
+        return instance_variable_get("@#{symbol_name}")
+      end
+      add_method_signature pname, [ptype]
+      add_method_signature "set" + camel, [java.lang.Void, type]
+      add_method_signature "get" + camel, [type]
     end
   end
 end
