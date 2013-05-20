@@ -41,6 +41,8 @@ task :clean do
   rm_rf "pkg" if File.exists? "pkg"
   rm_rf "doc" if File.exists? "doc"
   rm_rf "lib/jrubyfx/core_ext/precompiled.rb"
+  rm_rf "lib/jrubyfx/dsl_map.rb"
+  rm_rf "lib/jrubyfx/imports.rb"
 end
 
 desc "Clean all build artifacts INCLUDING jruby-complete.jar"
