@@ -20,7 +20,7 @@ require 'rubygems/package_task'
 require 'rdoc/task'
 require_relative 'lib/jrubyfx_tasks'
 require_relative 'lib/jrubyfx/version'
-task :default => [:build, :run]
+task :default => [:install]
 
 jar = ENV['jar'] || "jar"
 target = ENV['target'] || "target"
