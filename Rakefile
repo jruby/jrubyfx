@@ -34,6 +34,8 @@ cd base_dir unless Dir.pwd == base_dir
 main_script = nil if main_script == "nil"
 
 touch "lib/jrubyfx/core_ext/precompiled.rb" # Get around rake globbing issue
+touch "lib/jrubyfx/dsl_map.rb" # Get around rake globbing issue
+touch "lib/jrubyfx/imports.rb" # Get around rake globbing issue
 
 desc "Clean all build artifacts except jruby-complete.jar"
 task :clean do
