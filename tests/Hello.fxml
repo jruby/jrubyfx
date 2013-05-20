@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" xmlns:fx="http://javafx.com/fxml">
+  <children>
+	<Label fx:id="hello_label" text="Hello World!" underline="true">
+	  <font>
+	    <Font size="66.0" />
+	  </font>
+	</Label>
+	<Button mnemonicParsing="false" onAction="#say_clicked" prefHeight="49.0" prefWidth="166.0" text="Click Me!">
+	  <font>
+	    <Font size="23.0" />
+	  </font>
+	</Button>
+  </children>
+</VBox>
