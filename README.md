@@ -1,11 +1,11 @@
 JRubyFX
 =======
-JRubyFX is a pure ruby wrapper for JavaFX 2.x with FXML support
+JRubyFX is a pure ruby wrapper for JavaFX 2.2+ with FXML support
 
 Status
 ------
 JRubyFX master should be usable in its current form and able to run simple FXML apps if used properly (see Issues).
-FXML syntax in master is very different from 0.9 series currently on rubygems and not yet fully stabilized in master. Use 0.9.2 if you care about this.
+FXML syntax in master/1.0 is very different from 0.9 series. Please see the [JRubyFX github wiki](https://github.com/jruby/jrubyfx/wiki/) for more details.
 
 Install
 -----
@@ -15,7 +15,7 @@ gem install jrubyfx
 
 Manual Build and Install
 -----
-Build is done using rake/gem/bundler/rdoc. You need JRuby (1.9 mode), Java >1.6 with JavaFX, but Java 1.7 or 1.8 are recommended. Building native application packages requires JDK 8.
+Build is done using rake/gem/bundler/rdoc. You need JRuby >1.7.4 (in 1.9 mode), Java >1.6 with JavaFX 2.2, but Java 7 is recommended. Building native application packages requires JDK 8.
 
 ```text
 gem install jrubyfx-fxmlloader
@@ -56,7 +56,9 @@ Example: If my project directory is `Hello`, all my files are in `src`, I have a
 jrubyfx-jarify src --main src/HelloWorldApp.rb dist/HelloWorldApp.jar --native --name "Hello World App" -v
 ```
 
-Sample
+Also note that you can do this in code, see samples/fxml/Demo.rb for the rake task usage.
+
+Samples
 -------
 
 To run sample:
@@ -74,8 +76,10 @@ rake run main_script=samples/fxml/Demo.rb
 To run all samples (a nice quick way to make sure you didn't break anything), run:
 
 ```text
-jruby samples/test_all_the_samples.rb
+jruby -I lib samples/test_all_the_samples.rb
 ```
+
+Several other files that can be used as examples are in the tests/ folder
 
 Creating Application and Controller
 -----------------------------------
@@ -84,19 +88,16 @@ Require the 'jrubyfx' file/gem, and subclass JRubyFX::Application (and JRubyFX::
 At the bottom of the file, call _yourFXApplicationClass_.launch().
 Override start(stage) in the application. See samples/fxml/Demo.rb for commented FXML example,
 or the fils in samples/javafx for non-FXML (programatic JavaFX, but you should really
-look into FXML, its better) or see the [Getting Started Guide](https://github.com/jruby/jrubyfx/wiki/Getting-Started) and the Notes.
+look into FXML, its better) or see the [Getting Started Guide](https://github.com/jruby/jrubyfx/wiki/Getting-Started) and the Syntax Notes on the [JRubyFX github wiki](https://github.com/jruby/jrubyfx/wiki/)
 
 If you want rdoc, run `rake rdoc`. Please note that there are lots of generated methods and conventions that are not in the RDoc. Please read the Getting Started Guide or the tutorials.
 
 Issues
 ------
-* You must NOT set fx:controller in the FXML files. At the moment, due to JRuby bugs, Java is unable
-  to initialize Ruby objects in this way. See Demo.rb for the proper way to set the controller (passing the fxml and stage into Controller#new)
+* Use JRubyFX-FxmlLoader's FxmlLoader instead of javafx.fxml.FXMLLoader for maximum Ruby support.
 * FXML support in master for very complex documents is untested. Report bugs against JRubyFX-FxmlLoader with the FXML file if it fails.
-* You must use the provided JavaFXImpl::Launcher to launch the app (aka: call _yourFXApplicationClass_.launch()). This is due to the same JRuby bugs
-  as above.
-* Errors loading jfxrt.jar are bugs. Please report if you encounter this issue, tell us your platform,
-  OS, and version of JRuby
+* You must use the provided JavaFXImpl::Launcher to launch the app (aka: call _yourFXApplicationClass_.launch())
+* Errors loading JavaFX are bugs. Please report if you encounter this issue, tell us your platform, OS, and version of JRuby
 * Jarify command needs the `jar` executable in your path.
 * Any other difficulties are bugs. Please report them
 
