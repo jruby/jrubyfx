@@ -67,7 +67,7 @@ module JRubyFX
 
       #copy source in
       FileList[src].each do |iv_srv|
-        cp iv_srv, "#{target}/#{File.basename(iv_srv)}" if (main_script == nil || main_script != iv_srv) && opts[:file_filter].call(iv_srv)
+        cp_r iv_srv, "#{target}/#{File.basename(iv_srv)}" if (main_script == nil || main_script != iv_srv) && opts[:file_filter].call(iv_srv)
       end
       cp main_script, "#{target}/jar-bootstrap.rb" unless main_script == nil
 
@@ -83,10 +83,9 @@ module JRubyFX
       FileList["#{File.dirname(__FILE__)}/*"].each do |librb|
         cp_r librb, target
       end
-      
+
       #copy fxmlloader in
-      require 'jrubyfx-fxmlloader'
-      FileList["#{File.dirname(MAGIC_FXML_JAVAFX_JRUBYFX_FXMLLOADER__FILE__LOCATION_SUPER_SECRET)}/*"].each do |librb|
+      FileList["#{File.join(Gem::Specification.find_by_path('jrubyfx-fxmlloader').full_gem_path, "lib")}/*"].each do |librb|
         cp_r librb, target
       end
 
@@ -116,7 +115,7 @@ module JRubyFX
 
       # the native bundling uses ant
       require "ant"
-      
+
       output_jar = Pathname.new(output_jar)
       dist_dir = output_jar.parent
       jar_name = File.basename(output_jar)
