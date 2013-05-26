@@ -19,9 +19,9 @@ require 'jrubyfx-fxmlloader'
 
 # Special methods for fxml loading
 module Kernel
-  def fxml_root(value=nil)
-    if value
-      @@jrubyfx_fxml_dir = File.expand_path(value)
+  def fxml_root(value=nil, jar_value=nil)
+    if value or jar_value
+      @@jrubyfx_fxml_dir = JRubyFX::Application.in_jar? ? jar_value : File.expand_path(value)
     else
       @@jrubyfx_fxml_dir
     end
@@ -51,7 +51,7 @@ module JRubyFX::Controller
     # register ourselves as a control. overridable with custom_fxml_control
     register_type base if base.is_a? Class
   end
-  
+
   # class methods for FXML controllers
   module ClassMethods
     include JRubyFX::DSL
@@ -247,7 +247,7 @@ module JRubyFX::Controller
   def css(css_selector)
     @scene.get_root.lookup_all(css_selector).to_a
   end
-  
+
   # Loads a controller-less file
   def self.load_fxml_only(filename, stage, settings={})
     # Inherit from default settings
@@ -256,7 +256,7 @@ module JRubyFX::Controller
 
     # load the FXML file
     root = Controller.get_fxml_loader(settings[:filename], nil, settings[:root_dir]).load
-      
+
     # TODO: de-duplicate this code
 
     # Unless the FXML root node is a scene, wrap that node in a scene
@@ -294,7 +294,7 @@ module JRubyFX::Controller
       if JRubyFX::Application.in_jar?
       # If we are in a jar file, use the class loader to get the file from the jar (like java)
       # TODO: should just be able to use URLs
-      JRuby.runtime.jruby_class_loader.get_resource filename
+      JRuby.runtime.jruby_class_loader.get_resource File.join(root_dir, filename)
     else
       root_dir ||= fxml_root
       # If we are in the normal filesystem, create a file url path relative to relative_to or this file
