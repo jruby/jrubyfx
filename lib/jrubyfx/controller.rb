@@ -115,6 +115,9 @@ module JRubyFX::Controller
     # This is the default override for custom controls
     # Normal FXML controllers will use Control#new
     def new(*args, &block)
+      if @preparsed && @preparsed.length > 0
+        return @preparsed.pop.finish_initialization(*args, &block)
+      end
       # Custom controls don't always need to be pure java, but oh well...
       become_java! if @filename
 
@@ -127,6 +130,17 @@ module JRubyFX::Controller
 
       # return the controller
       ctrl
+    end
+
+    def preparse_new(num=3)
+      become_java! if @filename
+      @preparsed ||= []
+      num.times do
+        ctrl = allocate
+        ctrl.pre_initialize_controller(DEFAULT_SETTINGS.merge({root_dir: @fxml_root_dir || fxml_root,
+              filename: @filename})) if @filename
+        @preparsed << ctrl
+      end
     end
 
     #decorator to force becoming java class
@@ -204,6 +218,16 @@ module JRubyFX::Controller
     load_fxml options[:filename], options[:root_dir]
 
     finish_initialization *args, &block
+  end
+
+  # Initialize all controllers
+  def pre_initialize_controller(options={})
+
+    # JRuby complains loudly (probably broken behavior) if we don't call the ctor
+    java_ctor self.class.superclass.instance_method(:initialize).bind(self), [] #TODO: do we need to call this now with []?
+
+    # load the FXML file with the current control as the root
+    load_fxml options[:filename], options[:root_dir]
   end
 
   def load_fxml(filename, root_dir=nil)
