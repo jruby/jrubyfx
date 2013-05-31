@@ -79,7 +79,7 @@ module JRubyFX
     def method_missing(name, *args, &block)
       clazz = NAME_TO_CLASSES[name.to_s.gsub(/!$/, '')]
 
-      if caller[0] == caller[2]
+      if caller[0] == caller[2] and caller[0].include? "dsl.rb"
         raise "Whoa! method_missing caught infinite loop. Trying to run #{name}(#{args.inspect}) failed. Method not found."
       end
 
