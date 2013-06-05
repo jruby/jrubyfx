@@ -34,7 +34,7 @@ module JRubyFX
     # corrupt or an older version, set force to true to delete and re-download
     def download_jruby(jruby_version, force=false)
       dist = "#{ENV['HOME']}/.jruby-jar"
-      unless force || (File.exists?("#{dist}/jruby-complete.jar") && File.size("#{dist}/jruby-complete.jar") > 0)
+      unless force || (File.exists?("#{dist}/jruby-complete-#{jruby_version}.jar") && File.size("#{dist}/jruby-complete-#{jruby_version}.jar") > 0)
         mkdir_p dist
         base_dir = Dir.pwd
         cd dist
@@ -84,8 +84,21 @@ module JRubyFX
         cp_r librb, target
       end
 
+      fxml_loader_path = nil
+      # this will find it if we are calling ruby -I whatever
+      $LOAD_PATH.each do |pth|
+        if File.exist? File.join(pth, "jrubyfx-fxmlloader.rb")
+          fxml_loader_path = pth
+          break
+        end
+      end
+
+      # default to gems
+      unless fxml_loader_path
+        fxml_loader_path = File.join(Gem::Specification.find_by_path('jrubyfx-fxmlloader').full_gem_path, "lib")
+      end
       #copy fxmlloader in
-      FileList["#{File.join(Gem::Specification.find_by_path('jrubyfx-fxmlloader').full_gem_path, "lib")}/*"].each do |librb|
+      FileList["#{fxml_loader_path}/*"].each do |librb|
         cp_r librb, target
       end
 
@@ -148,7 +161,7 @@ module JRubyFX
 
     private
     def download(version_string) #:nodoc:
-      File.open("jruby-complete.jar","wb") do |f|
+      File.open("jruby-complete-#{version_string}.jar","wb") do |f|
         f.write(open("#{BASE_URL}/#{version_string}/jruby-complete-#{version_string}.jar").read)
       end
     end
