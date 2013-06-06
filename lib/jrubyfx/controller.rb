@@ -19,11 +19,26 @@ require 'jrubyfx-fxmlloader'
 
 # Special methods for fxml loading
 module Kernel
+  @@jrubyfx_res_dir = {}
   def fxml_root(value=nil, jar_value=nil)
     if value or jar_value
       @@jrubyfx_fxml_dir = JRubyFX::Application.in_jar? ? jar_value : File.expand_path(value)
     else
       @@jrubyfx_fxml_dir
+    end
+  end
+  def resource_root(res_name, value=nil, jar_value=nil)
+    if value or jar_value
+      @@jrubyfx_res_dir[res_name.to_sym] = JRubyFX::Application.in_jar? ? jar_value : File.expand_path(value)
+    else
+      @@jrubyfx_res_dir[res_name.to_sym]
+    end
+  end
+  def resource_url(type, relative_path)
+    if JRubyFX::Application.in_jar?
+      JRuby.runtime.jruby_class_loader.get_resource("#{resource_root(type)}/#{relative_path}");
+    else
+      java.net.URL.new("file:" + File.join(resource_root(type), relative_path))
     end
   end
 end
