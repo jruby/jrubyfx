@@ -63,7 +63,7 @@ module JRubyFX
       mkdir_p target
 
       #copy jruby jar file in, along with script and our rb files
-      cp "#{ENV['HOME']}/.jruby-jar/jruby-complete.jar", "#{target}/#{output_jar}"
+      cp "#{ENV['HOME']}/.jruby-jar/jruby-complete-#{opts[:version] || JRUBY_VERSION}.jar", "#{target}/#{output_jar}"
 
       #copy source in
       FileList[src].each do |iv_srv|
