@@ -28,7 +28,7 @@ module JRubyFX
   #   with(obj, hash) => obj
   #   with(obj) { block } => obj
   #   with(obj, hash) { block }=> obj
-  #   
+  #
   # Set properties (e.g. setters) on the passed in object plus also invoke
   # any block passed against this object.
   # === Examples
@@ -47,14 +47,14 @@ module JRubyFX
       obj.extend(JRubyFX)
       obj.instance_eval(&block)
     end
-    
+
     obj
   end
 
   ##
   # call-seq:
   #   run_later { block }
-  # 
+  #
   # Convenience method so anything can safely schedule to run on JavaFX
   # main thread.
   def run_later(&block)
@@ -67,11 +67,11 @@ module JRubyFX
   #   build(class, hash) => obj
   #   build(class) { block } => obj
   #   build(class, hash) { block } => obj
-  #   
+  #
   # Create "build" a new JavaFX instance with the provided class and
   # set properties (e.g. setters) on that new instance plus also invoke
   # any block passed against this new instance.  This also can build a proc
-  # or lambda form in which case the return value of the block will be what 
+  # or lambda form in which case the return value of the block will be what
   # is used to set the additional properties on.
   # === Examples
   #
@@ -93,11 +93,11 @@ module JRubyFX
 
     with(obj, properties, &block)
   end
-  
+
   def self.included(mod)
     mod.extend(JRubyFX::FXMLClassUtils)
   end
-  
+
   module FXMLClassUtils
     def fxml_raw_accessor(symbol_name, type=java::lang::String)
       # TODO: RDoc
@@ -129,6 +129,7 @@ module JRubyFX
       # TODO: somebody clean this up
       # TODO: _reader and _writer ? maybe? not?
       pname = symbol_name.id2name + "Property"
+      raise "#{ptype} does not inherit from Property." unless ptype.ancestors.include? Java::javafx.beans.property.Property
       unless type
         type = ptype.java_class.java_instance_methods.find_all{|x|x.name == "getValue"}.map{|x|x.return_type}.find_all{|x|x != java.lang.Object.java_class}
         if type.length != 1
