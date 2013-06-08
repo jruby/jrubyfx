@@ -37,13 +37,13 @@ require_relative 'Person'
 class FXMLTableViewController
   include JRubyFX::Controller
   fxml "fxml_tableview.fxml"
-  
+
   def addPerson
     data = @tableView.items
     data.add(Person.new(@firstNameField.text,
         @lastNameField.text,
         @emailField.text))
-    
+
     @firstNameField.text = ""
     @lastNameField.text = ""
     @emailField.text = ""

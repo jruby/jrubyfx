@@ -23,6 +23,7 @@ module Java::javafx::beans::value::ObservableValue
   ##
   # call-seq:
   #   add_change_listener { |observable, old_value, new_value| block }
+  #   add_change_listener { |new_value| block }
   #
   # Add a ruby block to call when the property changes changes
   def add_change_listener(type=nil, &block)
@@ -33,7 +34,20 @@ module Java::javafx::beans::value::ObservableValue
     if type == :list || type == :map
       super(&block)
     else
-      java_send :addListener, [ChangeListener.java_class], block
+      old_verbose = $VERBOSE
+      begin
+        $VERBOSE = nil
+        addListener(ChangeListener.impl {|name, x, y, z|
+            if block.arity == 1
+              block.call(z) # just call with new
+            else
+              block.call(x, y, z)
+            end
+            })
+      ensure
+        # always re-set to old value, even if block raises an exception
+        $VERBOSE = old_verbose
+      end
     end
   end
 
@@ -53,7 +67,14 @@ module Java::javafx::collections::ObservableList
   #
   # Add a ruby block to call when the property changes changes
   def add_change_listener(&block)
-    java_send :addListener, [ListChangeListener.java_class], block
+    old_verbose = $VERBOSE
+    begin
+      $VERBOSE = nil
+      addListener(ListChangeListener.impl {|name, x|block.call(x)})
+    ensure
+      # always re-set to old value, even if block raises an exception
+      $VERBOSE = old_verbose
+    end
   end
 
   # FIXME: Not sure how to remove with this API.  We are passing in a proc
@@ -72,7 +93,14 @@ module Java::javafx::collections::ObservableMap
   #
   # Add a ruby block to call when the property changes changes
   def add_change_listener(&block)
-    java_send :addListener, [MapChangeListener.java_class], block
+    old_verbose = $VERBOSE
+    begin
+      $VERBOSE = nil
+      addListener(MapChangeListener.impl {|name, x|block.call(x)})
+    ensure
+      # always re-set to old value, even if block raises an exception
+      $VERBOSE = old_verbose
+    end
   end
 
   # FIXME: Not sure how to remove with this API.  We are passing in a proc
