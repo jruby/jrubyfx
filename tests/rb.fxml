@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?language jruby?>
+
+<VBox xmlns:fx="http://javafx.com/fxml">
+    <fx:script>
+
+    def handleButtonAction(event)
+       puts('You clicked me!')
+	   p event
+	   $controller.hello();
+    end
+    </fx:script>
+
+    <children>
+        <Button text="Click Me!" onAction="handleButtonAction($event);"/>
+    </children>
+</VBox>

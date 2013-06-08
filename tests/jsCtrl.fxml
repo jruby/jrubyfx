@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?language javascript?>
+
+<VBox xmlns:fx="http://javafx.com/fxml">
+    <fx:script>
+    importClass(java.lang.System);
+
+    function handleButtonAction(event) {
+       System.out.println('You clicked me!');
+	   controller.hello();
+    }
+    </fx:script>
+
+    <children>
+        <Button text="Click Me!" onAction="handleButtonAction(event);"/>
+    </children>
+</VBox>
