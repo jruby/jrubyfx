@@ -31,6 +31,9 @@
 "Java::JavafxSceneControl::ContextMenu":
    method_missing: "Java::JavafxSceneControl::MenuItem"
    add: get_items
+"Java::JavafxSceneControl::MenuButton":
+   method_missing: "Java::JavafxSceneControl::MenuItem"
+   add: get_items
 "Java::JavafxSceneControl::MenuItem":
    dsl: Need to insert manually
 "Java::JavafxAnimation::Timeline":
