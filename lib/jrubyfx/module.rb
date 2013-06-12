@@ -39,6 +39,7 @@ module JRubyFX
   #   end
   #
   def with(obj, properties = {}, &block)
+    puts "Warning: calling 'with' on a nil object from #{caller[0]}" if obj.nil?
     populate_properties(obj, properties)
 
     if block_given?
