@@ -144,6 +144,24 @@ module JRubyFX
         write_color_method_converter child_catcher, clz, method
       end
 
+      # cleanout and search for events. TODO: combind with previous
+      mod_list = {:methods =>{}}
+      JRubyFX::DSL::NAME_TO_CLASSES.each do |n,cls|
+        cls.java_class.java_instance_methods.each do |method|
+          # one and only, must be a setter style
+          if method.name.start_with? "setOn"  and !(cls.ancestors[1].public_instance_methods.include? method.name.to_sym) #TODO: multiple args
+            mod_list[:methods][cls] = [] unless mod_list[:methods][cls]
+            # stuff both method name and the type of the argument in
+            mod_list[:methods][cls] << method.name
+          end
+        end if cls.respond_to? :ancestors and cls.ancestors.include? JavaProxy # some are not java classes. ignore those
+      end
+
+      mod_list[:methods].each do |clz, method|
+        child_catcher[clz.to_s] = "" unless child_catcher[clz.to_s]
+        write_event_method child_catcher, clz, method
+      end
+
       # load the yaml descriptors
 
       ydescs = YAML.load_file("#{File.dirname(__FILE__)}/core_ext/exts.yml")
@@ -205,6 +223,21 @@ class #{clz}
   include JRubyFX::DSL
 #{defs}end
 HERDOC
+      end
+    end
+
+    def self.write_event_method(outf, in_class, jfuncnclasses)
+      jfuncnclasses.each do |jfunc, jclass|
+        next if jfunc.include? "impl_"
+        outf[in_class.to_s] << <<ENDNAIVE
+  def #{jfunc.to_s.gsub(/^set/i,'').snake_case}(&block)
+    if block_given?
+      #{jfunc.to_s} block
+    else
+      #{jfunc.to_s.gsub(/^set/i,'get')}
+    end
+  end
+ENDNAIVE
       end
     end
 
