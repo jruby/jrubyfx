@@ -13,6 +13,8 @@
 "Java::JavafxScene::Parent":
    method_missing: "Java::JavafxScene::Node"
    add: get_children
+"Java::JavafxSceneLayout::GridPane":
+   add: get_children
 "Java::JavafxSceneControl::TreeItem":
    method_missing: "Java::JavafxSceneControl::TreeItem"
    add: get_children
