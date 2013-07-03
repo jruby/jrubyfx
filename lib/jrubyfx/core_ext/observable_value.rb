@@ -43,7 +43,7 @@ module Java::javafx::beans::value::ObservableValue
             else
               block.call(x, y, z)
             end
-            })
+          })
       ensure
         # always re-set to old value, even if block raises an exception
         $VERBOSE = old_verbose
@@ -127,5 +127,10 @@ class Class
   def property_accessor(*symbol_names)
     property_reader *symbol_names
     property_writer *symbol_names
+    symbol_names.each do |symbol_name|
+      send(:define_method, symbol_name.id2name + "_property") do
+        instance_variable_get("@#{symbol_name}")
+      end
+    end
   end
 end

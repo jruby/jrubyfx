@@ -217,7 +217,7 @@ module JRubyFX
 
       child_catcher.each do |clz, defs|
         next if defs == "" || defs == nil
-  # TODO: do we need to include the dsl? is this the fastest way to do it?
+        # TODO: do we need to include the dsl? is this the fastest way to do it?
         outf<< <<HERDOC
 class #{clz}
   include JRubyFX::DSL
