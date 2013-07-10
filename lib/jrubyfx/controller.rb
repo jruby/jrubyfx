@@ -246,7 +246,7 @@ module JRubyFX::Controller
   end
 
   def load_fxml(filename, root_dir=nil)
-    fx = Controller.get_fxml_loader(filename, self, root_dir)
+    fx = Controller.get_fxml_loader(filename, self, root_dir || @fxml_root_dir || fxml_root)
     fx.root = self
     fx.load
   end
