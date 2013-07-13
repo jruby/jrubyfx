@@ -101,6 +101,10 @@ Issues
 * Jarify command needs the `jar` executable in your path.
 * Any other difficulties are bugs. Please report them
 
+Contact
+-------
+Find us in #jruby on freenode.
+
 License
 -------
 Main code is Apache 2.0. See LICENSE.
@@ -108,8 +112,10 @@ Some samples in contrib may have other licenses.
 
 Authors
 -------
-- Patrick Plenefisch
-- Thomas E Enebo
-- Hiroshi Nakamura
-- Hiro Asari
+- Patrick Plenefisch (byteit101)
+- Thomas E Enebo (enebo)
+- Hiro Asari (BanzaiMan or asarih)
+- Jeremy Ebler (whitehat101)
+- Hiroshi Nakamura (nahi)
+- Eric West (e_dub or edubkendo)
 
