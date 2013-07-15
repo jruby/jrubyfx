@@ -1,3 +1,4 @@
+#!/usr/bin/env jruby
 require 'irb'
 require 'jrubyfx'
 
