@@ -1,3 +1,4 @@
+#!/usr/bin/env jruby
 require 'jrubyfx'
 
 class MultiTouchImageView < Java::javafx::scene::layout::StackPane
