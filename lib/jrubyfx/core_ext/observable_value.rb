@@ -19,6 +19,7 @@ require 'jrubyfx'
 # JRubyFX DSL extensions for JavaFX ObservableValues
 module Java::javafx::beans::value::ObservableValue
   java_import Java::javafx.beans.value.ChangeListener
+  java_import Java::javafx.beans.InvalidationListener
 
   ##
   # call-seq:
@@ -49,6 +50,23 @@ module Java::javafx::beans::value::ObservableValue
         $VERBOSE = old_verbose
       end
     end
+  end
+
+
+  ##
+  # call-seq:
+  #   add_invalidation_listener { |observable| block }
+  #
+  # Add a ruby block to call when the property invalidates itself (bad property!)
+  def add_invalidation_listener(&block)
+      old_verbose = $VERBOSE
+      begin
+        $VERBOSE = nil
+        addListener(InvalidationListener.impl {|name, change| block.call(change) })
+      ensure
+        # always re-set to old value, even if block raises an exception
+        $VERBOSE = old_verbose
+      end
   end
 
   # FIXME: Not sure how to remove with this API.  We are passing in a proc
