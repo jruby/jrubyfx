@@ -34,21 +34,24 @@ require 'jrubyfx'
 $JRUBYFX_AOT_COMPILING = true
 class App < JRubyFX::Application
   def start(stage)
-    if ARGV.include? "--"
-      ar, requires = split(ARGV, "--")
-      requires.each {|x| require x}
-      ar
-    else
-      ARGV
-    end.each do |arg|
-      loader = FxmlLoader.new
-      loader.location = URL.new "file:#{arg}"
-      loader.controller = Object.new
-      puts "Compiling #{arg}..."
-      loader.load(jruby_ext: {jit: 0, dont_load: true, jit_opts: {force: true}})
+    begin
+      if ARGV.include? "--"
+        ar, requires = split(ARGV, "--")
+        requires.each {|x| require x}
+        ar
+      else
+        ARGV
+      end.each do |arg|
+        loader = FxmlLoader.new
+        loader.location = URL.new "file:#{arg}"
+        loader.controller = Object.new
+        puts "Compiling #{arg}..."
+        loader.load(jruby_ext: {jit: 0, dont_load: true, jit_opts: {force: true}})
+      end
+      puts "done"
+    ensure
+      Platform.exit
     end
-    puts "done"
-    Platform.exit
   end
 
   def split(arr, delim)
