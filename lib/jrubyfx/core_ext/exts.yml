@@ -47,6 +47,7 @@
 "Java::JavafxSceneControl::ScrollPane":
    logical_child: content
 "Java::JavafxSceneControl::Accordion":
+   add: panes
    logical_children: panes
 "Java::JavafxSceneShape::Circle":
    new_converter: [[], [none], [none, color], [none, none, none], [none, none, none, color]]
