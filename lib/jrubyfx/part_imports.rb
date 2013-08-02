@@ -73,6 +73,7 @@ module JRubyFX
           :value => ['ChangeListener']
         },
         :collections => ['FXCollections'],
+        :concurrent => %w[Worker Task Service],
         :event => %w[Event ActionEvent EventHandler],
         :fxml => ['Initializable', 'LoadException'],
         :geometry => %w[HorizontalDirection HPos Insets Orientation Pos Rectangle2D Side VerticalDirection VPos],
