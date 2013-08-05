@@ -23,43 +23,44 @@ limitations under the License.
 module JavaFXImpl #:nodoc: all
   java_import 'com.sun.javafx.application.PlatformImpl'
   java_import 'javafx.stage.Stage'
-  
+
   #JRuby, you make me have to create real classes!
   class FinisherInterface
     include PlatformImpl::FinishListener
-    
+
     def initialize(&block)
       @exitBlock = block
     end
-    
+
     def idle(someBoolean)
       @exitBlock.call
     end
-    
+
     def exitCalled()
       @exitBlock.call
     end
   end
-  
+
   class Launcher
     java_import 'java.util.concurrent.atomic.AtomicBoolean'
     java_import 'java.util.concurrent.CountDownLatch'
     java_import 'java.lang.IllegalStateException'
-    
+    java_import 'com.sun.javafx.application.ParametersImpl'
+
     @@launchCalled = AtomicBoolean.new(false) # Atomic boolean go boom on bikini
-    
-    def self.launch_app(classObj, args=nil)
+
+    def self.launch_app(classObj, *args)
       #prevent multiple!
       if @@launchCalled.getAndSet(true)
         throw IllegalStateException.new "Application launch must not be called more than once"
       end
-      
+
       begin
         #create a java thread, and run the real worker, and wait till it exits
         count_down_latch = CountDownLatch.new(1)
         thread = Java.java.lang.Thread.new do
           begin
-            launch_app_from_thread(classObj)
+            launch_app_from_thread(classObj, args)
           rescue => ex
             puts "Exception starting app:"
             p ex
@@ -76,41 +77,44 @@ module JavaFXImpl #:nodoc: all
         puts ex.backtrace
       end
     end
-    
-    def self.launch_app_from_thread(classO)
+
+    def self.launch_app_from_thread(classO, args)
       #platformImpl startup?
       finished_latch = CountDownLatch.new(1)
       PlatformImpl.startup do
         finished_latch.countDown
       end
       finished_latch.await
-      
+
       begin
-        launch_app_after_platform(classO) #try to launch the app
+        launch_app_after_platform(classO, args) #try to launch the app
       rescue => ex
         puts "Error running Application:"
         p ex
         puts ex.backtrace
       end
-      
+
       #kill the toolkit and exit
       PlatformImpl.tkExit
     end
-    
-    def self.launch_app_after_platform(classO)
+
+    def self.launch_app_after_platform(classO, args)
       #listeners - for the end
       finished_latch = CountDownLatch.new(1)
-      
+
       # register for shutdown
       PlatformImpl.addListener(FinisherInterface.new {
           # this is called when the stage exits
           finished_latch.countDown
         })
-    
+
       app = classO.new
-      # do we need to register the params if there are none? - apparently not
+
+      # Correct answer: yes
+      ParametersImpl.registerParameters(app, ParametersImpl.new(args));
+
       app.init()
-      
+
       error = false
       #RUN! and hope it works!
       PlatformImpl.runAndWait do
@@ -127,10 +131,10 @@ module JavaFXImpl #:nodoc: all
           finished_latch.countDown # but if we fail, we need to unlatch it
         end
       end
-        
+
       #wait for stage exit
       finished_latch.await
-      
+
       # call stop on the interface
       app.stop() unless error
     end
