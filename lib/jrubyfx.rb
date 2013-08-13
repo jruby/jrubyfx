@@ -14,6 +14,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =end
+
+if RUBY_VERSION.include? "1.8" or !JRUBY_VERSION
+  puts "JRubyFX requires JRuby to be in 1.9 mode"
+  exit -2
+end
+if Gem::Version.new(JRUBY_VERSION) < Gem::Version.new("1.7.4")
+  puts "Warning: JRuby 1.7.3 and prior have bugs that can cause strange errors. Do not submit any bug reports. Please use JRuby 1.7.4 or later."
+end
+
 require 'java' # for java_import
 require 'jruby/core_ext' # for the become_java!
 

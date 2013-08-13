@@ -19,6 +19,6 @@ $spec = Gem::Specification.new do |s|
   s.add_dependency "jrubyfx-fxmlloader", ">= 0.2"
 
   s.files        = Dir.glob("lib/**/*") + %w(LICENSE README.md)
-  s.executables  = ['jrubyfx-generator', 'jrubyfx-jarify']
+  s.executables  = ['jrubyfx-generator', 'jrubyfx-jarify', 'jrubyfx-compile']
   s.require_path = 'lib'
 end

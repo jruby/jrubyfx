@@ -33,12 +33,9 @@
 class FormattedTableCellFactory
   include Java::javafx.util.Callback
   include JRubyFX
-  
+
   fxml_raw_accessor :alignment, Java::javafx.scene.text.TextAlignment
   fxml_raw_accessor :format, java.text.Format
-
-  # workarounds for https://github.com/jruby/jruby/issues/709 in Jruby 1.7.3. You don't need this if you have 1.7.4
-  def java_kind_of?(*args);false;end;def java_class;Java::javafx.util.Callback.java_class;end
 
   def call(param)
     cell = FormattedTableCellFactory_TableCell.new(@format)
@@ -61,9 +58,9 @@ class FormattedTableCellFactory_TableCell < Java::javafx.scene.control.TableCell
     super()
     @format = format
   end
-  
-  def updateItem(item, empty) 
-    if (item == getItem()) 
+
+  def updateItem(item, empty)
+    if (item == getItem())
       return;
     end
     super(item, empty);
