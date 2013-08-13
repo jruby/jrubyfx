@@ -106,13 +106,24 @@ module JRubyFX
       }
     }
 
+    $WRITE_OUT << <<HERE
+    def const_missing(c)
+      if LOCAL_NAME_MAP.has_key? c
+        java_import(LOCAL_NAME_MAP[c])[0]
+      else
+        super
+      end
+    end
+
+HERE
+
     # Imports all the listed JavaFX classes
-    $WRITE_OUT << "java_import "
+    $WRITE_OUT << "LOCAL_NAME_MAP = { \n  "
     $WRITE_OUT << (JFX_CLASS_HIERARCHY.flat_tree_inject do |res, name, values|
         name = "#{name.to_s}."
         name = "" if name == "."
         res.concat(values.map{|i| "#{name}#{i}"})
-      end).map{|x| "'#{x}'"}.join(",")
-    $WRITE_OUT << "\njava_import 'java.lang.Void'"
+      end).map{|x| "#{x.split(".").last.to_sym.inspect} => #{x.inspect}"}.join(",\n  ")
+    $WRITE_OUT << "\n}\njava_import 'java.lang.Void'"
   end
 end

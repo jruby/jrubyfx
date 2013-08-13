@@ -77,7 +77,12 @@ module JRubyFX
     # container.  This is useful for specifying clipping regions in particular.
     #
     def method_missing(name, *args, &block)
-      clazz = NAME_TO_CLASSES[name.to_s.gsub(/!$/, '')]
+      fixed_name = name.to_s.gsub(/!$/, '')
+      clazz = NAME_TO_CLASSES[fixed_name]
+      unless clazz
+        clazz = NAME_TO_CLASS_NAME[fixed_name]
+        clazz = (NAME_TO_CLASSES[fixed_name] = clazz.constantize) if clazz
+      end
 
       unless clazz
         @supers = {} unless @supers
@@ -106,7 +111,8 @@ module JRubyFX
         :methods =>{},
         :all => []
       }
-      JRubyFX::DSL::NAME_TO_CLASSES.each do |n,cls|
+      JRubyFX::DSL::NAME_TO_CLASS_NAME.each do |n,clsz|
+        cls = eval(clsz) # TODO: use constantize
         cls.java_class.java_instance_methods.each do |method|
           args = method.argument_types.find_all(&:enum?).tap {|i| mod_list[:all] <<  i }
 
@@ -132,7 +138,8 @@ module JRubyFX
       end
       # cleanout and search for colors. TODO: combind with previous
       mod_list = {:methods =>{}, :all => []}
-      JRubyFX::DSL::NAME_TO_CLASSES.each do |n,cls|
+      JRubyFX::DSL::NAME_TO_CLASS_NAME.each do |n,clsz|
+        cls = eval(clsz) # TODO: use constantize
         cls.java_class.java_instance_methods.each do |method|
           args = method.argument_types.find_all{|i| JavaUtilities.get_proxy_class(i).ancestors.include? Java::javafx.scene.paint.Paint}
 
@@ -152,7 +159,8 @@ module JRubyFX
 
       # cleanout and search for events. TODO: combind with previous
       mod_list = {:methods =>{}}
-      JRubyFX::DSL::NAME_TO_CLASSES.each do |n,cls|
+      JRubyFX::DSL::NAME_TO_CLASS_NAME.each do |n,clsz|
+        cls = eval(clsz) # TODO: use constantize
         cls.java_class.java_instance_methods.each do |method|
           # one and only, must be a setter style
           if method.name.start_with? "setOn"  and !(cls.ancestors[1].public_instance_methods.include? method.name.to_sym) #TODO: multiple args

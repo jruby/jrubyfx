@@ -169,11 +169,11 @@ module JRubyFX
       ENUM_CACHE = {}
 
       # Store enum mapping overrides
-      ENUM_OVERRIDES = {Java::javafxAnimation::PathTransition::OrientationType => {:orthogonal_to_tangent => :orthogonal},
-        Java::javafxSceneEffect::BlendMode => {:src_over => :over, :src_atop => :atop, :color_dodge => :dodge, :color_burn => :burn},
-        Java::javafxSceneControl::ContentDisplay => {:graphic_only => :graphic, :text_only => :text},
-        Java::javafxSceneEffect::BlurType => {:one_pass_box => [:one, :one_pass], :two_pass_box => [:two, :two_pass], :three_pass_box => [:three, :three_pass]},
-        Java::javafxStage::Modality => {:window_modal => :window, :application_modal => [:application, :app]}}
+      ENUM_OVERRIDES = {Java::JavafxAnimation::PathTransition::OrientationType => {:orthogonal_to_tangent => :orthogonal},
+        Java::JavafxSceneEffect::BlendMode => {:src_over => :over, :src_atop => :atop, :color_dodge => :dodge, :color_burn => :burn},
+        Java::JavafxSceneControl::ContentDisplay => {:graphic_only => :graphic, :text_only => :text},
+        Java::JavafxSceneEffect::BlurType => {:one_pass_box => [:one, :one_pass], :two_pass_box => [:two, :two_pass], :three_pass_box => [:three, :three_pass]},
+        Java::JavafxStage::Modality => {:window_modal => :window, :application_modal => [:application, :app]}}
 
       # sets the given overrides for the given class/enum
       def self.set_overrides_for(enum_class,ovr)
