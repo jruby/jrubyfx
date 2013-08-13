@@ -158,6 +158,12 @@ module JRubyFX
       rm FileList["#{full_build_dir}*.html","#{full_build_dir}*.jnlp"]
     end
 
+    def compile(cmdline)
+      require 'jrubyfx/compiler_app'
+      $JRUBYFX_AOT_COMPILING = true
+      CompilerApp.launch(*cmdline) # must use this to provide a full javafx environ so controls will build properly
+    end
+
 
     private
     def download(version_string) #:nodoc:
@@ -170,5 +176,6 @@ module JRubyFX
     module_function :download_jruby
     module_function :native_bundles
     module_function :download
+    module_function :compile
   end
 end

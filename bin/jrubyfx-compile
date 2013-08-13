@@ -28,38 +28,5 @@ if ARGV.length < 1
   usage
 end
 
-
-
-require 'jrubyfx'
-$JRUBYFX_AOT_COMPILING = true
-class App < JRubyFX::Application
-  def start(stage)
-    begin
-      if ARGV.include? "--"
-        ar, requires = split(ARGV, "--")
-        requires.each {|x| require x}
-        ar
-      else
-        ARGV
-      end.each do |arg|
-        loader = FxmlLoader.new
-        loader.location = URL.new "file:#{arg}"
-        loader.controller = Object.new
-        puts "Compiling #{arg}..."
-        loader.load(jruby_ext: {jit: 0, dont_load: true, jit_opts: {force: true}})
-      end
-      puts "done"
-    ensure
-      Platform.exit
-    end
-  end
-
-  def split(arr, delim)
-    index = arr.index(delim)
-    first = arr[0...index]
-    second = arr[(index+1)..-1]
-    return first, second
-  end
-end
-
-App.launch # must use this to provide a full javafx environ so controls will build properly
+require 'jrubyfx_tasks'
+JRubyFX::Tasks.compile(ARGV)
