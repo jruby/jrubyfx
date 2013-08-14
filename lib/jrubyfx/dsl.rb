@@ -21,6 +21,7 @@ module JRubyFX
   # access to the DSL. JRubyFX::Application and JRubyFX::Controller include it already.
   module DSL
     include JRubyFX
+    include JRubyFX::FXImports
 
     # Contains methods to be defined inside all classes that include JRubyFX
     module ClassUtils
@@ -49,6 +50,7 @@ module JRubyFX
     # When a class includes JRubyFX, extend (add to the metaclass) ClassUtils
     def self.included(mod)
       mod.extend(JRubyFX::DSL::ClassUtils)
+      mod.extend(JRubyFX::FXImports)
     end
 
     #--

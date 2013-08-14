@@ -97,6 +97,7 @@ module JRubyFX
 
   def self.included(mod)
     mod.extend(JRubyFX::FXMLClassUtils)
+    mod.extend(JRubyFX::FXImports)
   end
 
   module FXMLClassUtils

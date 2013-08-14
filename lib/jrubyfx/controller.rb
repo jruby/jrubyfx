@@ -46,6 +46,8 @@ end
 # Inherit from this class for FXML controllers
 module JRubyFX::Controller
   include JRubyFX::DSL
+  include JRubyFX::FXImports
+
   java_import 'java.net.URL'
 
   DEFAULT_SETTINGS = {
@@ -63,6 +65,7 @@ module JRubyFX::Controller
   def self.included(base)
     base.extend(ClassMethods)
     base.extend(JRubyFX::FXMLClassUtils)
+    base.extend(JRubyFX::FXImports)
     # register ourselves as a control. overridable with custom_fxml_control
     register_type base if base.is_a? Class
   end
