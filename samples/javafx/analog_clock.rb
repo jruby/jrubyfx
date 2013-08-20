@@ -3,13 +3,9 @@ require 'jrubyfx'
 
 class AnalogClock < JRubyFX::Application
 
-  def initialize(size)
-    super()
-    @size = size
-  end
-
   def start(stage)
     @stage = stage
+    @size = parameters.raw[0].to_i
     height, width, = @size, @size
 
     with(stage, init_style: :transparent, width: width+5, height: height+25,
@@ -31,23 +27,23 @@ class AnalogClock < JRubyFX::Application
             size = i % 3 == 0 ? 4 : 2
             circle(x, y, size, :black)
           end
-          
+
           circle(5, :black)
-          
+
           path(fill: :black, id: 'minute') do
             move_to(4, -4)
             arc_to(-1, -1, 0, -4, -4, false, false)
             line_to(0, -radius)
             rotate
           end
-          
+
           path(fill: :black, id: 'hour') do
             move_to(4, -4)
             arc_to(-1, -1, 0, -4, -4, false, false)
             line_to(0, -radius/4*3)
             rotate
           end
-          
+
           line(stroke: :red, end_y: -radius-3, stroke_width: 2, id: 'second') do
             rotate
           end
@@ -64,7 +60,7 @@ class AnalogClock < JRubyFX::Application
     @stage['#minute'].transforms[0].angle = t.min * 6
     @stage['#hour'].transforms[0].angle = t.hour * 30 + t.min * 0.5
   end
- 
+
   def play
     refresh_time # Initially set hands to proper locs
     handler = EventHandler.impl { |n, e| refresh_time }
@@ -76,4 +72,4 @@ class AnalogClock < JRubyFX::Application
 end
 
 size = ARGV.shift || 300
-AnalogClock.launch(size.to_i)
+AnalogClock.launch(size.to_s)

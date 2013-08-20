@@ -49,7 +49,7 @@ module JavaFXImpl #:nodoc: all
 
     @@launchCalled = AtomicBoolean.new(false) # Atomic boolean go boom on bikini
 
-    def self.launch_app(classObj, *args)
+    def self.launch_app(classObj, new, *args)
       #prevent multiple!
       if @@launchCalled.getAndSet(true)
         throw IllegalStateException.new "Application launch must not be called more than once"
@@ -60,7 +60,7 @@ module JavaFXImpl #:nodoc: all
         count_down_latch = CountDownLatch.new(1)
         thread = Java.java.lang.Thread.new do
           begin
-            launch_app_from_thread(classObj, args)
+            launch_app_from_thread(classObj, new, args)
           rescue => ex
             puts "Exception starting app:"
             p ex
@@ -78,7 +78,7 @@ module JavaFXImpl #:nodoc: all
       end
     end
 
-    def self.launch_app_from_thread(classObj, args)
+    def self.launch_app_from_thread(classObj, new, args)
       #platformImpl startup?
       finished_latch = CountDownLatch.new(1)
       PlatformImpl.startup do
@@ -87,7 +87,7 @@ module JavaFXImpl #:nodoc: all
       finished_latch.await
 
       begin
-        launch_app_after_platform(classObj, args) #try to launch the app
+        launch_app_after_platform(classObj, new, args) #try to launch the app
       rescue => ex
         puts "Error running Application:"
         p ex
@@ -98,7 +98,7 @@ module JavaFXImpl #:nodoc: all
       PlatformImpl.tkExit
     end
 
-    def self.launch_app_after_platform(classObj, args)
+    def self.launch_app_after_platform(classObj, new, args)
       #listeners - for the end
       finished_latch = CountDownLatch.new(1)
 
@@ -108,7 +108,12 @@ module JavaFXImpl #:nodoc: all
           finished_latch.countDown
         })
 
-      app = classObj.new
+      app = if new
+        classObj.new
+      else
+        raise "Invalid type: cannot launch non-Application" unless classObj.is_a? Java::javafx.application.Application
+        classObj
+      end
 
       # Correct answer: yes
       ParametersImpl.registerParameters(app, ParametersImpl.new(args));
