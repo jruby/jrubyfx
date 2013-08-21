@@ -50,10 +50,6 @@ module JavaFXImpl #:nodoc: all
     @@launchCalled = AtomicBoolean.new(false) # Atomic boolean go boom on bikini
 
     def self.launch_app(application_class, *args)
-      launch_app_with_object(application_class.new, *args)
-    end
-
-    def self.launch_app_with_object(application, *args)
       #prevent multiple!
       if @@launchCalled.getAndSet(true)
         throw IllegalStateException.new "Application launch must not be called more than once"
@@ -64,7 +60,7 @@ module JavaFXImpl #:nodoc: all
         count_down_latch = CountDownLatch.new(1)
         thread = Java.java.lang.Thread.new do
           begin
-            launch_app_from_thread(application, args)
+            launch_app_from_thread(application_class, args)
           rescue => ex
             puts "Exception starting app:"
             p ex
@@ -82,7 +78,7 @@ module JavaFXImpl #:nodoc: all
       end
     end
 
-    def self.launch_app_from_thread(application, args)
+    def self.launch_app_from_thread(application_class, args)
       #platformImpl startup?
       CountDownLatch.new(1).tap do |latch|
         PlatformImpl.startup { latch.countDown }
@@ -90,7 +86,7 @@ module JavaFXImpl #:nodoc: all
       end
 
       begin
-        launch_app_after_platform(application, args) 
+        launch_app_after_platform(application_class, args) 
       rescue => ex
         puts "Error running Application:"
         p ex
@@ -100,7 +96,7 @@ module JavaFXImpl #:nodoc: all
       PlatformImpl.tkExit # kill the toolkit and exit
     end
 
-    def self.launch_app_after_platform(application, args)
+    def self.launch_app_after_platform(application_class, args)
       #listeners - for the end
       finished_latch = CountDownLatch.new(1)
 
@@ -110,11 +106,12 @@ module JavaFXImpl #:nodoc: all
           finished_latch.countDown
         })
 
+      application = application_class.new
+
       unless application.is_a? Java::javafx.application.Application
         raise "Invalid type: cannot launch non-Application"
       end
 
-      # Correct answer: yes
       ParametersImpl.registerParameters(application, ParametersImpl.new(args))
 
       application.init

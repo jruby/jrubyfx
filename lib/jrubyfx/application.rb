@@ -39,14 +39,4 @@ class JRubyFX::Application < Java.javafx.application.Application
     #call our custom launcher to avoid a java shim
     JavaFXImpl::Launcher.launch_app(self, *args)
   end
-
-  ##
-  # call-seq:
-  #   launch_object(app)
-  #
-  # When called on a subclass, this is effectively our main method.
-  def self.launch_object(obj, *args)
-    #call our custom launcher to avoid a java shim
-    JavaFXImpl::Launcher.launch_app_with_object(obj, *args)
-  end
 end

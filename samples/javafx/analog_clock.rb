@@ -2,13 +2,9 @@
 require 'jrubyfx'
 
 class AnalogClock < JRubyFX::Application
-  def initialize(size)
-    super()
-    @size = size
-  end
-
   def start(stage)
     @stage = stage
+    @size = parameters.raw[0].to_i
     height, width, = @size, @size
 
     with(stage, init_style: :transparent, width: width+5, height: height+25,
@@ -74,5 +70,5 @@ class AnalogClock < JRubyFX::Application
   end
 end
 
-size = ARGV.shift || 300
-AnalogClock.launch_object(AnalogClock.new(size.to_i))
+size = ARGV.shift || 300.to_s
+AnalogClock.launch(size)
