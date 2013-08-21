@@ -49,7 +49,11 @@ module JavaFXImpl #:nodoc: all
 
     @@launchCalled = AtomicBoolean.new(false) # Atomic boolean go boom on bikini
 
-    def self.launch_app(classObj, new, *args)
+    def self.launch_app(application_class, *args)
+      launch_app_with_object(application_class.new, *args)
+    end
+
+    def self.launch_app_with_object(application, *args)
       #prevent multiple!
       if @@launchCalled.getAndSet(true)
         throw IllegalStateException.new "Application launch must not be called more than once"
@@ -60,7 +64,7 @@ module JavaFXImpl #:nodoc: all
         count_down_latch = CountDownLatch.new(1)
         thread = Java.java.lang.Thread.new do
           begin
-            launch_app_from_thread(classObj, new, args)
+            launch_app_from_thread(application, args)
           rescue => ex
             puts "Exception starting app:"
             p ex
@@ -78,27 +82,25 @@ module JavaFXImpl #:nodoc: all
       end
     end
 
-    def self.launch_app_from_thread(classObj, new, args)
+    def self.launch_app_from_thread(application, args)
       #platformImpl startup?
-      finished_latch = CountDownLatch.new(1)
-      PlatformImpl.startup do
-        finished_latch.countDown
+      CountDownLatch.new(1).tap do |latch|
+        PlatformImpl.startup { latch.countDown }
+        latch.await
       end
-      finished_latch.await
 
       begin
-        launch_app_after_platform(classObj, new, args) #try to launch the app
+        launch_app_after_platform(application, args) 
       rescue => ex
         puts "Error running Application:"
         p ex
         puts ex.backtrace
       end
 
-      #kill the toolkit and exit
-      PlatformImpl.tkExit
+      PlatformImpl.tkExit # kill the toolkit and exit
     end
 
-    def self.launch_app_after_platform(classObj, new, args)
+    def self.launch_app_after_platform(application, args)
       #listeners - for the end
       finished_latch = CountDownLatch.new(1)
 
@@ -108,17 +110,14 @@ module JavaFXImpl #:nodoc: all
           finished_latch.countDown
         })
 
-      app = if new
-        classObj.new
-      else
-        raise "Invalid type: cannot launch non-Application" unless classObj.is_a? Java::javafx.application.Application
-        classObj
+      unless application.is_a? Java::javafx.application.Application
+        raise "Invalid type: cannot launch non-Application"
       end
 
       # Correct answer: yes
-      ParametersImpl.registerParameters(app, ParametersImpl.new(args));
+      ParametersImpl.registerParameters(application, ParametersImpl.new(args))
 
-      app.init()
+      application.init
 
       error = false
       #RUN! and hope it works!
@@ -126,7 +125,7 @@ module JavaFXImpl #:nodoc: all
         begin
           stage = Stage.new
           stage.impl_setPrimary(true)
-          app.start(stage)
+          application.start(stage)
           # no countDown here because its up top... yes I know
         rescue => ex
           puts "Exception running Application:"
@@ -141,7 +140,7 @@ module JavaFXImpl #:nodoc: all
       finished_latch.await
 
       # call stop on the interface
-      app.stop() unless error
+      application.stop unless error
     end
   end
 end
