@@ -59,7 +59,7 @@ module JRubyFX
   # Convenience method so anything can safely schedule to run on JavaFX
   # main thread.
   def run_later(&block)
-    Platform.run_later &block
+    Java::javafx.application.Platform.run_later &block
   end
 
   ##

@@ -95,6 +95,10 @@ module Java::javafx::collections::ObservableList
     end
   end
 
+  def index(x)
+    indexOf(x)
+  end
+
   # FIXME: Not sure how to remove with this API.  We are passing in a proc
   # and we would need to examine each proc to determine which listener to
   # remove.  Probably a way to do it in each derived real class which actually
