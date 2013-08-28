@@ -2,7 +2,6 @@
 require 'jrubyfx'
 
 class AnalogClock < JRubyFX::Application
-
   def start(stage)
     @stage = stage
     @size = parameters.raw[0].to_i
@@ -71,5 +70,5 @@ class AnalogClock < JRubyFX::Application
   end
 end
 
-size = ARGV.shift || 300
-AnalogClock.launch(size.to_s)
+size = ARGV.shift || 300.to_s
+AnalogClock.launch(size)
