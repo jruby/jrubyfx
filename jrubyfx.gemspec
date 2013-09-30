@@ -21,4 +21,5 @@ $spec = Gem::Specification.new do |s|
   s.files        = Dir.glob("lib/**/*") + %w(LICENSE README.md)
   s.executables  = ['jrubyfx-generator', 'jrubyfx-jarify', 'jrubyfx-compile']
   s.require_path = 'lib'
+  s.license      = 'Apache License 2.0'
 end
