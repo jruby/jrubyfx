@@ -140,6 +140,9 @@ module JRubyFX
         },
         :color => lambda { |value|
           new_value = NAME_TO_COLORS[value.to_s.gsub(/_/, "")]
+          if !new_value && value.kind_of?(Symbol)
+            raise ArgumentError.new("No such color: #{value.to_s}") 
+          end
           new_value ? new_value : value
         },
         :rectangle2d => lambda { |value|
