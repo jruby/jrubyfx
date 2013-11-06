@@ -90,7 +90,7 @@ module JRubyFX
           InnerShadow Lighting MotionBlur PerspectiveTransform Reflection SepiaTone Shadow],
           :image => %w[Image ImageView PixelReader PixelWriter],
           :input => %w[Clipboard ClipboardContent ContextMenuEvent DragEvent GestureEvent InputEvent InputMethodEvent KeyCode KeyEvent
-          Mnemonic MouseDragEvent MouseEvent RotateEvent ScrollEvent SwipeEvent TouchEvent TransferMode ZoomEvent],
+          Mnemonic MouseButton MouseDragEvent MouseEvent RotateEvent ScrollEvent SwipeEvent TouchEvent TransferMode ZoomEvent],
           :layout => %w[AnchorPane BorderPane ColumnConstraints FlowPane GridPane HBox Pane Priority RowConstraints StackPane TilePane VBox],
           :media => %w[AudioClip AudioEqualizer AudioTrack EqualizerBand Media MediaException
           MediaErrorEvent MediaMarkerEvent MediaPlayer MediaView VideoTrack],
