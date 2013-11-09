@@ -38,6 +38,13 @@ begin
     jre[:version].to_f < 1.8 or
     (jre[:version].to_f == 1.8 and jre[:release] == 'ea' and jre[:build].to_i < 75)
 
+  # Java 8 at some point requires explicit toolkit/platform initialization
+  # before any controls can be loaded.
+  java.util.concurrent.CountDownLatch.new(1).tap do |latch|
+    com.sun.javafx.application.PlatformImpl.startup { latch.countDown }
+    latch.await
+  end
+
   # Attempt to load a javafx class
   Java.javafx.application.Application
 rescue  LoadError, NameError
