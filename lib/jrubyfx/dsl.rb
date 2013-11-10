@@ -28,6 +28,8 @@ module JRubyFX
       include JRubyFX::FXImports
 
       ##
+      # DEPRECATED: Please include JRubyFX::DSLControl instead of this method.
+      #
       # Register your own type for use in the DSL.
       #
       #   class MyFooWidget < Region
@@ -37,10 +39,15 @@ module JRubyFX
       #   register_type(MyFooWidget)
       #   register_type(MyFooWidget, "aliased_name")
       #
+      #   class MyOtherWidget < Region
+      #     register_type
+      #   end
+      #
+      #
       # Note, this also makes it possible to override existing definitions
       # of built-in components.
       #
-      def register_type(type, name=nil)
+      def register_type(type=self, name=nil)
         name = type.name.snake_case unless name
         JRubyFX::DSL::NAME_TO_CLASSES[name.to_s] = type
       end
