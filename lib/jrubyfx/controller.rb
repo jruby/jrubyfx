@@ -333,10 +333,14 @@ module JRubyFX::Controller
   def self.get_fxml_loader(filename, controller = nil, root_dir = nil)
     fx = FxmlLoader.new
     fx.location =
-      if JRubyFX::Application.in_jar?
+    if JRubyFX::Application.in_jar?
       # If we are in a jar file, use the class loader to get the file from the jar (like java)
       # TODO: should just be able to use URLs
-      JRuby.runtime.jruby_class_loader.get_resource File.join(root_dir, filename)
+      unless root_dir == "."
+        JRuby.runtime.jruby_class_loader.get_resource File.join(root_dir, filename)
+      else
+        JRuby.runtime.jruby_class_loader.get_resource filename
+      end
     else
       root_dir ||= fxml_root
       # If we are in the normal filesystem, create a file url path relative to relative_to or this file
