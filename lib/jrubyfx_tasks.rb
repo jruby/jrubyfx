@@ -26,14 +26,14 @@ module JRubyFX
   module Tasks
     extend Rake::DSL
     # Base URL of JRuby-complete.jar download location
-    BASE_URL='http://repository.codehaus.org/org/jruby/jruby-complete'
+    BASE_URL='http://jruby.org.s3.amazonaws.com/downloads/'
 
     ##
     # Downloads the jruby-complete jar file for `jruby_version` and save in
     # ~/.jruby-jar/jruby-complete.jar unless it already exits. If the jar is
     # corrupt or an older version, set force to true to delete and re-download
     def download_jruby(jruby_version, force=false)
-      dist = "#{ENV['HOME']}/.jruby-jar"
+      dist = "#{Dir.home}/.jruby-jar"
       unless force || (File.exists?("#{dist}/jruby-complete-#{jruby_version}.jar") && File.size("#{dist}/jruby-complete-#{jruby_version}.jar") > 0)
         mkdir_p dist
         base_dir = Dir.pwd
