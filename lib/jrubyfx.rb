@@ -34,6 +34,7 @@ end
 require_relative 'jrubyfx/imports'
 require_relative 'jrubyfx/module'
 require_relative 'jrubyfx/dsl'
+require_relative 'jrubyfx/dsl_control'
 JRubyFX::DSL.load_dsl # load it after we require the dsl package to not loop around
 require_relative 'jrubyfx/application'
 require_relative 'jrubyfx/controller'

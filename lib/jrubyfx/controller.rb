@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =end
 
-require 'jrubyfx-fxmlloader'
+require 'jrubyfx/utils/string_utils'
 
 # Special methods for fxml loading
 module Kernel
@@ -64,7 +64,7 @@ module JRubyFX::Controller
 
   def self.included(base)
     base.extend(ClassMethods)
-    base.extend(JRubyFX::FXMLClassUtils)
+    base.extend(JRubyFX::FXMLClassUtils) if defined? JRubyFX::FXMLClassUtils
     base.extend(JRubyFX::FXImports)
     # register ourselves as a control. overridable with custom_fxml_control
     register_type base if base.is_a? Class

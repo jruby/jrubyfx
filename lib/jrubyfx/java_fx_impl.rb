@@ -79,12 +79,6 @@ module JavaFXImpl #:nodoc: all
     end
 
     def self.launch_app_from_thread(application_class, args)
-      #platformImpl startup?
-      CountDownLatch.new(1).tap do |latch|
-        PlatformImpl.startup { latch.countDown }
-        latch.await
-      end
-
       begin
         launch_app_after_platform(application_class, args) 
       rescue => ex

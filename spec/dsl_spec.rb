@@ -15,7 +15,7 @@ class FooControl
 end
 
 class BarControl
-  include JRubyFX::DSL
+  include JRubyFX::DSL, JRubyFX::DSLControl
 
   attr_reader :list
 
@@ -23,8 +23,6 @@ class BarControl
     @list ||= []
     @list << value
   end
-
-  register_type self
 end
 
 include JRubyFX::DSL
