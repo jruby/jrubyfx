@@ -22,7 +22,7 @@ module Kernel
   @@jrubyfx_res_dir = {}
   def fxml_root(value=nil, jar_value=nil)
     if value or jar_value
-      @@jrubyfx_fxml_dir = JRubyFX::Application.in_jar? ? jar_value : File.expand_path(value)
+      @@jrubyfx_fxml_dir = (JRubyFX::Application.in_jar? and jar_value) ? jar_value : File.expand_path(value)
     else
       @@jrubyfx_fxml_dir
     end
@@ -332,18 +332,27 @@ module JRubyFX::Controller
   #
   def self.get_fxml_loader(filename, controller = nil, root_dir = nil)
     fx = FxmlLoader.new
-    fx.location =
-      if JRubyFX::Application.in_jar?
-      # If we are in a jar file, use the class loader to get the file from the jar (like java)
-      # TODO: should just be able to use URLs
-      JRuby.runtime.jruby_class_loader.get_resource File.join(root_dir, filename)
-    else
-      root_dir ||= fxml_root
-      # If we are in the normal filesystem, create a file url path relative to relative_to or this file
-      URL.new "file:#{File.join root_dir, filename}"
-    end
+    fx.location = get_fxml_location(root_dir, filename)
+    
     # we must set this here for JFX to call our events
     fx.controller = controller
     fx
+  end
+  
+  # return the fxml location for root_dir and filename, whether in a jar or on disk
+  def self.get_fxml_location(root_dir, filename)
+    if JRubyFX::Application.in_jar?
+      # If we are in a jar file, use the class loader to get the file from the jar (like java)
+      # TODO: should just be able to use URLs
+      location = JRuby.runtime.jruby_class_loader.get_resource File.join(root_dir, filename)
+      
+      # If we got the location in the jar return it, else fall back to normal filesystem
+      # (Useful when running in the jruby-complete jar with external gems/sources)
+      return location if location
+    end
+    
+    root_dir ||= fxml_root
+    # If we are in the normal filesystem, create a file url path relative to relative_to or this file
+    URL.new "file:#{File.join root_dir, filename}"
   end
 end
