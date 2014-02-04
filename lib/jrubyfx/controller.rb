@@ -337,11 +337,12 @@ module JRubyFX::Controller
       # If we are in a jar file, use the class loader to get the file from the jar (like java)
       # TODO: should just be able to use URLs
       
-      # According to how class loader works with jar paths, the correct path for a file inside a jar (starting 
-      # from the jar root path) is NOT "/subfolder/file.fxml" but "subfolder/file.fxml" (without starting "/" or 
-      # ".", which would be both seen as a filesystem reference) so we assume that if root_dir is set to "" or 
-      # to a folder NOT starting with "." or "/" we are actually pointing to a folder inside the jar, otherwise 
-      # to the filesystem. According to this we format the right path for the class loader.
+      # According to how class loader works, the correct path for a file inside a jar is NOT "/folder/file.fxml" 
+      # but "folder/file.fxml" (without starting "/" or ".", which would both make the path to be seen as a filesystem 
+      # reference) so we assume that if root_dir is set to "" or to any other path not starting with "." or "/" then 
+      # we want to point to a folder inside the jar, otherwise to a filesystem's one. According to this we format and 
+      # feed the right path to the class loader.
+      
       if root_dir == "" or not ["/", "."].include? (root_dir[0])
         JRuby.runtime.jruby_class_loader.get_resource filename
       else
