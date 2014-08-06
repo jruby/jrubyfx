@@ -63,3 +63,14 @@ module Enumerable
     end]
   end
 end
+
+module JRubyFX
+  def self.load_fx(force=false)
+    return if @already_loaded_fx and !force
+    @already_loaded_fx = true
+    java.util.concurrent.CountDownLatch.new(1).tap do |latch|
+      com.sun.javafx.application.PlatformImpl.startup { latch.countDown }
+      latch.await
+    end
+  end
+end
