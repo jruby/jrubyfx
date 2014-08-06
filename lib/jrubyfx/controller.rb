@@ -16,6 +16,12 @@ limitations under the License.
 =end
 
 require 'jrubyfx/utils/string_utils'
+# If fxmlloader is installed, require it here
+begin
+  require 'jrubyfx-fxmlloader'
+rescue LoadError
+  # no fxmlloader, ignore it
+end
 
 # Special methods for fxml loading
 module Kernel

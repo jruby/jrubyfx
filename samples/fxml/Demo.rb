@@ -17,7 +17,6 @@ limitations under the License.
 =end
 
 require 'jrubyfx'
-require 'jrubyfx-fxmlloader'
 
 require_relative 'complex_control'
 
