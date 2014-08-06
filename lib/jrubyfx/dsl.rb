@@ -90,7 +90,7 @@ module JRubyFX
       clazz = NAME_TO_CLASSES[fixed_name]
       unless clazz
         clazz = NAME_TO_CLASS_NAME[fixed_name]
-        clazz = (NAME_TO_CLASSES[fixed_name] = clazz.constantize) if clazz
+        clazz = (NAME_TO_CLASSES[fixed_name] = clazz.constantize_by("::")) if clazz
       end
 
       unless clazz

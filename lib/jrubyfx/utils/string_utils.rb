@@ -19,7 +19,7 @@ class String
   #
   # NameError is raised when the name is not in CamelCase or the constant is
   # unknown.
-  def constantize(splitter="::")
+  def constantize_by(splitter="::")
     camel_cased_word = self
     names = camel_cased_word.split(splitter)
     names.shift if names.empty? || names.first.empty?
@@ -44,36 +44,5 @@ class String
         constant.const_get(name, false)
       end
     end
-  end
-
-  # Tries to find a constant with the name specified in the argument string.
-  #
-  # 'Module'.safe_constantize # => Module
-  # 'Test::Unit'.safe_constantize # => Test::Unit
-  #
-  # The name is assumed to be the one of a top-level constant, no matter
-  # whether it starts with "::" or not. No lexical context is taken into
-  # account:
-  #
-  # C = 'outside'
-  # module M
-  # C = 'inside'
-  # C # => 'inside'
-  # 'C'.safe_constantize # => 'outside', same as ::C
-  # end
-  #
-  # +nil+ is returned when the name is not in CamelCase or the constant (or
-  # part of it) is unknown.
-  #
-  # 'blargle'.safe_constantize # => nil
-  # 'UnknownModule'.safe_constantize # => nil
-  # 'UnknownModule::Foo::Bar'.safe_constantize # => nil
-  def safe_constantize()
-    constantize(self)
-  rescue NameError => e
-    raise unless e.message =~ /(uninitialized constant|wrong constant name) #{const_regexp(self)}$/ ||
-      e.name.to_s == self.to_s
-  rescue ArgumentError => e
-    raise unless e.message =~ /not missing constant #{const_regexp(self)}\!$/
   end
 end
