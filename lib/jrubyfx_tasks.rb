@@ -26,7 +26,7 @@ module JRubyFX
   module Tasks
     extend Rake::DSL
     # Base URL of JRuby-complete.jar download location
-    BASE_URL='http://jruby.org.s3.amazonaws.com/downloads/'
+    BASE_URL='http://jruby.org.s3.amazonaws.com/downloads'
 
     ##
     # Downloads the jruby-complete jar file for `jruby_version` and save in
