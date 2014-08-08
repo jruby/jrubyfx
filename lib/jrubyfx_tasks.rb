@@ -168,7 +168,7 @@ module JRubyFX
     private
     def download(version_string) #:nodoc:
       File.open("jruby-complete-#{version_string}.jar","wb") do |f|
-        f.write(open("#{BASE_URL}/#{version_string}/jruby-complete-#{version_string}.jar").read)
+        f.write(open("#{BASE_URL}#{version_string}/jruby-complete-#{version_string}.jar").read)
       end
     end
 
