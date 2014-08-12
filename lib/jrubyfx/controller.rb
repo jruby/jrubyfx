@@ -339,10 +339,21 @@ module JRubyFX::Controller
   def self.get_fxml_loader(filename, controller = nil, root_dir = nil)
     fx = FxmlLoader.new
     fx.location =
-      if JRubyFX::Application.in_jar?
+    if JRubyFX::Application.in_jar?
       # If we are in a jar file, use the class loader to get the file from the jar (like java)
       # TODO: should just be able to use URLs
-      JRuby.runtime.jruby_class_loader.get_resource File.join(root_dir, filename)
+      
+      # According to how class loader works, the correct path for a file inside a jar is NOT "/folder/file.fxml" 
+      # but "folder/file.fxml" (without starting "/" or ".", which would both make the path to be seen as a filesystem 
+      # reference) so we assume that if root_dir is set to "" or to any other path not starting with "." or "/" then 
+      # we want to point to a folder inside the jar, otherwise to a filesystem's one. According to this we format and 
+      # feed the right path to the class loader.
+      
+      if root_dir == "" or not ["/", "."].include? (root_dir[0])
+        JRuby.runtime.jruby_class_loader.get_resource filename
+      else
+        JRuby.runtime.jruby_class_loader.get_resource File.join(root_dir, filename)
+      end
     else
       root_dir ||= fxml_root
       # If we are in the normal filesystem, create a file url path relative to relative_to or this file
