@@ -167,6 +167,9 @@ module JRubyFX
         end
         return instance_variable_get("@#{symbol_name}")
       end
+      send(:define_method, pname.snake_case) do
+        send(pname)
+      end
       add_method_signature pname, [ptype]
       add_method_signature "set" + camel, [java.lang.Void, type]
       add_method_signature "get" + camel, [type]
