@@ -26,23 +26,28 @@ end
 # Special methods for fxml loading
 module Kernel
   @@jrubyfx_res_dir = {}
-  def fxml_root(value=nil, jar_value=nil)
+  @@jrubyfx_fxml_res_cl = nil
+  def fxml_root(value=nil, jar_value=nil, class_loader = nil)
+  	@@jrubyfx_fxml_res_cl = class_loader if class_loader
     if value or jar_value
-      @@jrubyfx_fxml_dir = JRubyFX::Application.in_jar? ? jar_value : File.expand_path(value)
+      @@jrubyfx_fxml_dir = (JRubyFX::Application.in_jar? and jar_value) ? jar_value : File.expand_path(value)
     else
       @@jrubyfx_fxml_dir
     end
   end
   def resource_root(res_name, value=nil, jar_value=nil)
     if value or jar_value
-      @@jrubyfx_res_dir[res_name.to_sym] = JRubyFX::Application.in_jar? ? jar_value : File.expand_path(value)
+      @@jrubyfx_res_dir[res_name.to_sym] = (JRubyFX::Application.in_jar? and jar_value) ? jar_value : File.expand_path(value)
     else
       @@jrubyfx_res_dir[res_name.to_sym]
     end
   end
+  def get_fxml_resource_class_loader
+  	@@jrubyfx_fxml_res_cl || JRuby.runtime.jruby_class_loader.method("get_resource")
+  end
   def resource_url(type, relative_path)
     if JRubyFX::Application.in_jar?
-      JRuby.runtime.jruby_class_loader.get_resource("#{resource_root(type)}/#{relative_path}");
+      get_fxml_resource_class_loader.call("#{resource_root(type)}/#{relative_path}")
     else
       java.net.URL.new("file:" + File.join(resource_root(type), relative_path))
     end
@@ -108,6 +113,7 @@ module JRubyFX::Controller
     def load_into(stage, settings={})
       # Inherit from default settings
       settings = DEFAULT_SETTINGS.merge({root_dir: (self.instance_variable_get("@fxml_root_dir") || fxml_root),
+          class_loader: (get_fxml_resource_class_loader),
           filename: self.instance_variable_get("@filename")}).merge settings
 
       # Custom controls don't always need to be pure java, but oh well...
@@ -120,7 +126,7 @@ module JRubyFX::Controller
       ctrl.stage = stage
 
       # load the FXML file
-      root = Controller.get_fxml_loader(settings[:filename], ctrl, settings[:root_dir]).load
+      root = Controller.get_fxml_loader(settings[:filename], ctrl, settings[:root_dir], settings[:class_loader]).load
 
       # Unless the FXML root node is a scene, wrap that node in a scene
       if root.is_a? Scene
@@ -255,7 +261,7 @@ module JRubyFX::Controller
   end
 
   def load_fxml(filename, root_dir=nil)
-    fx = Controller.get_fxml_loader(filename, self, root_dir || @fxml_root_dir || fxml_root)
+    fx = Controller.get_fxml_loader(filename, self, root_dir || @fxml_root_dir || fxml_root, get_fxml_resource_class_loader)
     fx.root = self
     fx.load
   end
@@ -300,10 +306,11 @@ module JRubyFX::Controller
   def self.load_fxml_only(filename, stage, settings={})
     # Inherit from default settings
     settings = DEFAULT_SETTINGS.merge({root_dir: fxml_root,
+    	class_loader: get_fxml_resource_class_loader,
         filename: filename}).merge settings
 
     # load the FXML file
-    root = Controller.get_fxml_loader(settings[:filename], nil, settings[:root_dir]).load
+    root = Controller.get_fxml_loader(settings[:filename], nil, settings[:root_dir], settings[:class_loader]).load
 
     # TODO: de-duplicate this code
 
@@ -336,10 +343,17 @@ module JRubyFX::Controller
   # === Equivalent Java
   #   Parent root = FXMLLoader.load(getClass().getResource("Demo.fxml"));
   #
-  def self.get_fxml_loader(filename, controller = nil, root_dir = nil)
+  def self.get_fxml_loader(filename, controller = nil, root_dir = nil, class_loader = JRuby.runtime.jruby_class_loader.method("get_resource"))
     fx = FxmlLoader.new
-    fx.location =
-    if JRubyFX::Application.in_jar?
+    fx.location = get_fxml_location(root_dir, filename, class_loader)
+    puts fx.location
+    # we must set this here for JFX to call our events
+    fx.controller = controller
+    fx
+  end
+  
+  def self.get_fxml_location(root_dir, filename, class_loader)
+    if JRubyFX::Application.in_jar? and filename.match(/^[^.\/]/)
       # If we are in a jar file, use the class loader to get the file from the jar (like java)
       # TODO: should just be able to use URLs
       
@@ -349,18 +363,14 @@ module JRubyFX::Controller
       # we want to point to a folder inside the jar, otherwise to a filesystem's one. According to this we format and 
       # feed the right path to the class loader.
       
-      if root_dir == "" or not ["/", "."].include? (root_dir[0])
-        JRuby.runtime.jruby_class_loader.get_resource filename
-      else
-        JRuby.runtime.jruby_class_loader.get_resource File.join(root_dir, filename)
-      end
-    else
-      root_dir ||= fxml_root
-      # If we are in the normal filesystem, create a file url path relative to relative_to or this file
-      URL.new "file:#{File.join root_dir, filename}"
+      location = class_loader.call(File.join(root_dir, filename))
+      
+      # fall back if not found
+      return location if location
     end
-    # we must set this here for JFX to call our events
-    fx.controller = controller
-    fx
+    
+    root_dir ||= fxml_root
+    # If we are in the normal filesystem, create a file url path relative to relative_to or this file
+    URL.new "file:#{File.join root_dir, filename}"
   end
 end
