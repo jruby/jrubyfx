@@ -35,6 +35,8 @@ class CompilerApp < JRubyFX::Application
         loader.load(jruby_ext: {jit: 0, dont_load: true, jit_opts: {force: true}})
       end
       puts "done"
+    rescue java.lang.Throwable, Exception => e
+      $JRUBYFX_AOT_ERROR = e
     ensure
       Platform.exit
     end

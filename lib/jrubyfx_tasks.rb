@@ -161,7 +161,9 @@ module JRubyFX
     def compile(cmdline)
       require 'jrubyfx/compiler_app'
       $JRUBYFX_AOT_COMPILING = true
+      $JRUBYFX_AOT_ERROR = false
       CompilerApp.launch(*cmdline) # must use this to provide a full javafx environ so controls will build properly
+      raise $JRUBYFX_AOT_ERROR if $JRUBYFX_AOT_ERROR
     end
 
 
