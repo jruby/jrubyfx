@@ -346,7 +346,6 @@ module JRubyFX::Controller
   def self.get_fxml_loader(filename, controller = nil, root_dir = nil, class_loader = JRuby.runtime.jruby_class_loader.method("get_resource"))
     fx = FxmlLoader.new
     fx.location = get_fxml_location(root_dir, filename, class_loader)
-    puts fx.location
     # we must set this here for JFX to call our events
     fx.controller = controller
     fx
