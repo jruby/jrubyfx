@@ -54,11 +54,6 @@ class MyTask < javafx.concurrent.Task
 end
 
 class MyService < javafx.concurrent.Service
-  def initialize(bar)
-    @bar = bar
-    super()
-  end
-
   def createTask
     MyTask.new.tap do |t|
       t.set_on_cancelled do |event|
@@ -66,7 +61,7 @@ class MyService < javafx.concurrent.Service
       end
 
       t.set_on_failed do |event|
-        puts "task failed #{event.to_s}: #{@bar.progress}"
+        puts "task failed #{event.to_s}:"
       end
     end
   end
@@ -84,7 +79,7 @@ class ProgressBarWithServiceDemo < JRubyFX::Application
       end
     end
 
-    @my_service = MyService.new(bar)
+    @my_service = MyService.new
 
     bar = stage['#bar']
     bar.progress_property.bind(@my_service.progress_property)
@@ -95,4 +90,4 @@ class ProgressBarWithServiceDemo < JRubyFX::Application
   end
 end
 
-ProgressBarDemo.launch
+ProgressBarWithServiceDemo.launch
