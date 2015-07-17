@@ -53,20 +53,48 @@ class MyTask < javafx.concurrent.Task
   end
 end
 
-class ProgressBarDemo < JRubyFX::Application
-  def start(stage)
-    with(stage, title: "Progress Bar Demo with binded Task", width: 400,
-         height: 150) do
-      layout_scene do
-        progress_bar(id: 'bar')
+class MyService < javafx.concurrent.Service
+  def initialize(bar)
+    @bar = bar
+    super()
+  end
+
+  def createTask
+    MyTask.new.tap do |t|
+      t.set_on_cancelled do |event|
+        puts "task cancelled"
+      end
+
+      t.set_on_failed do |event|
+        puts "task failed #{event.to_s}: #{@bar.progress}"
       end
     end
-    my_task = MyTask.new
-    bar = stage['#bar']
-    bar.progress_property.bind(my_task.progress_property)
-    Java::java.lang.Thread.new(my_task).start
+  end
+end
 
+class ProgressBarDemo < JRubyFX::Application
+  def start(stage)
+    with(stage, title: "Progress Bar Demo with binded Task", width: 200,
+         height: 100) do
+      layout_scene do
+        vbox(15, alignment: Java::javafx.geometry.Pos::CENTER) do
+          progress_bar(id: 'bar')
+          button("restart")
+        end
+      end
+    end
+
+    stage['.button'].set_on_action { restart_task }
+    bar = stage['#bar']
+    @my_service = MyService.new(bar)
+    bar.progress_property.bind(@my_service.progress_property)
+
+    @my_service.start
     stage.show
+  end
+
+  def restart_task
+    @my_service.restart
   end
 end
 
