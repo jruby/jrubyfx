@@ -84,17 +84,14 @@ class ProgressBarWithServiceDemo < JRubyFX::Application
       end
     end
 
-    stage['.button'].set_on_action { restart_task }
-    bar = stage['#bar']
     @my_service = MyService.new(bar)
+
+    bar = stage['#bar']
     bar.progress_property.bind(@my_service.progress_property)
+    stage['.button'].set_on_action { @my_service.restart }
 
     @my_service.start
     stage.show
-  end
-
-  def restart_task
-    @my_service.restart
   end
 end
 
