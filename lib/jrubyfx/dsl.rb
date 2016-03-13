@@ -196,7 +196,7 @@ module JRubyFX
         },
         rotate: ->(on){
           "  def rotate(*args)
-    transforms << build(Rotate, *args)
+    transforms << build(#{JRubyFX::DSL::NAME_TO_CLASS_NAME['rotate']}, *args)
   end\n"
         },
         method_missing: ->(on, type) {

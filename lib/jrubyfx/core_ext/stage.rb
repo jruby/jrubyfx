@@ -72,7 +72,7 @@ class Java::javafx::stage::Stage
   #
   def layout_scene(*args, &code)
     root = code.arity == 1 ? code[node] : instance_eval(&code)
-    build(Scene, root, *args).tap { |scene| set_scene scene }
+    build(Java::JavafxScene::Scene, root, *args).tap { |scene| set_scene scene }
   end
   
   def fxml(source, options={})
