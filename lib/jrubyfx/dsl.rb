@@ -48,7 +48,7 @@ module JRubyFX
       # of built-in components.
       #
       def register_type(type=self, name=nil)
-        name = type.name.snake_case unless name
+        name = type.name.snake_case(true) unless name
         JRubyFX::DSL::NAME_TO_CLASSES[name.to_s] = type
       end
       module_function :register_type

@@ -40,14 +40,24 @@ end
 # Standard ruby String class extensions
 class String
   # call-seq:
-  #   snake_case() => string
+  #   snake_case(ignore_prefix_namespace=false) => string
   #
   # Converts a CamelCaseString to a snake_case_string
   #
   #   "JavaFX".snake_case #=> "java_fx"
   #
-  def snake_case
-    self.gsub(/::/, '/').
+  # If ignore_prefix_namespace is specified it will strip
+  # any preceding modules/classes off front of string before
+  # snake casing:
+  #   Foo::BigBar #=> "big_bar"
+  #
+  # By default it will separate modules with a "/":
+  #   Foo::BigBar #=> "foo/big_bar"
+  #
+  def snake_case(ignore_prefix_namespace=false)
+    base = ignore_prefix_namespace ?
+             self.gsub(/.*::/, '') : self.gsub(/::/, '/')
+    base.
     gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
     gsub(/([a-z\d])([A-Z])/,'\1_\2').
     tr("-", "_").
