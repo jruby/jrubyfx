@@ -27,7 +27,7 @@ class JRubyFX::Application < Java.javafx.application.Application
   # and, if jruby changes, false negatives. If you are using this, it might be a
   # very bad idea... (though it is handy)
   def self.in_jar?()
-    $LOAD_PATH.inject(false) { |res,i| res || i.include?(".jar!/META-INF/jruby.home/lib/ruby/")}
+    $LOAD_PATH.inject(false) { |res,i| res || i.include?("/META-INF/jruby.home/lib/ruby/")}
   end
 
   ##
