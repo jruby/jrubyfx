@@ -115,7 +115,14 @@ module JavaFXImpl #:nodoc: all
       PlatformImpl.runAndWait do
         begin
           stage = Stage.new
-          stage.impl_setPrimary(true)
+          if stage.respond_to? :impl_setPrimary
+	          stage.impl_setPrimary(true)
+          else
+	          # java 9 is awful
+	          sp = Stage.java_class.to_java.getDeclaredMethod("setPrimary", Java::boolean)
+	          sp.accessible = true
+	          sp.invoke(stage, true)
+          end
           application.start(stage)
           # no countDown here because its up top... yes I know
         rescue => ex
