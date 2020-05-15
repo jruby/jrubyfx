@@ -6,19 +6,25 @@ OpenJFX used was pre-built library downloaded from [https://gluonhq.com/products
 
 ## Limitation
 
-It is limited by the pre-built OpenJFX class file was compiled by Java 11
+It is limited by the pre-built OpenJFX class file was compiled higher then Java 10 (class file version 54.0) proved by the following error message while trying to run it using OpenJDK 1.8:
+```ruby
+NameError: cannot link Java class com.sun.javafx.application.PlatformImpl com/sun/javafx/application/PlatformImpl has been compiled by a more recent version of the Java Runtime (class file version 54.0), this version of the Java Runtime only recognizes class file versions up to 52.0
+```
+Therefore it is only compatible from OpenJDK 10 and above.
+
+## Testing Result
 
 The patch is tested on two OSes:
 * Linux Mint 19.3 Tricia x86\_64, kernel 5.3.0-51-generic
 * MacOS Catalina 10.15.4
 
 Java used to run the test is
-* openjdk version "11.0.7" 2020-04-14 (Linux Mint)
-* java version "11.0.2" 2019-01-15 LTS (Mac OS)
+* (Linux Mint) openjdk version "11.0.7" 2020-04-14 
+* (Mac OS) java version "11.0.2" 2019-01-15 LTS 
 
 Ruby used to run the test is
-* jruby 9.2.9.0 (2.5.7) 2019-10-30 458ad3e OpenJDK 64-Bit Server VM 11.0.7+10-post-Ubuntu-2ubuntu218.04 on 11.0.7+10-post-Ubuntu-2ubuntu218.04 +jit [linux-x86_64]
-* jruby 9.2.0.0 (2.5.0) 2018-05-24 81156a8 Java HotSpot(TM) 64-Bit Server VM 11.0.2+9-LTS on 11.0.2+9-LTS +jit [darwin-x86_64]
+* (Linux Mint) jruby 9.2.9.0 (2.5.7) 2019-10-30 458ad3e OpenJDK 64-Bit Server VM 11.0.7+10-post-Ubuntu-2ubuntu218.04 on 11.0.7+10-post-Ubuntu-2ubuntu218.04 +jit [linux-x86_64]
+* (Mac OS) jruby 9.2.0.0 (2.5.0) 2018-05-24 81156a8 Java HotSpot(TM) 64-Bit Server VM 11.0.2+9-LTS on 11.0.2+9-LTS +jit [darwin-x86_64]
 
 The OpenJFX version used in this integration and tested are:
 * version 11.0.2 (LTS Public Version)
