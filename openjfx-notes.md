@@ -10,7 +10,7 @@ It is limited by the pre-built OpenJFX class file is compiled using Java version
 ```ruby
 NameError: cannot link Java class com.sun.javafx.application.PlatformImpl com/sun/javafx/application/PlatformImpl has been compiled by a more recent version of the Java Runtime (class file version 54.0), this version of the Java Runtime only recognizes class file versions up to 52.0
 ```
-Therefore it is only compatible from OpenJDK 10 and above.
+Therefore it is only compatible from JDK/JRE 10 and above.
 
 ## Testing Result
 
