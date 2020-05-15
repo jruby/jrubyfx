@@ -12,6 +12,10 @@ NameError: cannot link Java class com.sun.javafx.application.PlatformImpl com/su
 ```
 Therefore it is only compatible from JDK/JRE 10 and above.
 
+## Changes
+
+The changes only limited to lib/jrubyfx/utils/part\_imports.rb that shall load the OpenJFX library via the environment variable PATH\_TO\_FX as instructed on the [https://openjfx.io](https://openjfx.io/openjfx-docs/#install-javafx) hence if developer followed the instruction, JRubyFX shall be able to work out-of-the-box.
+
 ## Testing Result
 
 The patch is tested on two OSes:
