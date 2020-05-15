@@ -2,7 +2,11 @@
 
 # OpenJFX
 
-OpenJFX used was prebuilt library downloaded from [https://gluonhq.com/products/javafx/](https://gluonhq.com/products/javafx/) as that is referred by [https://openjfx.io](https://openjfx.io) download link.
+OpenJFX used was pre-built library downloaded from [https://gluonhq.com/products/javafx/](https://gluonhq.com/products/javafx/) as that is referred by [https://openjfx.io](https://openjfx.io) download link.
+
+## Limitation
+
+It is limited by the pre-built OpenJFX class file was compiled by Java 11
 
 The patch is tested on two OSes:
 * Linux Mint 19.3 Tricia x86\_64, kernel 5.3.0-51-generic
