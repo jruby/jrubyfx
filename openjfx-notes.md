@@ -44,7 +44,7 @@ After integrated, the samples/test\_all\_the\_samples.rb was run:
 | samples/javafx/movie\_app.rb   |  Success  (Linux & MacOS)             |   Success  (Linux & MacOS)            |  Success  (Linux), halted on Mac (MacOS Note 2)  | 
 | samples/javafx/movie\_app.rb   |   No movie is shown but using Oracle Java yield the same result. Media key detected.   (Linux & MacOS)            |   No movie is shown but using Oracle Java yield the same result. Media key detected.   (Linux & MacOS)            |  No movie is shown but using Oracle Java yield the same result. Media key detected.   (Linux), halted on Mac (MacOS Note 2) | 
 | samples/javafx/tree\_view.rb   |  Success   (Linux & MacOS)            |   Success     (Linux & MacOS)         |  Success   (Linux), halted on Mac (MacOS Note 2)  | 
-| samples/javafx/image\_view\_with\_multi\_touch.rb  |   Success            |   Success             |  Success   | 
+| samples/javafx/image\_view\_with\_multi\_touch.rb  |   Success            |   Success             |  Success   (Linux), halted on Mac (MacOS Note 2)   | 
 | samples/javafx/hello\_jrubyfx.rb  |  Success (Linux & MacOS)            |   Success    (Linux & MacOS)          |  Success  (Linux), halted on Mac (MacOS Note 2)  | 
 | samples/javafx/analog\_clock.rb  |  Success (Linux & MacOS)           |  Success  (Linux & MacOS)              |  Success (Linux), halted on Mac (MacOS Note 2)  | 
 | samples/javafx/line\_chart.rb  |  Success (Linux & MacOS)             |  Success (Linux & MacOS)              |  Success (Linux), halted on Mac (MacOS Note 2)   | 
@@ -81,6 +81,7 @@ Running the ruby files inside tests/
 
 
 MacOS Notes:
+
 \* Note 1: Sometimes when exiting the window, the following error shall be prompted:
   Java has been detached already, but someone is still trying to use it at -[GlassViewDelegate dealloc]:/Users/jenkins/workspace/OpenJFX11.0.2-mac/modules/javafx.graphics/src/main/native-glass/mac/GlassViewDelegate.m:198
 
