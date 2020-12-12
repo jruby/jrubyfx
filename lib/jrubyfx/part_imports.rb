@@ -75,48 +75,64 @@ module JRubyFX
     # classes by using either `Hash.flat_tree_inject` from jrubyfx/utils.rb or
     # writing your own traversal function
     #
-    JFX_CLASS_HIERARCHY = { :javafx => {
-        :animation => %w[Animation AnimationTimer FadeTransition FillTransition Interpolator KeyFrame KeyValue ParallelTransition PathTransition
-        PauseTransition RotateTransition ScaleTransition SequentialTransition StrokeTransition Timeline Transition TranslateTransition],
-        :application => ['Platform'],
-        :beans => {
-          :property => %w[SimpleBooleanProperty SimpleDoubleProperty SimpleFloatProperty SimpleIntegerProperty SimpleListProperty SimpleLongProperty SimpleMapProperty SimpleObjectProperty SimpleSetProperty SimpleStringProperty],
-          #TODO: import more
-          :value => ['ChangeListener']
+    JFX_CLASS_HIERARCHY = {
+    :javafx => {
+      :animation => %w[Animation AnimationTimer FadeTransition FillTransition Interpolatable Interpolator KeyFrame KeyValue ParallelTransition PathTransition PauseTransition RotateTransition ScaleTransition SequentialTransition StrokeTransition Timeline Transition TranslateTransition],
+      :application => %w[Application HostServices Platform Preloader],
+      :beans => {
+        :binding => %w[Binding Bindings BooleanBinding BooleanExpression DoubleBinding DoubleExpression FloatBinding FloatExpression IntegerBinding IntegerExpression ListBinding ListExpression LongBinding LongExpression MapBinding MapExpression NumberBinding NumberExpression NumberExpressionBase ObjectBinding ObjectExpression SetBinding SetExpression StringBinding StringExpression When],
+        '' => %w[DefaultProperty InvalidationListener NamedArg Observable WeakInvalidationListener WeakListener],
+        :property => {
+          :adapter => %w[JavaBeanBooleanProperty JavaBeanBooleanPropertyBuilder JavaBeanDoubleProperty JavaBeanDoublePropertyBuilder JavaBeanFloatProperty JavaBeanFloatPropertyBuilder JavaBeanIntegerProperty JavaBeanIntegerPropertyBuilder JavaBeanLongProperty JavaBeanLongPropertyBuilder JavaBeanObjectProperty JavaBeanObjectPropertyBuilder JavaBeanProperty JavaBeanStringProperty JavaBeanStringPropertyBuilder ReadOnlyJavaBeanBooleanProperty ReadOnlyJavaBeanBooleanPropertyBuilder ReadOnlyJavaBeanDoubleProperty ReadOnlyJavaBeanDoublePropertyBuilder ReadOnlyJavaBeanFloatProperty ReadOnlyJavaBeanFloatPropertyBuilder ReadOnlyJavaBeanIntegerProperty ReadOnlyJavaBeanIntegerPropertyBuilder ReadOnlyJavaBeanLongProperty ReadOnlyJavaBeanLongPropertyBuilder ReadOnlyJavaBeanObjectProperty ReadOnlyJavaBeanObjectPropertyBuilder ReadOnlyJavaBeanProperty ReadOnlyJavaBeanStringProperty ReadOnlyJavaBeanStringPropertyBuilder],
+          '' => %w[BooleanProperty BooleanPropertyBase DoubleProperty DoublePropertyBase FloatProperty FloatPropertyBase IntegerProperty IntegerPropertyBase ListProperty ListPropertyBase LongProperty LongPropertyBase MapProperty MapPropertyBase ObjectProperty ObjectPropertyBase Property ReadOnlyBooleanProperty ReadOnlyBooleanPropertyBase ReadOnlyBooleanWrapper ReadOnlyDoubleProperty ReadOnlyDoublePropertyBase ReadOnlyDoubleWrapper ReadOnlyFloatProperty ReadOnlyFloatPropertyBase ReadOnlyFloatWrapper ReadOnlyIntegerProperty ReadOnlyIntegerPropertyBase ReadOnlyIntegerWrapper ReadOnlyListProperty ReadOnlyListPropertyBase ReadOnlyListWrapper ReadOnlyLongProperty ReadOnlyLongPropertyBase ReadOnlyLongWrapper ReadOnlyMapProperty ReadOnlyMapPropertyBase ReadOnlyMapWrapper ReadOnlyObjectProperty ReadOnlyObjectPropertyBase ReadOnlyObjectWrapper ReadOnlyProperty ReadOnlySetProperty ReadOnlySetPropertyBase ReadOnlySetWrapper ReadOnlyStringProperty ReadOnlyStringPropertyBase ReadOnlyStringWrapper SetProperty SetPropertyBase SimpleBooleanProperty SimpleDoubleProperty SimpleFloatProperty SimpleIntegerProperty SimpleListProperty SimpleLongProperty SimpleMapProperty SimpleObjectProperty SimpleSetProperty SimpleStringProperty StringProperty StringPropertyBase],
         },
-        :collections => ['FXCollections'],
-        :concurrent => %w[Worker Task Service],
-        :event => %w[Event ActionEvent EventHandler],
-        :fxml => ['Initializable', 'LoadException'],
-        :geometry => %w[HorizontalDirection HPos Insets Orientation Pos Rectangle2D Side VerticalDirection VPos],
-        :scene => {
-          '' => %w[Group Node Parent Scene],
-          :canvas => ['Canvas'],
-          :chart => %w[AreaChart Axis BarChart BubbleChart CategoryAxis Chart LineChart NumberAxis
-          PieChart ScatterChart StackedAreaChart StackedBarChart ValueAxis XYChart],
-          :control => %w[Accordion Button Cell CheckBox CheckBoxTreeItem CheckMenuItem ChoiceBox ColorPicker ComboBox ContextMenu Hyperlink
-          Label ListCell ListView Menu MenuBar MenuButton MenuItem Pagination PasswordField PopupControl ProgressBar ProgressIndicator RadioButton
-          RadioMenuItem ScrollBar ScrollPane Separator SeparatorMenuItem Slider SplitMenuButton SplitPane Tab TableView TableCell TableColumn TabPane TextArea
-          TextField TitledPane ToggleButton ToggleGroup ToolBar Tooltip TreeCell TreeItem TreeView ContentDisplay OverrunStyle SelectionMode],
-          :effect => %w[Blend BlendMode Bloom BlurType BoxBlur ColorAdjust ColorInput DisplacementMap DropShadow GaussianBlur Glow ImageInput
-          InnerShadow Lighting MotionBlur PerspectiveTransform Reflection SepiaTone Shadow],
-          :image => %w[Image ImageView PixelReader PixelWriter],
-          :input => %w[Clipboard ClipboardContent ContextMenuEvent DragEvent GestureEvent InputEvent InputMethodEvent KeyCode KeyEvent
-          Mnemonic MouseButton MouseDragEvent MouseEvent RotateEvent ScrollEvent SwipeEvent TouchEvent TransferMode ZoomEvent],
-          :layout => %w[AnchorPane BorderPane ColumnConstraints FlowPane GridPane HBox Pane Priority RowConstraints StackPane TilePane VBox],
-          :media => %w[AudioClip AudioEqualizer AudioTrack EqualizerBand Media MediaException
-          MediaErrorEvent MediaMarkerEvent MediaPlayer MediaView VideoTrack],
-          :paint => %w[Color CycleMethod ImagePattern LinearGradient Paint RadialGradient Stop],
-          :shape => %w[Arc ArcTo ArcType Circle ClosePath CubicCurve CubicCurveTo Ellipse FillRule HLineTo Line LineTo MoveTo Path PathElement
-          Polygon Polyline QuadCurve QuadCurveTo Rectangle Shape StrokeLineCap StrokeLineJoin StrokeType SVGPath VLineTo],
-          :text => %w[Font FontPosture FontSmoothingType FontWeight Text TextAlignment TextBoundsType],
-          :transform => %w[Affine Rotate Scale Shear Translate],
-          :web => ['WebView', 'HTMLEditor']
+        :value => %w[ChangeListener ObservableBooleanValue ObservableDoubleValue ObservableFloatValue ObservableIntegerValue ObservableListValue ObservableLongValue ObservableMapValue ObservableNumberValue ObservableObjectValue ObservableSetValue ObservableStringValue ObservableValue ObservableValueBase WeakChangeListener WritableBooleanValue WritableDoubleValue WritableFloatValue WritableIntegerValue WritableListValue WritableLongValue WritableMapValue WritableNumberValue WritableObjectValue WritableSetValue WritableStringValue WritableValue],
+      },
+      :collections => {
+        '' => %w[ArrayChangeListener FXCollections ListChangeListener MapChangeListener ModifiableObservableListBase ObservableArray ObservableArrayBase ObservableFloatArray ObservableIntegerArray ObservableList ObservableListBase ObservableMap ObservableSet SetChangeListener WeakListChangeListener WeakMapChangeListener WeakSetChangeListener],
+        :transformation => %w[FilteredList SortedList TransformationList],
+      },
+      :concurrent => %w[ScheduledService Service Task Worker WorkerStateEvent],
+      :css => {
+        '' => %w[CompoundSelector CssMetaData CssParser Declaration FontCssMetaData FontFace Match ParsedValue PseudoClass Rule Selector SimpleSelector SimpleStyleableBooleanProperty SimpleStyleableDoubleProperty SimpleStyleableFloatProperty SimpleStyleableIntegerProperty SimpleStyleableLongProperty SimpleStyleableObjectProperty SimpleStyleableStringProperty Size Style Styleable StyleableBooleanProperty StyleableDoubleProperty StyleableFloatProperty StyleableIntegerProperty StyleableLongProperty StyleableObjectProperty StyleableProperty StyleablePropertyFactory StyleableStringProperty StyleClass StyleConverter Stylesheet],
+        :converter => %w[BooleanConverter ColorConverter CursorConverter DeriveColorConverter DeriveSizeConverter DurationConverter EffectConverter FontConverter InsetsConverter LadderConverter PaintConverter ShapeConverter SizeConverter StopConverter URLConverter],
+      },
+      :embed => {
+        :swing => %w[JFXPanel SwingFXUtils SwingNode],
+      },
+      :event => %w[ActionEvent Event EventDispatchChain EventDispatcher EventHandler EventTarget EventType WeakEventHandler],
+      :fxml => %w[FXML FXMLLoader Initializable JavaFXBuilderFactory LoadException LoadListener],
+      :geometry => %w[BoundingBox Bounds Dimension2D Insets Point2D Point3D Rectangle2D],
+      :print => %w[JobSettings PageLayout PageRange Paper PaperSource Printer PrinterAttributes PrinterJob PrintResolution],
+      :scene => {
+        '' => %w[AmbientLight Camera Cursor Group ImageCursor LightBase Node ParallelCamera Parent PerspectiveCamera PointLight Scene SceneAntialiasing SnapshotParameters SnapshotResult SubScene],
+        :canvas => %w[Canvas GraphicsContext],
+        :chart => %w[AreaChart Axis BarChart BubbleChart CategoryAxis Chart LineChart NumberAxis PieChart ScatterChart StackedAreaChart StackedBarChart ValueAxis XYChart],
+        :control => {
+          '' => %w[Accordion Alert Button ButtonBar ButtonBase ButtonType Cell CheckBox CheckBoxTreeItem CheckMenuItem ChoiceBox ChoiceDialog ColorPicker ComboBox ComboBoxBase ContextMenu Control CustomMenuItem DateCell DatePicker Dialog DialogEvent DialogPane FocusModel Hyperlink IndexedCell IndexRange Label Labeled ListCell ListView Menu MenuBar MenuButton MenuItem MultipleSelectionModel Pagination PasswordField PopupControl ProgressBar ProgressIndicator RadioButton RadioMenuItem ResizeFeaturesBase ScrollBar ScrollPane ScrollToEvent SelectionModel Separator SeparatorMenuItem SingleSelectionModel Skin SkinBase Skinnable Slider SortEvent Spinner SpinnerValueFactory SplitMenuButton SplitPane Tab TableCell TableColumn TableColumnBase TableFocusModel TablePosition TablePositionBase TableRow TableSelectionModel TableView TabPane TextArea TextField TextFormatter TextInputControl TextInputDialog TitledPane Toggle ToggleButton ToggleGroup ToolBar Tooltip TreeCell TreeItem TreeTableCell TreeTableColumn TreeTablePosition TreeTableRow TreeTableView TreeView],
+          :cell => %w[CheckBoxListCell CheckBoxTableCell CheckBoxTreeCell CheckBoxTreeTableCell ChoiceBoxListCell ChoiceBoxTableCell ChoiceBoxTreeCell ChoiceBoxTreeTableCell ComboBoxListCell ComboBoxTableCell ComboBoxTreeCell ComboBoxTreeTableCell MapValueFactory ProgressBarTableCell ProgressBarTreeTableCell PropertyValueFactory TextFieldListCell TextFieldTableCell TextFieldTreeCell TextFieldTreeTableCell TreeItemPropertyValueFactory],
+          :skin => %w[AccordionSkin ButtonBarSkin ButtonSkin CellSkinBase CheckBoxSkin ChoiceBoxSkin ColorPickerSkin ComboBoxBaseSkin ComboBoxListViewSkin ComboBoxPopupControl ContextMenuSkin DateCellSkin DatePickerSkin HyperlinkSkin LabeledSkinBase LabelSkin ListCellSkin ListViewSkin MenuBarSkin MenuButtonSkin MenuButtonSkinBase NestedTableColumnHeader PaginationSkin ProgressBarSkin ProgressIndicatorSkin RadioButtonSkin ScrollBarSkin ScrollPaneSkin SeparatorSkin SliderSkin SpinnerSkin SplitMenuButtonSkin SplitPaneSkin TableCellSkin TableCellSkinBase TableColumnHeader TableHeaderRow TableRowSkin TableRowSkinBase TableViewSkin TableViewSkinBase TabPaneSkin TextAreaSkin TextFieldSkin TextInputControlSkin TitledPaneSkin ToggleButtonSkin ToolBarSkin TooltipSkin TreeCellSkin TreeTableCellSkin TreeTableRowSkin TreeTableViewSkin TreeViewSkin VirtualContainerBase VirtualFlow],
         },
-        :stage => %w[DirectoryChooser FileChooser Modality Popup PopupWindow Screen Stage StageStyle Window WindowEvent],
-        :util => ['Duration']
-      }
-    }
+        :effect => %w[Blend Bloom BoxBlur ColorAdjust ColorInput DisplacementMap DropShadow Effect FloatMap GaussianBlur Glow ImageInput InnerShadow Light Lighting MotionBlur PerspectiveTransform Reflection SepiaTone Shadow],
+        :image => %w[Image ImageView PixelFormat PixelReader PixelWriter WritableImage WritablePixelFormat],
+        :input => %w[Clipboard ClipboardContent ContextMenuEvent DataFormat Dragboard DragEvent GestureEvent InputEvent InputMethodEvent InputMethodRequests InputMethodTextRun KeyCharacterCombination KeyCodeCombination KeyCombination KeyEvent Mnemonic MouseDragEvent MouseEvent PickResult RotateEvent ScrollEvent SwipeEvent TouchEvent TouchPoint ZoomEvent],
+        :layout => %w[AnchorPane Background BackgroundFill BackgroundImage BackgroundPosition BackgroundSize Border BorderImage BorderPane BorderStroke BorderStrokeStyle BorderWidths ColumnConstraints ConstraintsBase CornerRadii FlowPane GridPane HBox Pane Region RowConstraints StackPane TilePane VBox],
+        :media => %w[AudioClip AudioEqualizer AudioSpectrumListener AudioTrack EqualizerBand Media MediaErrorEvent MediaException MediaMarkerEvent MediaPlayer MediaView SubtitleTrack Track VideoTrack],
+        :paint => %w[Color ImagePattern LinearGradient Material Paint PhongMaterial RadialGradient Stop],
+        :robot => %w[Robot],
+        :shape => %w[Arc ArcTo Box Circle ClosePath CubicCurve CubicCurveTo Cylinder Ellipse HLineTo Line LineTo Mesh MeshView MoveTo ObservableFaceArray Path PathElement Polygon Polyline QuadCurve QuadCurveTo Rectangle Shape Shape3D Sphere SVGPath TriangleMesh VertexFormat VLineTo],
+        :text => %w[Font HitInfo Text TextFlow],
+        :transform => %w[Affine NonInvertibleTransformException Rotate Scale Shear Transform TransformChangedEvent Translate],
+        :web => %w[HTMLEditor HTMLEditorSkin PopupFeatures PromptData WebEngine WebErrorEvent WebEvent WebHistory WebView],
+      },
+      :stage => %w[DirectoryChooser FileChooser Popup PopupWindow Screen Stage Window WindowEvent],
+      :util => {
+        '' => %w[Builder BuilderFactory Callback Duration FXPermission Pair StringConverter],
+        :converter => %w[BigDecimalStringConverter BigIntegerStringConverter BooleanStringConverter ByteStringConverter CharacterStringConverter CurrencyStringConverter DateStringConverter DateTimeStringConverter DefaultStringConverter DoubleStringConverter FloatStringConverter FormatStringConverter IntegerStringConverter LocalDateStringConverter LocalDateTimeStringConverter LocalTimeStringConverter LongStringConverter NumberStringConverter PercentageStringConverter ShortStringConverter TimeStringConverter],
+      },
+    },
+  },
+
 
     $WRITE_OUT << <<HERE
     def const_missing(c)
