@@ -97,6 +97,10 @@ class SimpleFXController
 
     # you can use custom controls as if they were built in via the dsl
     @ui_border_pane.bottom = complex_control("Enter text and hit enter:")
+
+    # You can get the controller of the custom control and invoke methods
+    complex_controller = find('#theComplexControl') # See ComplexControl.fxml
+    complex_controller.text='Hello JRubyFX'
   end
 
 
