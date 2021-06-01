@@ -131,7 +131,7 @@ module JRubyFX
         :converter => %w[BigDecimalStringConverter BigIntegerStringConverter BooleanStringConverter ByteStringConverter CharacterStringConverter CurrencyStringConverter DateStringConverter DateTimeStringConverter DefaultStringConverter DoubleStringConverter FloatStringConverter FormatStringConverter IntegerStringConverter LocalDateStringConverter LocalDateTimeStringConverter LocalTimeStringConverter LongStringConverter NumberStringConverter PercentageStringConverter ShortStringConverter TimeStringConverter],
       },
     },
-  },
+  }
 
 
     $WRITE_OUT << <<HERE

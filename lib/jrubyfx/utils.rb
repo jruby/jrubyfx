@@ -79,7 +79,12 @@ module JRubyFX
     return if @already_loaded_fx and !force
     @already_loaded_fx = true
     java.util.concurrent.CountDownLatch.new(1).tap do |latch|
-      com.sun.javafx.application.PlatformImpl.startup { latch.countDown }
+      platform = unless javafx.application.Platform.respond_to? :startup
+        com.sun.javafx.application.PlatformImpl
+      else
+        javafx.application.Platform
+      end
+      platform.startup { latch.countDown }
       latch.await
     end
   end
