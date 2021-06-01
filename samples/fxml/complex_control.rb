@@ -6,14 +6,13 @@ class ComplexControl < Java::javafx::scene::layout::BorderPane
   fxml "ComplexControl.fxml"
 
   #optional
-  def java_ctor(ctor, initialize_args)
-    ctor.call() # any arguments to BorderPane constructor go here
+  def java_ctor(*initialize_args)
+    super() # any arguments to BorderPane constructor go here
   end
 
   def initialize(text)
     #force override
-    load_fxml "ComplexControl.fxml"
-
+#    load_fxml "ComplexControl.fxml" # TODO!
     @label.text = text
   end
 
