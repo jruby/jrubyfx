@@ -16,12 +16,8 @@ limitations under the License.
 =end
 
 require 'jrubyfx/utils/string_utils'
-# If fxmlloader is installed, require it here
-begin
-  require 'jrubyfx-fxmlloader'
-rescue LoadError
-  # no fxmlloader, ignore it
-end
+require 'jrubyfx/fxml_helper'
+require 'jruby/core_ext'
 
 # Special methods for fxml loading
 module Kernel
@@ -77,6 +73,13 @@ module JRubyFX::Controller
     base.extend(ClassMethods)
     base.extend(JRubyFX::FXMLClassUtils) if defined? JRubyFX::FXMLClassUtils
     base.extend(JRubyFX::FXImports)
+    base.configure_java_class ctor_name: "java_ctor" do
+      dispatch :initialize, :fx_initialize # we want to load our code before calling user code
+        # TODO: exclude?
+      # always exclude copy_fxml_instances
+      # un-exclude "initialize"
+      exclude :copy_fxml_instances
+    end
     # register ourselves as a control. overridable with custom_fxml_control
     register_type base if base.is_a? Class
   end
@@ -115,9 +118,15 @@ module JRubyFX::Controller
       settings = DEFAULT_SETTINGS.merge({root_dir: (self.instance_variable_get("@fxml_root_dir") || fxml_root),
           class_loader: (get_fxml_resource_class_loader),
           filename: self.instance_variable_get("@filename")}).merge settings
-
-      # Custom controls don't always need to be pure java, but oh well...
-      become_java!
+          
+      unless @built
+        ## Use the temporary loader to reformat AController
+        JRubyFX::FxmlHelper.transform self, Controller.get_fxml_location(settings[:root_dir], settings[:filename], settings[:class_loader])
+  
+        # Custom controls don't always need to be pure java, but oh well...
+        become_java!
+        @built = true
+      end
 
       # like new, without initialize
       ctrl = allocate
@@ -148,14 +157,23 @@ module JRubyFX::Controller
       if @preparsed && @preparsed.length > 0
         return @preparsed.pop.finish_initialization(*args, &block)
       end
+      
+      settings = DEFAULT_SETTINGS.merge({root_dir: @fxml_root_dir || fxml_root, class_loader: get_fxml_resource_class_loader, filename: @filename})
+      
       # Custom controls don't always need to be pure java, but oh well...
-      become_java! if @filename
+      if @filename && !@built
+        @built = true # TODO: move later if no new :bake call
+        ## Use the temporary loader to reformat AController
+        JRubyFX::FxmlHelper.transform self, Controller.get_fxml_location(settings[:root_dir], settings[:filename], settings[:class_loader])
+  
+        # Custom controls don't always need to be pure java, but oh well...
+        become_java!
+      end
 
       # like new, without initialize
       ctrl = allocate
 
-      ctrl.initialize_controller(DEFAULT_SETTINGS.merge({root_dir: @fxml_root_dir || fxml_root,
-            filename: @filename}),
+      ctrl.initialize_controller(settings,
         *args, &block) if @filename
 
       # return the controller
@@ -232,17 +250,22 @@ module JRubyFX::Controller
       end
     end
   end
+  
+  # java initialize is redirected to here
+  def fx_initialize()
+    # Do nothing, as we already control initialization
+  end
 
   #default java ctor, override for arguments
-  def java_ctor(ctor, initialize_arguments)
-    ctor.call
+  def java_ctor(*initialize_arguments)
+    super()
   end
 
   # Initialize all controllers
   def initialize_controller(options={}, *args, &block)
-
+    
     # JRuby complains loudly (probably broken behavior) if we don't call the ctor
-    java_ctor self.class.superclass.instance_method(:initialize).bind(self), args
+    __jallocate!() # TODO: args? TODO: non-java controllers?*args) # TODO: remove
 
     # load the FXML file with the current control as the root
     load_fxml options[:filename], options[:root_dir]
@@ -254,7 +277,7 @@ module JRubyFX::Controller
   def pre_initialize_controller(options={})
 
     # JRuby complains loudly (probably broken behavior) if we don't call the ctor
-    java_ctor self.class.superclass.instance_method(:initialize).bind(self), [] #TODO: do we need to call this now with []?
+    java_ctor self.class.instance_method(:__jallocate!).bind(self), [] #TODO: do we need to call this now with []?
 
     # load the FXML file with the current control as the root
     load_fxml options[:filename], options[:root_dir]
@@ -271,9 +294,11 @@ module JRubyFX::Controller
 
     # custom controls are their own scene
     self.scene = self unless @scene
+    
+    self.copy_fxml_instances # set instance methods (defined in fxml_helper)
 
     # Everything is ready, call initialize
-    if private_methods.include? :initialize
+    if private_methods.include? :initialize or methods.include? :initialize
       self.send :initialize, *args, &block
     end
 
@@ -344,8 +369,7 @@ module JRubyFX::Controller
   #   Parent root = FXMLLoader.load(getClass().getResource("Demo.fxml"));
   #
   def self.get_fxml_loader(filename, controller = nil, root_dir = nil, class_loader = JRuby.runtime.jruby_class_loader.method("get_resource"))
-    fx = FxmlLoader.new
-    fx.location = get_fxml_location(root_dir, filename, class_loader)
+    fx = javafx.fxml.FXMLLoader.new(get_fxml_location(root_dir, filename, class_loader))
     # we must set this here for JFX to call our events
     fx.controller = controller
     fx

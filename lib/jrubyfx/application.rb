@@ -36,7 +36,7 @@ class JRubyFX::Application < Java.javafx.application.Application
   #
   # When called on a subclass, this is effectively our main method.
   def self.launch(*args)
-    #call our custom launcher to avoid a java shim
-    JavaFXImpl::Launcher.launch_app(self, *args)
+    # Note: object args are no longer allowed
+    Java.javafx.application.Application.launch(self.become_java!, args.map(&:to_s).to_java(:string))
   end
 end

@@ -96,7 +96,22 @@ ENDL
   puts "Done Writing jrfx!"
   Platform.exit
   end
-end
+  
 
-  require_relative 'lib/jrubyfx/java_fx_impl'
-JavaFXImpl::Launcher.launch_app(ReflectGenerator)
+  def self.launch(*args)
+    sbj = self.become_java!
+    raise "JRuby 9.3 is required" unless sbj
+    Java.javafx.application.Application.launch(sbj, args.map(&:to_s).to_java(:string))
+  end
+  
+  
+  def initialize()
+    super()
+  end
+end
+begin
+ReflectGenerator.launch
+rescue => e
+  p e
+  e.printStackTrace
+end
