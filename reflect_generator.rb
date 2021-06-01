@@ -109,9 +109,16 @@ ENDL
     super()
   end
 end
+
+# we now get Java exceptions, so de-proxy them
 begin
-ReflectGenerator.launch
+	ReflectGenerator.launch
 rescue => e
-  p e
-  e.printStackTrace
+  cause = e.cause
+  if cause && cause.is_a?(org.jruby.exceptions.RaiseException)
+    raise cause.exception
+  else
+	p e
+	e.printStackTrace
+  end
 end
