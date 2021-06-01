@@ -69,6 +69,8 @@ module JRubyFX
       FileList[src].each do |iv_srv|
         cp_r iv_srv, "#{target}/#{File.basename(iv_srv)}" if (main_script == nil || main_script != iv_srv) && opts[:file_filter].call(iv_srv)
       end
+	cp_r "./.jrubyfx_cache", "#{target}/.jrubyfx_cache"
+
       cp main_script, "#{target}/jar-bootstrap.rb" unless main_script == nil
 
       unless File.exists? "#{target}/jar-bootstrap.rb"
@@ -105,7 +107,7 @@ module JRubyFX
       # edit the jar
       base_dir = Dir.pwd
       cd target
-      sh "#{opts[:jar]} ufe '#{output_jar}' org.jruby.JarBootstrapMain *"
+      sh "#{opts[:jar]} ufe '#{output_jar}' org.jruby.JarBootstrapMain * .jr*"
       chmod 0775, output_jar
       cd base_dir
 
