@@ -16,6 +16,9 @@
 "Java::JavafxSceneControl::TreeItem":
    method_missing: "Java::JavafxSceneControl::TreeItem"
    add: get_children
+"Java::JavafxSceneControl::TreeTableView":
+   method_missing: "Java::JavafxSceneControl::TreeItem"
+   add: get_children
 "Java::JavafxSceneControl::TableView":
    method_missing: "Java::JavafxSceneControl::TableColumn"
    add: get_columns
@@ -39,6 +42,8 @@
 "Java::JavafxAnimation::Timeline":
    method_missing: "Java::JavafxAnimation::KeyFrame"
    add: key_frames
+"Java::JavafxSceneLayout::BackgroundFill":
+   new_converter: [[color, none, none]]
 "Java::JavafxSceneShape::Path":
    add: elements
    rotate: []
@@ -51,7 +56,10 @@
    logical_children: panes
 "Java::JavafxSceneShape::Circle":
    new_converter: [[], [none], [none, color], [none, none, none], [none, none, none, color]]
+"Java::JavafxSceneShape::Rectangle":
+   new_converter: [[], [none, none], [none, none, none, none], [none, none, color]]
 "Java::JavafxScenePaint::Stop":
    new_converter: [[none, color]]
 "Java::JavafxSceneShape::Shape":
    getter_setter: fill
+

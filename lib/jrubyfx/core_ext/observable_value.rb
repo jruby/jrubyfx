@@ -131,6 +131,24 @@ module Java::javafx::collections::ObservableMap
   # stores the listeners.
 end
 
+module Java::javafx::beans::binding::NumberExpression
+  def - x
+    subtract x
+  end
+  def / x
+    divide x
+  end
+  def * x
+    multiply x
+  end
+  def + x
+    add x
+  end
+  def -@ x
+    negate x
+  end
+end
+
 class Class
   def property_writer(*symbol_names)
     symbol_names.each do |symbol_name|
@@ -147,8 +165,8 @@ class Class
     end
   end
   def property_accessor(*symbol_names)
-    property_reader *symbol_names
-    property_writer *symbol_names
+    property_reader(*symbol_names)
+    property_writer(*symbol_names)
     symbol_names.each do |symbol_name|
       send(:define_method, symbol_name.id2name + "_property") do
         instance_variable_get("@#{symbol_name}")

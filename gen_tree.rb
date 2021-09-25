@@ -1,6 +1,6 @@
 #usage:
-# unzip javafx jars to .
-# for x in $(find javafx -name '*.class'); do javap $x | head -n 2; done | grep public | grep -v Enum | sed -n 's/^.* \(interface\|class\) \(javafx.[^ <]\+\)\(<.*>\)\? .*$/\2/p' | grep -v '\$'  | sort -u | ruby gen_tree.rb
+# unzip javafx jars to . (on linux, possibly: for f in /usr/share/openjfx/lib/*.jar; do b=`basename $f .jar`; unzip $f -d $b/; done)
+# for x in $(find javafx -name '*.class'); do javap $x | head -n 2; done | grep public | sed -n 's/^.* \(interface\|class\) \(javafx.[^ <]\+\)\(<.*>\)\? .*$/\2/p' | grep -v '\$'  | sort -u | ruby gen_tree.rb
 # Look for duplicates and unexported packages
 # Paste the output in part_import
 
