@@ -242,9 +242,12 @@ module JRubyFX
         next if defs == "" || defs == nil
         # TODO: do we need to include the dsl? is this the fastest way to do it?
         outf<< <<HERDOC
+begin
 class #{clz}
   include JRubyFX::DSL
 #{defs}end
+rescue NameError # ignore, different JDK version likely
+end
 HERDOC
       end
     end
