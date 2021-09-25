@@ -1,24 +1,32 @@
 JRubyFX
 =======
-JRubyFX is a pure ruby wrapper for JavaFX 2.2+ with FXML support
+JRubyFX is a pure ruby wrapper for JavaFX 2.2+ with FXML support. Currently supported: Java 8+, JRuby 9.3+.
 
 Status
 ------
-JRubyFX master should be usable in its current form and able to run simple FXML apps if used properly (see Issues).
-FXML syntax in master/1.0 is very different from 0.9 series. Please see the [JRubyFX github wiki](https://github.com/jruby/jrubyfx/wiki/) for more details.
+JRubyFX master should be usable in its current form and able to run most FXML apps.
+As of JRubyFX 2.0, the Java FXML Loader is used. This requires JRuby 9.3+. 
+Please see the [JRubyFX github wiki](https://github.com/jruby/jrubyfx/wiki/) for upgrading from 1.x.
 
 Install
 -----
+
+For JRuby 9.3+:
+
 ```text
 gem install jrubyfx
+```
+For older JRuby versions:
+
+```text
+gem install jrubyfx -v 1.2
 ```
 
 Manual Build and Install
 -----
-Build is done using rake/gem/bundler/rdoc. You need JRuby >1.7.4 (in 1.9 mode), Java >1.6 with JavaFX 2.2, but Java 7 is recommended. Building native application packages requires JDK 8.
+Build is done using rake/gem/bundler/rdoc. You need JRuby >= 9.3.0.0, Java >= 8 with JavaFX 11 modules installed (only required for `reflect` task). Building native application packages requires JDK 8+.
 
 ```text
-gem install jrubyfx-fxmlloader
 rake install
 ```
 Once the gem is installed, just run a ruby file that uses it normally.
@@ -26,7 +34,11 @@ Once the gem is installed, just run a ruby file that uses it normally.
 **NOTE:** If you don't have JRuby installed as the `ruby` command, use `jruby -S rake` instead of `rake`. If
 you are using RVM, this does not apply to you (though make sure you `rvm use jruby`).
 
-**If you are reporting bugs or encountering fxml issues:** please install [master jrubyfx-fxmlloader](https://github.com/byteit101/JRubyFX-FXMLLoader/) instead of from rubygems
+**If you are reporting bugs or encountering fxml issues:** please ensure you are using JRubyFX 2.0. Prior version relied on a ported fxml parser and had many known issues.
+
+Updating the Imports
+--------------
+JRubyFX currently uses the 11-based classes for the default imports (part_imports.rb). In the future, this list may change. See `gen_tree.rb` for a script to help automate finding the classes to import. 
 
 Creating a Jar
 --------------
@@ -94,16 +106,13 @@ If you want rdoc, run `rake rdoc`. Please note that there are lots of generated 
 
 Issues
 ------
-* Use JRubyFX-FxmlLoader's FxmlLoader instead of javafx.fxml.FXMLLoader for maximum Ruby support.
-* FXML support in master for very complex documents is untested. Report bugs against JRubyFX-FxmlLoader with the FXML file if it fails.
-* You must use the provided JavaFXImpl::Launcher to launch the app (aka: call _yourFXApplicationClass_.launch())
 * Errors loading JavaFX are bugs. Please report if you encounter this issue, tell us your platform, OS, and version of JRuby
 * Jarify command needs the `jar` executable in your path.
 * Any other difficulties are bugs. Please report them
 
 Contact
 -------
-Find us in #jruby on freenode.
+Find us in #jruby on matrix.
 
 License
 -------
