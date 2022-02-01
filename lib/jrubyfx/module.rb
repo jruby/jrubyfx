@@ -116,15 +116,20 @@ module JRubyFX
       end
       camel = symbol_name.id2name
       camel = camel[0].upcase + camel[1..-1]
+      jcn = type.java_class.name
+      java_signature "void set" + camel + "(#{jcn} f)"
       send(:define_method, "set" + camel) do |val|
         instance_variable_set("@#{symbol_name}", val)
       end
+      java_signature "#{jcn} get" + camel + "()"
       send(:define_method, "get" + camel) do
         instance_variable_get("@#{symbol_name}")
       end
+      java_signature "java.lang.Class " + symbol_name.id2name + "GetType()"
       send(:define_method, symbol_name.id2name + "GetType") do
         return type.java_class
       end
+      java_field "@javafx.fxml.FXML #{type.java_class.name} #{symbol_name}", bind_variable: true
     end
     def fxml_accessor(symbol_name,ptype=Java::javafx.beans.property.SimpleStringProperty, type=nil)
       # TODO: RDoc
@@ -175,4 +180,26 @@ module JRubyFX
       add_method_signature "get" + camel, [type]
     end
   end
+
+  # FXML requires loading both ruby and java classes.
+  # JRuby has no such single classloader builtin, so we proxy them all
+  # This is a minimal classloader only for classes, resources not supported
+  class PolyglotClassLoader < java.lang.ClassLoader
+    def initialize()
+      super(JRuby.runtime.jruby_class_loader)
+      @prefix = File.basename(fxml_root) + "."
+    end
+    java_signature "java.lang.Class findClass(java.lang.String name)"
+    def findClass(a)
+      return nil unless a.start_with? @prefix or a[0].upcase == a[0]
+      a = a[@prefix.length..-1] unless a[0].upcase == a[0]
+      begin # TODO: become_java! idempotent?
+        return a.constantize_by(/[.$]/).tap{|x| x.become_java!}.java_class
+      rescue NameError
+        raise java.lang.ClassNotFoundException.new("Could not find Ruby or Java class '#{a.gsub(/[.$]/, "::")}' or '#{a}'") # Must be a java CNF, not a Ruby Name Error
+      end
+    end
+    become_java!
+  end
+
 end

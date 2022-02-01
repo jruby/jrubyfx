@@ -83,7 +83,7 @@ module JRubyFX::FxmlHelper
               # add the field to the controller
               clazz.instance_eval do
                 # Note: we could detect the type, but Ruby doesn't care, and neither does JavaFX's FXMLLoader 
-                java_field "@javafx.fxml.FXML java.lang.Object #{value}"
+                java_field "@javafx.fxml.FXML java.lang.Object #{value}", bind_variable: true
               end
             # otherwise, if it is an event, add a forwarding call
             elsif localName.start_with? "on" and value.start_with? "#"
@@ -114,15 +114,7 @@ module JRubyFX::FxmlHelper
       end
       # poorly dispose of stream reader
       xmlStreamReader = nil
-      
-      # once everything is done, define background helper methods to expose the base fxml values
-      clazz.instance_eval do
-        define_method :copy_fxml_instances do
-          self.class.__jruby_get_insts.each do |attrib|
-              instance_variable_set("@#{attrib}", send(attrib)) # TODO: this could lead to bugs if the method aliases some ruby or java method name
-          end
-        end
-      end
+
       # have to jump through hoops to set the classwide list
       class << clazz
         define_method :__jruby_set_insts, &(lambda {|list|
@@ -133,11 +125,8 @@ module JRubyFX::FxmlHelper
         })
       end
       clazz.__jruby_set_insts(attribs)
-    
-      #clazz.new :bake if clazz.ancestors.include? java.lang.Object # generate java proxy class (only generated on first ctor call)
+
       clazz.become_java!
-      # TODO: check ordering of these two calls
-      #clazz.new :bake if clazz.ancestors.include? java.lang.Object # generate java proxy class (only generated on first ctor call)
     rescue XMLStreamException => exception
       raise (exception)
     end

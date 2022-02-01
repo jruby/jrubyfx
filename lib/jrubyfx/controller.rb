@@ -23,8 +23,9 @@ require 'jruby/core_ext'
 module Kernel
   @@jrubyfx_res_dir = {}
   @@jrubyfx_fxml_res_cl = nil
-  def fxml_root(value=nil, jar_value=nil, class_loader = nil)
-  	@@jrubyfx_fxml_res_cl = class_loader if class_loader
+  def fxml_root(value=nil, jar_value=nil, get_resources: nil, fxml_class_loader: nil)
+  	@@jrubyfx_fxml_res_cl = get_resources if get_resources
+  	@@jrubyfx_fxml_main_cl = fxml_class_loader if fxml_class_loader
     if value or jar_value
       @@jrubyfx_fxml_dir = (JRubyFX::Application.in_jar? and jar_value) ? jar_value : File.expand_path(value)
     else
@@ -40,6 +41,9 @@ module Kernel
   end
   def get_fxml_resource_class_loader
   	@@jrubyfx_fxml_res_cl || JRuby.runtime.jruby_class_loader.method("get_resource")
+  end
+  def get_fxml_classes_class_loader
+  	@@jrubyfx_fxml_main_cl ||= JRubyFX::PolyglotClassLoader.new
   end
   def resource_url(type, relative_path)
     if JRubyFX::Application.in_jar?
@@ -75,10 +79,7 @@ module JRubyFX::Controller
     base.extend(JRubyFX::FXImports)
     base.configure_java_class ctor_name: "java_ctor" do
       dispatch :initialize, :fx_initialize # we want to load our code before calling user code
-        # TODO: exclude?
-      # always exclude copy_fxml_instances
       # un-exclude "initialize"
-      exclude :copy_fxml_instances
     end
     # register ourselves as a control. overridable with custom_fxml_control
     register_type base if base.is_a? Class
@@ -116,12 +117,15 @@ module JRubyFX::Controller
     def load_into(stage, settings={})
       # Inherit from default settings
       settings = DEFAULT_SETTINGS.merge({root_dir: (self.instance_variable_get("@fxml_root_dir") || fxml_root),
-          class_loader: (get_fxml_resource_class_loader),
+          get_resources: get_fxml_resource_class_loader,
+          fxml_class_loader: get_fxml_classes_class_loader,
           filename: self.instance_variable_get("@filename")}).merge settings
+          
+      raise "JRubyFX 1.x style class loader argument passed into 'load_into'. Replace 'class_loader' with either 'get_resources' (likely) or 'fxml_class_loader' (less likely)" if settings.has_key? :class_loader
           
       unless @built
         ## Use the temporary loader to reformat AController
-        JRubyFX::FxmlHelper.transform self, Controller.get_fxml_location(settings[:root_dir], settings[:filename], settings[:class_loader])
+        JRubyFX::FxmlHelper.transform self, Controller.get_fxml_location(settings[:root_dir], settings[:filename], settings[:get_resources])
   
         # Custom controls don't always need to be pure java, but oh well...
         become_java!
@@ -135,7 +139,7 @@ module JRubyFX::Controller
       ctrl.stage = stage
 
       # load the FXML file
-      root = Controller.get_fxml_loader(settings[:filename], ctrl, settings[:root_dir], settings[:class_loader]).load
+      root = Controller.get_fxml_loader(settings[:filename], ctrl, settings[:root_dir], settings[:get_resources], settings[:fxml_class_loader]).load
 
       # Unless the FXML root node is a scene, wrap that node in a scene
       if root.is_a? Scene
@@ -158,13 +162,14 @@ module JRubyFX::Controller
         return @preparsed.pop.finish_initialization(*args, &block)
       end
       
-      settings = DEFAULT_SETTINGS.merge({root_dir: @fxml_root_dir || fxml_root, class_loader: get_fxml_resource_class_loader, filename: @filename})
+      settings = DEFAULT_SETTINGS.merge({root_dir: @fxml_root_dir || fxml_root, get_resources: get_fxml_resource_class_loader,
+          fxml_class_loader: get_fxml_classes_class_loader, filename: @filename})
       
       # Custom controls don't always need to be pure java, but oh well...
       if @filename && !@built
         @built = true # TODO: move later if no new :bake call
         ## Use the temporary loader to reformat AController
-        JRubyFX::FxmlHelper.transform self, Controller.get_fxml_location(settings[:root_dir], settings[:filename], settings[:class_loader])
+        JRubyFX::FxmlHelper.transform self, Controller.get_fxml_location(settings[:root_dir], settings[:filename], settings[:get_resources])
   
         # Custom controls don't always need to be pure java, but oh well...
         become_java!
@@ -284,7 +289,7 @@ module JRubyFX::Controller
   end
 
   def load_fxml(filename, root_dir=nil)
-    fx = Controller.get_fxml_loader(filename, self, root_dir || @fxml_root_dir || fxml_root, get_fxml_resource_class_loader)
+    fx = Controller.get_fxml_loader(filename, self, root_dir || @fxml_root_dir || fxml_root, get_fxml_resource_class_loader, get_fxml_classes_class_loader)
     fx.root = self
     fx.load
   end
@@ -294,8 +299,6 @@ module JRubyFX::Controller
 
     # custom controls are their own scene
     self.scene = self unless @scene
-    
-    self.copy_fxml_instances # set instance methods (defined in fxml_helper)
 
     # Everything is ready, call initialize
     if private_methods.include? :initialize or methods.include? :initialize
@@ -331,11 +334,14 @@ module JRubyFX::Controller
   def self.load_fxml_only(filename, stage, settings={})
     # Inherit from default settings
     settings = DEFAULT_SETTINGS.merge({root_dir: fxml_root,
-    	class_loader: get_fxml_resource_class_loader,
+    	get_resources: get_fxml_resource_class_loader,
+        fxml_class_loader: get_fxml_classes_class_loader,
         filename: filename}).merge settings
-
+          
+    raise "JRubyFX 1.x style class loader argument passed into 'load_fxml_only'. Replace 'class_loader' with either 'get_resources' (likely) or 'fxml_class_loader' (less likely)" if settings.has_key? :class_loader
+    
     # load the FXML file
-    root = Controller.get_fxml_loader(settings[:filename], nil, settings[:root_dir], settings[:class_loader]).load
+    root = Controller.get_fxml_loader(settings[:filename], nil, settings[:root_dir], settings[:get_resources], settings[:fxml_class_loader]).load
 
     # TODO: de-duplicate this code
 
@@ -368,14 +374,15 @@ module JRubyFX::Controller
   # === Equivalent Java
   #   Parent root = FXMLLoader.load(getClass().getResource("Demo.fxml"));
   #
-  def self.get_fxml_loader(filename, controller = nil, root_dir = nil, class_loader = JRuby.runtime.jruby_class_loader.method("get_resource"))
-    fx = javafx.fxml.FXMLLoader.new(get_fxml_location(root_dir, filename, class_loader))
+  def self.get_fxml_loader(filename, controller = nil, root_dir = nil, get_resources = JRuby.runtime.jruby_class_loader.method("get_resource"), fxml_class_loader=nil)
+    fx = javafx.fxml.FXMLLoader.new(get_fxml_location(root_dir, filename, get_resources))
+	fx.class_loader = fxml_class_loader unless fxml_class_loader.nil?
     # we must set this here for JFX to call our events
     fx.controller = controller
     fx
   end
   
-  def self.get_fxml_location(root_dir, filename, class_loader)
+  def self.get_fxml_location(root_dir, filename, get_resources)
     if JRubyFX::Application.in_jar? and filename.match(/^[^.\/]/)
       # If we are in a jar file, use the class loader to get the file from the jar (like java)
       # TODO: should just be able to use URLs
@@ -386,7 +393,7 @@ module JRubyFX::Controller
       # we want to point to a folder inside the jar, otherwise to a filesystem's one. According to this we format and 
       # feed the right path to the class loader.
       
-      location = class_loader.call(File.join(root_dir, filename))
+      location = get_resources.call(File.join(root_dir, filename))
       
       # fall back if not found
       return location if location
