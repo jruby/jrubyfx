@@ -11,7 +11,7 @@ Please see the [JRubyFX github wiki](https://github.com/jruby/jrubyfx/wiki/) for
 Install
 -----
 
-For JRuby 9.3+:
+For JRuby 9.3.4+:
 
 ```text
 gem install jrubyfx
@@ -24,7 +24,7 @@ gem install jrubyfx -v 1.2
 
 Manual Build and Install
 -----
-Build is done using rake/gem/bundler/rdoc. You need JRuby >= 9.3.0.0, Java >= 8 with JavaFX 11 modules installed (only required for `reflect` task). Building native application packages requires JDK 8+.
+Build is done using rake/gem/bundler/rdoc. You need JRuby >= 9.3.4.0, Java >= 8 with JavaFX 11 modules installed (only required for `reflect` task). Building native application packages requires JDK 8+.
 
 ```text
 rake install

@@ -83,7 +83,7 @@ module JRubyFX::FxmlHelper
               # add the field to the controller
               clazz.instance_eval do
                 # Note: we could detect the type, but Ruby doesn't care, and neither does JavaFX's FXMLLoader 
-                java_field "@javafx.fxml.FXML java.lang.Object #{value}", bind_variable: true
+                java_field "@javafx.fxml.FXML java.lang.Object #{value}", instance_variable: true
               end
             # otherwise, if it is an event, add a forwarding call
             elsif localName.start_with? "on" and value.start_with? "#"

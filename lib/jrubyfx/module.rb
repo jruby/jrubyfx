@@ -17,6 +17,7 @@ limitations under the License.
 
 require_relative 'utils/common_utils'
 
+
 # This module contains useful methods for defining JavaFX code. Include it in your
 # class to use it, and the JRubyFX::FXImports. JRubyFX::Application and JRubyFX::Controller already include it.
 module JRubyFX
@@ -129,7 +130,7 @@ module JRubyFX
       send(:define_method, symbol_name.id2name + "GetType") do
         return type.java_class
       end
-      java_field "@javafx.fxml.FXML #{type.java_class.name} #{symbol_name}", bind_variable: true
+      java_field "@javafx.fxml.FXML #{type.java_class.name} #{symbol_name}", instance_variable: true
     end
     def fxml_accessor(symbol_name,ptype=Java::javafx.beans.property.SimpleStringProperty, type=nil)
       # TODO: RDoc
