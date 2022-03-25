@@ -21,23 +21,10 @@ require_relative 'utils'
 begin
   if ENV['JFX_DIR']
     $LOAD_PATH << ENV['JFX_DIR']
-  else #should we check for 1.7 vs 1.8? oh well, adding extra paths won't hurt anybody (maybe performance loading)
-    jfx_path = ENV_JAVA["sun.boot.library.path"]
-    $LOAD_PATH << if jfx_path.include? ":\\" and !jfx_path.include? "/" # can be tricked, but should work fine
-      #windows
-      jfx_path.gsub(/\\bin[\\]*$/i, "\\lib")
-    else
-      # *nix
-      jfx_path.gsub(/[\/\\][amdix345678_]+$/, "") # strip i386 or amd64 (including variants). TODO: ARM
-    end
   end
-
-  # Java 8 (after ea-b75) and above has JavaFX as part of the normal distib, only require it if we are 7 or below
-  jre = ENV_JAVA["java.runtime.version"].match %r{^(?<version>(?<major>\d+)\.(?<minor>\d+))\.(?<patch>\d+)(_\d+)?-?(?<release>ea|u\d)?(-?b(?<build>\d+))?}
+  
   # add OpenJFX support if follow instruction from https://openjfx.io
-  if ENV['JFX_DIR'] or
-    jre[:version].to_f < 1.8 or
-    (jre[:version].to_f == 1.8 and jre[:release] == 'ea' and jre[:build].to_i < 75)
+  if ENV['JFX_DIR']
     require 'jfxrt.jar'
   elsif ENV['PATH_TO_FX'] # support the OpenJFX installation as in https://openjfx.io/openjfx-docs/#install-javafx as of 15th May 2020
     Dir.glob(File.join(ENV['PATH_TO_FX'],"*.jar")).each do |jar|
@@ -53,8 +40,8 @@ begin
   Java.javafx.application.Application
 rescue  LoadError, NameError
   # Advice user too about the OpenJFX support
-  puts "JavaFX runtime not found.  Please install Java 7u6 or newer, set environment variable JFX_DIR to the folder that contains jfxrt.jar or set the environment variable PATH_TO_FX that points to the OpenJFX libraries"
-  puts "If you have Java 7u6 or later, this is a bug. Please report to the issue tracker on github. Include your OS version, 32/64bit, and architecture (x86, ARM, PPC, etc)"
+  puts "JavaFX runtime not found.  Please install Java 8 or newer, set environment variable JFX_DIR to the folder that contains jfxrt.jar or set the environment variable PATH_TO_FX that points to the OpenJFX libraries"
+  puts "If you have Java 8 or later, this is a bug. Please report to the issue tracker on github. Include your OS version, 32/64bit, and architecture (x86, ARM, PPC, etc)"
   exit -1
 end
 
