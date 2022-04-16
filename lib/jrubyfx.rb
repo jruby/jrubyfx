@@ -19,8 +19,8 @@ if !JRUBY_VERSION
   puts "JRubyFX requires JRuby"
   exit -2
 end
-if Gem::Version.new(JRUBY_VERSION) < Gem::Version.new("9.3.0.0.pre.A") # TODO: make a release version
-  puts "JRubyFX 2.0 requires JRuby 9.3.0.0 or later. Use JRubyFX 1.x for earlier versions."
+if Gem::Version.new(JRUBY_VERSION) < Gem::Version.new("9.3.4.0")
+  puts "JRubyFX 2.0 requires JRuby 9.3.4.0 or later. Use JRubyFX 1.x for earlier versions."
   exit -2
 end
 

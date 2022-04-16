@@ -22,6 +22,8 @@ For older JRuby versions:
 gem install jrubyfx -v 1.2
 ```
 
+If you are using Java 9+, additionally append the contents of `module-opens.txt` to `bin/.jruby.java_opts` in your jruby install. If you fail to do this, you may get inscruitable "method X not found, did you mean X?" errors.
+
 Manual Build and Install
 -----
 Build is done using rake/gem/bundler/rdoc. You need JRuby >= 9.3.4.0, Java >= 8 with JavaFX 11 modules installed (only required for `reflect` task). Building native application packages requires JDK 8+.

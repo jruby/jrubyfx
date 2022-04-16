@@ -36,6 +36,8 @@ Original Java source from: http://docs.oracle.com/javafx/2/collections/jfxpub-co
 
 require 'jrubyfx'
 
+java_import 'javafx.collections.FXCollections'
+
 # Example for an ObservableList
 list = []
 observable_list = FXCollections.observable_list(list)
